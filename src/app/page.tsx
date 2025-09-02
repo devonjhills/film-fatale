@@ -19,36 +19,48 @@ export default async function Home() {
       )}
 
       {/* Movie Sections */}
-      <div className="container mx-auto px-4 space-y-10 md:space-y-16 pb-8 md:pb-12 relative">
+      <div className="space-y-8 md:space-y-12 pb-8 md:pb-12">
         {/* Trending This Week - Featured Layout */}
-        <FeaturedSection
-          title="Trending This Week"
-          items={popular}
-          mediaType="movie"
-          limit={6}
-          showTrending={true}
-          viewAllHref="/movies/popular"
-        />
+        <section className="section-gradient-primary py-8 md:py-12">
+          <div className="container mx-auto px-4">
+            <FeaturedSection
+              title="Trending This Week"
+              items={popular}
+              mediaType="movie"
+              limit={6}
+              showTrending={true}
+              viewAllHref="/movies/popular"
+            />
+          </div>
+        </section>
 
         {/* Now Playing */}
-        <MediaSection
-          title="Now Playing"
-          items={nowPlaying}
-          mediaType="movie"
-          href="/movies/now-playing"
-          limit={12}
-          badge="In Theaters"
-        />
+        <section className="py-6 md:py-8">
+          <div className="container mx-auto px-4">
+            <MediaSection
+              title="Now Playing"
+              items={nowPlaying}
+              mediaType="movie"
+              href="/movies/now-playing"
+              limit={12}
+              badge="In Theaters"
+            />
+          </div>
+        </section>
 
         {/* Top Rated */}
-        <MediaSection
-          title="Top Rated"
-          items={topRated}
-          mediaType="movie"
-          href="/movies/top-rated"
-          limit={12}
-          badge="Critics' Choice"
-        />
+        <section className="section-gradient-secondary py-8 md:py-12">
+          <div className="container mx-auto px-4">
+            <MediaSection
+              title="Top Rated"
+              items={topRated}
+              mediaType="movie"
+              href="/movies/top-rated"
+              limit={12}
+              badge="Critics' Choice"
+            />
+          </div>
+        </section>
       </div>
     </div>
   );

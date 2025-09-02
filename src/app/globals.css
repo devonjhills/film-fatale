@@ -4,58 +4,50 @@
 
 @layer base {
   :root {
-    /* Film Noir Femme Fatale Light Theme */
-    --background: 30 8% 94%; /* Warm pearl white */
-    --foreground: 210 22% 8%; /* Deep midnight blue */
-    --card: 0 0% 98%; /* Pristine white cards */
-    --card-foreground: 210 22% 8%;
-    --popover: 0 0% 98%;
-    --popover-foreground: 210 22% 8%;
-    --primary: 210 65% 12%; /* Rich midnight navy */
-    --primary-foreground: 30 15% 95%;
-    --secondary: 210 12% 16%; /* Charcoal gray */
-    --secondary-foreground: 30 8% 94%;
-    --muted: 210 8% 88%; /* Soft gray */
-    --muted-foreground: 210 15% 35%;
-    --accent: 348 83% 47%; /* Femme fatale crimson */
-    --accent-foreground: 30 15% 95%;
-    --destructive: 0 84% 55%;
-    --destructive-foreground: 30 15% 95%;
-    --border: 210 12% 82%;
-    --input: 210 8% 92%;
-    --ring: 348 83% 47%;
+    /* Modern Film Noir Light Theme - Sophisticated & Elegant */
+    --background: 220 15% 97%; /* Cool pearl white */
+    --foreground: 220 40% 8%; /* Rich midnight blue */
+    --card: 220 20% 98%; /* Pristine white cards */
+    --card-foreground: 220 40% 8%;
+    --popover: 220 20% 98%;
+    --popover-foreground: 220 40% 8%;
+    --primary: 220 60% 25%; /* Deeper midnight blue */
+    --primary-foreground: 220 15% 97%;
+    --secondary: 220 15% 88%; /* Soft silver */
+    --secondary-foreground: 220 40% 15%;
+    --muted: 220 10% 90%; /* Light ash */
+    --muted-foreground: 220 20% 40%;
+    --accent: 25 70% 55%; /* Warm amber gold */
+    --accent-foreground: 220 40% 8%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 220 15% 97%;
+    --border: 220 15% 85%;
+    --input: 220 10% 94%;
+    --ring: 220 60% 25%;
     --radius: 0.75rem;
-    
-    /* Film noir gold accent */
-    --gold: 45 86% 58%; /* Vintage gold */
-    --gold-foreground: 210 22% 8%;
   }
 
   .dark {
-    /* Film Noir Femme Fatale Dark Theme */
-    --background: 210 22% 4%; /* Deep noir black */
-    --foreground: 30 15% 92%; /* Warm ivory */
-    --card: 210 20% 8%; /* Shadowy card background */
-    --card-foreground: 30 15% 92%;
-    --popover: 210 20% 8%;
-    --popover-foreground: 30 15% 92%;
-    --primary: 30 25% 88%; /* Warm light */
-    --primary-foreground: 210 22% 8%;
-    --secondary: 210 15% 12%; /* Deep charcoal */
-    --secondary-foreground: 30 15% 92%;
-    --muted: 210 15% 10%; /* Dark muted */
-    --muted-foreground: 210 8% 65%;
-    --accent: 348 90% 58%; /* Vibrant crimson */
-    --accent-foreground: 210 22% 8%;
-    --destructive: 0 75% 58%;
-    --destructive-foreground: 30 15% 92%;
-    --border: 210 15% 15%;
-    --input: 210 15% 10%;
-    --ring: 348 90% 58%;
-    
-    /* Film noir gold accent */
-    --gold: 45 100% 68%; /* Bright vintage gold */
-    --gold-foreground: 210 22% 8%;
+    /* Modern Film Noir Dark Theme - Dramatic & Moody */
+    --background: 220 30% 3%; /* Deep noir blue-black */
+    --foreground: 35 25% 92%; /* Warm platinum */
+    --card: 220 25% 6%; /* Shadow blue-black */
+    --card-foreground: 35 25% 92%;
+    --popover: 220 25% 6%;
+    --popover-foreground: 35 25% 92%;
+    --primary: 25 75% 65%; /* Warm golden amber */
+    --primary-foreground: 220 30% 3%;
+    --secondary: 220 20% 12%; /* Dark slate */
+    --secondary-foreground: 35 20% 85%;
+    --muted: 220 15% 8%; /* Deep shadow */
+    --muted-foreground: 220 10% 65%;
+    --accent: 35 60% 50%; /* Rich bronze gold */
+    --accent-foreground: 220 25% 95%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 35 25% 92%;
+    --border: 220 20% 15%;
+    --input: 220 15% 8%;
+    --ring: 25 75% 65%;
   }
 }
 
@@ -66,179 +58,96 @@
 
   body {
     @apply bg-background text-foreground;
-    /* Improve overall text rendering */
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 
-  /* Clean film noir background */
-  body {
-    background: 
-      radial-gradient(ellipse at top, hsl(var(--muted) / 0.3) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom right, hsl(var(--accent) / 0.08) 0%, transparent 60%);
-  }
-
-  /* Elegant noir pattern for non-detail pages */
-  body.film-noir-bg {
-    background: 
-      /* Subtle art deco lines */
-      repeating-linear-gradient(
-        45deg,
-        transparent 0px,
-        transparent 40px,
-        hsl(var(--foreground) / 0.06) 40px,
-        hsl(var(--foreground) / 0.06) 41px
-      ),
-      /* Atmospheric fog */
-      radial-gradient(
-        ellipse 100% 60% at 20% 80%, 
-        hsl(var(--muted) / 0.15) 0%, 
-        transparent 70%
-      ),
-      radial-gradient(
-        ellipse 80% 50% at 80% 20%, 
-        hsl(var(--accent) / 0.08) 0%, 
-        transparent 80%
-      );
-  }
-
-  /* Enhanced dark mode atmosphere */
-  .dark body.film-noir-bg {
-    background: 
-      /* More visible lines in dark */
-      repeating-linear-gradient(
-        45deg,
-        transparent 0px,
-        transparent 40px,
-        hsl(var(--foreground) / 0.1) 40px,
-        hsl(var(--foreground) / 0.1) 41px
-      ),
-      /* Dramatic lighting */
-      radial-gradient(
-        ellipse 100% 60% at 20% 80%, 
-        hsl(var(--muted) / 0.2) 0%, 
-        transparent 70%
-      ),
-      radial-gradient(
-        ellipse 80% 50% at 80% 20%, 
-        hsl(var(--accent) / 0.12) 0%, 
-        transparent 80%
-      );
-  }
-
-  /* Apply readable typography to common elements */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    @apply leading-tight;
-    font-weight: 600;
+    @apply font-semibold tracking-tight;
   }
 }
 
 @layer utilities {
-  /* Essential glass effect for film noir cards */
-  .glass-strong {
-    background: hsl(var(--card) / 0.8);
-    backdrop-filter: blur(12px) saturate(150%);
-    border: 1px solid hsl(var(--border) / 0.5);
-    box-shadow: 0 8px 32px hsl(var(--foreground) / 0.08);
+  .glass-card {
+    @apply bg-card/95 backdrop-blur-sm border border-border/50 shadow-lg;
   }
 
-  /* Film noir typography */
-  .text-serif-heading {
-    @apply font-serif font-bold tracking-tight leading-tight;
+  .glass-hero {
+    @apply bg-background/70 backdrop-blur-lg border border-border/40 shadow-2xl;
   }
 
-  .text-serif-subheading {
-    @apply font-serif font-semibold tracking-wide leading-tight;
+  .dark .glass-hero {
+    @apply bg-background/60 border-border/30;
   }
 
-  /* Femme fatale accent utilities */
-  .text-gold {
-    color: hsl(var(--gold));
-  }
-  
-  .bg-gold {
-    background-color: hsl(var(--gold));
-  }
-  
-  .border-gold {
-    border-color: hsl(var(--gold));
+  .glass-section {
+    @apply bg-card/80 backdrop-blur-sm border border-border/30 shadow-lg;
   }
 
-  /* Fixed backdrop for detail pages - true fixed background */
+  .section-gradient-primary {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.06) 0%,
+      hsl(var(--accent) / 0.08) 50%,
+      hsl(var(--primary) / 0.04) 100%
+    );
+  }
+
+  .section-gradient-secondary {
+    background: linear-gradient(
+      225deg,
+      hsl(var(--accent) / 0.04) 0%,
+      hsl(var(--muted) / 0.15) 50%,
+      hsl(var(--secondary) / 0.08) 100%
+    );
+  }
+
+  .section-gradient-accent {
+    background: linear-gradient(
+      45deg,
+      hsl(var(--accent) / 0.03) 0%,
+      hsl(var(--primary) / 0.05) 100%
+    );
+  }
+
+  .noir-divider {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--border)) 50%,
+      transparent 100%
+    );
+  }
+
   .backdrop-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -10;
-    background-color: hsl(var(--background));
-    background-size: contain;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    @apply fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat;
   }
 
-  /* Mobile optimization - keep fixed but adjust sizing */
-  @media (max-width: 768px) {
-    .backdrop-container {
-      background-size: cover;
-      background-position: center top;
-    }
-  }
-
-  /* Backdrop overlay for readability */
   .backdrop-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -9;
-    pointer-events: none;
-    background: 
-      /* Edge vignette */
-      radial-gradient(
-        ellipse at center,
-        transparent 20%,
-        hsl(var(--background) / 0.3) 70%,
-        hsl(var(--background) / 0.8) 100%
-      ),
-      /* Bottom gradient for content readability */
-        linear-gradient(
-          to bottom,
-          hsl(var(--background) / 0.1) 0%,
-          hsl(var(--background) / 0.2) 20%,
-          hsl(var(--background) / 0.4) 50%,
-          hsl(var(--background) / 0.7) 80%,
-          hsl(var(--background) / 0.9) 100%
-        );
+    @apply fixed inset-0 -z-[9] pointer-events-none;
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--background) / 0.1) 0%,
+      hsl(var(--background) / 0.7) 70%,
+      hsl(var(--background)) 100%
+    );
   }
 
-  /* Ensure detail page content is positioned above backdrop */
   .detail-page {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
+    @apply relative z-10 min-h-screen;
   }
 
-  /* Prevent horizontal overflow */
-  html,
-  body {
-    overflow-x: hidden;
-  }
-
-  /* Essential animations */
-  @keyframes fadeIn {
+  @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(10px);
     }
     to {
       opacity: 1;
@@ -246,13 +155,12 @@
     }
   }
 
-  .fade-in {
-    animation: fadeIn 0.3s ease-out;
+  .animate-fade-in-up {
+    animation: fadeInUp 0.4s ease-out;
   }
 
-  /* Accessibility */
   @media (prefers-reduced-motion: reduce) {
-    .fade-in {
+    .animate-fade-in-up {
       animation: none;
     }
   }

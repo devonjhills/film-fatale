@@ -87,7 +87,7 @@ export function DetailsHero({
       {/* Hero Section */}
       <div className="relative py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="glass-strong rounded-xl p-8 md:p-12">
+          <div className="glass-hero rounded-xl p-8 md:p-12">
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
               {/* Poster */}
               <div className="flex-shrink-0">
@@ -165,7 +165,7 @@ export function DetailsHero({
                     </h1>
                     {((isMovieDetails(item) && item.tagline) ||
                       (isTVShowDetails(item) && item.tagline)) && (
-                      <p className="font-serif text-lg md:text-xl lg:text-2xl text-muted-foreground italic mt-6 leading-relaxed drop-shadow-lg">
+                      <p className="font-serif text-lg md:text-xl lg:text-2xl text-foreground/90 italic mt-6 leading-relaxed drop-shadow-2xl">
                         &ldquo;
                         {isMovieDetails(item)
                           ? item.tagline

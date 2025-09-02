@@ -39,7 +39,7 @@ export function MediaGrid({
     return (
       <div
         className={cn(
-          "grid gap-6 justify-items-center px-2 layout-stable",
+          "grid gap-4 sm:gap-5 md:gap-6 lg:gap-8 justify-items-center layout-stable",
           getGridClasses(columns),
           className,
         )}
@@ -83,7 +83,7 @@ export function MediaGrid({
   return (
     <div
       className={cn(
-        "grid gap-4 md:gap-6 justify-items-center px-2 film-noir-grid",
+        "grid gap-4 sm:gap-5 md:gap-6 lg:gap-8 justify-items-center",
         getGridClasses(columns),
         className,
       )}
@@ -105,38 +105,39 @@ export function MediaGrid({
 }
 
 function getGridClasses(columns: MediaGridProps["columns"]) {
-  // Film noir card layout - max 6 columns at largest screens
-  const smCols = columns?.sm || 2;
+  // Optimized for smaller cards (~160-180px) with more spacing
+  // More columns = better spacing between cards
+  const smCols = columns?.sm || 3;
   const mdCols = columns?.md || 4;
   const lgCols = columns?.lg || 5;
   const xlCols = columns?.xl || 6;
 
   return cn([
-    // Mobile: 2 columns
-    smCols === 1 ? "grid-cols-1" : "grid-cols-2",
-    // Small tablets: 3-4 columns
-    mdCols === 2
-      ? "sm:grid-cols-2"
-      : mdCols === 3
-        ? "sm:grid-cols-3"
-        : mdCols === 4
-          ? "sm:grid-cols-4"
-          : "sm:grid-cols-3",
-    // Medium screens: 4-5 columns
-    lgCols === 3
-      ? "md:grid-cols-3"
-      : lgCols === 4
-        ? "md:grid-cols-4"
-        : lgCols === 5
-          ? "md:grid-cols-5"
-          : "md:grid-cols-4",
-    // Large screens: max 6 columns
-    xlCols === 4
-      ? "lg:grid-cols-4"
-      : xlCols === 5
-        ? "lg:grid-cols-5"
-        : xlCols === 6
-          ? "lg:grid-cols-6"
-          : "lg:grid-cols-5",
+    // Mobile: 3 columns (smaller cards fit better)
+    smCols === 2 ? "grid-cols-2" : smCols === 4 ? "grid-cols-4" : "grid-cols-3",
+    // Small tablets: 4 columns
+    mdCols === 3
+      ? "sm:grid-cols-3"
+      : mdCols === 5
+        ? "sm:grid-cols-5"
+        : mdCols === 6
+          ? "sm:grid-cols-6"
+          : "sm:grid-cols-4",
+    // Medium screens: 5 columns
+    lgCols === 4
+      ? "md:grid-cols-4"
+      : lgCols === 6
+        ? "md:grid-cols-6"
+        : lgCols === 7
+          ? "md:grid-cols-7"
+          : "md:grid-cols-5",
+    // Large screens: 6 columns
+    xlCols === 5
+      ? "lg:grid-cols-5"
+      : xlCols === 7
+        ? "lg:grid-cols-7"
+        : xlCols === 8
+          ? "lg:grid-cols-8"
+          : "lg:grid-cols-6",
   ]);
 }

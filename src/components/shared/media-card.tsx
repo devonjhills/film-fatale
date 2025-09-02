@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { RatingBadge } from "@/components/ui/rating-badge";
 import { OptimizedImage } from "@/components/ui/optimized-image";
 import { InViewAnimation } from "@/components/ui/progressive-loader";
 import { cn, formatVoteAverage } from "@/lib/utils";
@@ -36,100 +36,83 @@ export function MediaCard({
   showRating = true,
   priority = false,
 }: MediaCardProps) {
-  // Optimized image sizes for performance
-  const imageUrl = getImageUrl(item.poster_path || null, "poster", "w185");
+  // Optimized image sizes based on card size and device
+  const getOptimalImageSize = () => {
+    switch (size) {
+      case "sm":
+        return "w185"; // Small cards use w185 (185px)
+      case "lg":
+        return "w342"; // Large cards use w342 (342px)
+      default:
+        return "w185"; // Default to w185 for optimal quality/performance
+    }
+  };
+  const imageUrl = getImageUrl(
+    item.poster_path || null,
+    "poster",
+    getOptimalImageSize(),
+  );
   const rating = formatVoteAverage(item.vote_average);
   const title = item.title || item.name || "";
   const releaseDate = item.release_date || item.first_air_date;
 
-  // Film noir inspired sizing - prioritize poster visibility
   const sizeClasses = {
-    sm: "w-[160px]",
-    md: "w-[180px]",
-    lg: "w-[200px]",
-  };
-
-  // Compact cards with minimal text footprint
-  const cardHeights = {
-    sm: "h-[280px]", // 160*1.5 + 40px compact text = 280px
-    md: "h-[310px]", // 180*1.5 + 40px compact text = 310px
-    lg: "h-[340px]", // 200*1.5 + 40px compact text = 340px
+    sm: "w-full max-w-[160px] mx-auto",
+    md: "w-full max-w-[170px] mx-auto",
+    lg: "w-full max-w-[180px] mx-auto",
   };
 
   return (
     <InViewAnimation
       animation="fadeUp"
       delay={priority ? 0 : 100}
-      className="w-full"
+      className="w-full h-full"
       startVisible={priority}
     >
-      <div className={cn(sizeClasses[size], "group cursor-pointer")}>
-        <Link href={`/${mediaType}/${item.id}`} className="block">
+      <div className={cn(sizeClasses[size], "group h-full")}>
+        <Link href={`/${mediaType}/${item.id}`} className="block h-full">
           <div
             className={cn(
-              cardHeights[size],
-              "relative overflow-hidden transition-all duration-500 ease-out",
-              "hover:scale-[1.03] hover:z-10",
+              "space-y-2 transition-all duration-300 hover:scale-[1.02] hover:drop-shadow-lg h-full flex flex-col",
               className,
             )}
           >
-            <div className="p-0 h-full relative">
-              {/* Main Poster Image */}
-              <div className="relative aspect-[2/3] overflow-hidden rounded-lg shadow-lg">
-                {imageUrl ? (
-                  <OptimizedImage
-                    src={imageUrl}
-                    alt={title}
-                    fill
-                    aspectRatio="poster"
-                    className="object-cover transition-all duration-500 group-hover:brightness-110"
-                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 20vw"
-                    priority={priority}
-                    quality={90}
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-black/20 border border-border/50 rounded-lg">
-                    <span className="text-xs text-muted-foreground p-2 text-center">
-                      No Image
-                    </span>
-                  </div>
-                )}
-
-                {/* Film Noir Shadow Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-70 group-hover:opacity-80 transition-opacity duration-500" />
-
-                {/* Rating Badge */}
-                {showRating && item.vote_average > 0 && (
-                  <div className="absolute top-2 right-2 z-10">
-                    <div className="bg-background/90 backdrop-blur-sm rounded-md px-2 py-1 border border-border shadow-lg">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-primary text-primary" />
-                        <span className="text-xs font-medium text-foreground">
-                          {rating}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Compact Text Overlay at Bottom */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-3">
-                  <h3 className="font-serif font-semibold text-white text-base leading-tight line-clamp-2 mb-1 drop-shadow-lg">
-                    {title}
-                  </h3>
-                  {showYear && releaseDate && (
-                    <p className="text-xs text-white/80 font-medium tracking-wider">
-                      {new Date(releaseDate).getFullYear()}
-                    </p>
-                  )}
+            <div className="relative aspect-[2/3] overflow-hidden rounded-md shadow-md group-hover:shadow-lg transition-shadow duration-300 flex-shrink-0">
+              {imageUrl ? (
+                <OptimizedImage
+                  src={imageUrl}
+                  alt={title}
+                  fill
+                  aspectRatio="poster"
+                  className="object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
+                  sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 20vw"
+                  priority={priority}
+                  quality={85}
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-muted rounded-lg">
+                  <span className="text-xs text-muted-foreground text-center px-2">
+                    No Image
+                  </span>
                 </div>
+              )}
 
-                {/* Subtle Border Glow on Hover */}
-                <div className="absolute inset-0 rounded-lg border border-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {showRating && item.vote_average > 0 && (
+                <div className="absolute top-2 right-2">
+                  <RatingBadge rating={rating} variant="overlay" size="sm" />
+                </div>
+              )}
+            </div>
 
-                {/* Noir Light Reflection */}
-                <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white/10 via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              </div>
+            <div className="space-y-1 flex-grow flex flex-col justify-start min-h-0">
+              <h3 className="font-semibold text-sm leading-tight line-clamp-2">
+                {title}
+              </h3>
+              {showYear && releaseDate && (
+                <p className="text-xs text-muted-foreground">
+                  {new Date(releaseDate).getFullYear()}
+                </p>
+              )}
             </div>
           </div>
         </Link>

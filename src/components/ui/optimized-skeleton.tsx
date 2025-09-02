@@ -49,7 +49,7 @@ function MediaCardSkeleton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
 
   return (
     <div className={cn("group", sizeClasses[size])}>
-      <div className="relative overflow-hidden rounded-lg shadow-lg bg-black/10">
+      <div className="relative overflow-hidden rounded-lg shadow-lg bg-muted/50">
         {/* Poster skeleton with noir overlay */}
         <OptimizedSkeleton variant="shimmer" className="aspect-[2/3] w-full" />
 
@@ -59,7 +59,7 @@ function MediaCardSkeleton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
         {/* Rating skeleton */}
         <div className="absolute top-2 right-2">
           <OptimizedSkeleton
-            className="h-6 w-12 rounded-md bg-black/40"
+            className="h-6 w-12 rounded-md bg-muted"
             variant="shimmer"
           />
         </div>
@@ -67,7 +67,7 @@ function MediaCardSkeleton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
         {/* Text overlay skeleton at bottom */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-3">
           <OptimizedSkeleton
-            className="h-4 w-full mb-1 bg-white/20"
+            className="h-4 w-full mb-1 bg-muted"
             variant="shimmer"
           />
           <OptimizedSkeleton

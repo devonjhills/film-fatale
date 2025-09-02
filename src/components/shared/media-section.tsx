@@ -68,11 +68,13 @@ export function MediaSection({
 
   return (
     <InViewAnimation animation="fadeUp" delay={100}>
-      <section className={cn("space-y-6 layout-stable", className)}>
+      <section
+        className={cn("space-y-4 md:space-y-6 layout-stable", className)}
+      >
         {/* Section Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-serif-heading">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold tracking-tight">
               {title}
             </h2>
 

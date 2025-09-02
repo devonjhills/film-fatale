@@ -30,28 +30,34 @@ const ProviderLogo = ({
   provider: WatchProvider;
   onClick?: () => void;
 }) => (
-  <div
-    className={cn(
-      "relative w-16 h-16 rounded-2xl overflow-hidden",
-      "bg-white dark:bg-gray-900 shadow-md",
-      "hover:scale-105 hover:shadow-lg",
-      "transition-all duration-300 ease-out",
-      onClick && "cursor-pointer",
-    )}
-    onClick={onClick}
-    title={provider.provider_name}
-  >
-    <div className="absolute inset-0 p-2">
-      <Image
-        src={getImageUrl(provider.logo_path, "logo", "w300")}
-        alt={provider.provider_name}
-        fill
-        className="object-contain"
-        sizes="64px"
-        quality={95}
-      />
-    </div>
-  </div>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <div
+        className={cn(
+          "relative w-16 h-16 rounded-2xl overflow-hidden",
+          "bg-background shadow-md",
+          "hover:scale-105 hover:shadow-lg",
+          "transition-all duration-300 ease-out",
+          onClick && "cursor-pointer",
+        )}
+        onClick={onClick}
+      >
+        <div className="absolute inset-0 p-2">
+          <Image
+            src={getImageUrl(provider.logo_path, "logo", "w300")}
+            alt={provider.provider_name}
+            fill
+            className="object-contain"
+            sizes="64px"
+            quality={95}
+          />
+        </div>
+      </div>
+    </TooltipTrigger>
+    <TooltipContent side="bottom">
+      <p>{provider.provider_name}</p>
+    </TooltipContent>
+  </Tooltip>
 );
 
 const ProviderSection = ({
@@ -222,7 +228,7 @@ export function WatchProvidersCompact({
       {visibleProviders.map((provider) => (
         <Tooltip key={provider.provider_id}>
           <TooltipTrigger asChild>
-            <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-white dark:bg-gray-900 shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
+            <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-background shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
               <div className="absolute inset-0 p-1">
                 <Image
                   src={getImageUrl(provider.logo_path, "logo", "w154")}
@@ -253,7 +259,7 @@ export function WatchProvidersCompact({
               {hiddenProviders.map((provider) => (
                 <Tooltip key={provider.provider_id}>
                   <TooltipTrigger asChild>
-                    <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-white dark:bg-gray-900 shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
+                    <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-background shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
                       <div className="absolute inset-0 p-1">
                         <Image
                           src={getImageUrl(provider.logo_path, "logo", "w154")}

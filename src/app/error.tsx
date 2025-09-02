@@ -53,7 +53,7 @@ export default function Error({
           </button>
           <Link
             href="/"
-            className="inline-flex items-center justify-center space-x-2 px-6 py-3 border border-input rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="inline-flex items-center justify-center space-x-2 px-6 py-3 border border-input rounded-lg hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors"
           >
             <Home className="h-4 w-4" />
             <span>Go home</span>

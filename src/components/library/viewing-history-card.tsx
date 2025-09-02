@@ -6,13 +6,12 @@ import { getImageUrl } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Star, Trash2, RotateCcw, StickyNote, Edit3 } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Star, MoreVertical, RotateCcw, StickyNote, Edit3 } from "lucide-react";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { StatusUpdateDialog } from "./status-update-dialog";
 import { EpisodeProgress } from "./episode-progress";
 import Link from "next/link";
@@ -24,11 +23,9 @@ interface ViewingHistoryCardProps {
 }
 
 const statusColors = {
-  watching: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-  completed:
-    "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-  plan_to_watch:
-    "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
+  watching: "bg-primary/10 text-primary",
+  completed: "bg-accent/10 text-accent-foreground",
+  plan_to_watch: "bg-muted text-muted-foreground",
 };
 
 const statusLabels = {
@@ -86,7 +83,7 @@ export function ViewingHistoryCard({
                     />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center">
-                      <span className="text-xs text-muted-foreground font-medium text-center text-body">
+                      <span className="text-xs text-muted-foreground font-medium text-center text-sm">
                         No Image
                       </span>
                     </div>
@@ -106,43 +103,49 @@ export function ViewingHistoryCard({
                   href={`/${item.media_type}/${item.tmdb_id}`}
                   className="block hover:text-primary transition-colors flex-1 min-w-0"
                 >
-                  <h3 className="text-noir-subheading text-lg line-clamp-2 leading-tight">
+                  <h3 className="font-semibold text-lg line-clamp-2 leading-tight">
                     {item.title}
                   </h3>
                 </Link>
 
                 {/* Action Buttons */}
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 w-7 p-0"
-                    onClick={() => setShowStatusDialog(true)}
-                    title="Update status, rating & notes"
-                  >
-                    <Edit3 className="h-3 w-3" />
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                        <MoreVertical className="h-3 w-3" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={handleRemove}
-                        className="text-destructive"
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 w-7 p-0"
+                        onClick={() => setShowStatusDialog(true)}
                       >
-                        Remove from Library
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        <Edit3 className="h-3 w-3" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>Update status, rating & notes</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 w-7 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={handleRemove}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>Remove from library</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               </div>
 
               {/* Media Type and Status */}
               <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground font-medium text-body">
+                <span className="text-sm text-muted-foreground font-medium text-sm">
                   {item.media_type === "movie" ? "Movie" : "TV Show"}
                 </span>
                 <Badge
@@ -155,28 +158,39 @@ export function ViewingHistoryCard({
               {/* Ratings and Metadata */}
               <div className="flex items-center flex-wrap gap-3">
                 {item.rating && (
-                  <div className="flex items-center gap-1" title="Your rating">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-semibold text-readable">
-                      {item.rating}/10
-                    </span>
-                  </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1 cursor-default">
+                        <Star className="h-4 w-4 fill-accent text-accent" />
+                        <span className="text-sm font-semibold">
+                          {item.rating}/10
+                        </span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>Your rating</p>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
                 {item.vote_average && (
-                  <div
-                    className="flex items-center gap-1 text-muted-foreground"
-                    title="TMDB score"
-                  >
-                    <span className="text-sm font-medium text-body">TMDB</span>
-                    <span className="text-sm text-body">
-                      {Math.round(item.vote_average * 10) / 10}
-                    </span>
-                  </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1 text-muted-foreground cursor-default">
+                        <span className="text-sm font-medium">TMDB</span>
+                        <span className="text-sm">
+                          {Math.round(item.vote_average * 10) / 10}
+                        </span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>TMDB score</p>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
                 {item.watch_count > 1 && (
                   <div className="flex items-center gap-1 text-sm text-muted-foreground">
                     <RotateCcw className="h-4 w-4" />
-                    <span className="font-medium text-body">
+                    <span className="font-medium text-sm">
                       {item.watch_count}x
                     </span>
                   </div>
@@ -200,7 +214,7 @@ export function ViewingHistoryCard({
                 <div className="border-t pt-2">
                   <div className="flex items-start gap-2 text-sm text-muted-foreground">
                     <StickyNote className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                    <span className="line-clamp-2 text-body">{item.notes}</span>
+                    <span className="line-clamp-2 text-sm">{item.notes}</span>
                   </div>
                 </div>
               )}

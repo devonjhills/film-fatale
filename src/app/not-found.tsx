@@ -27,7 +27,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/search"
-            className="inline-flex items-center justify-center px-6 py-3 border border-input rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border border-input rounded-lg hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors"
           >
             Search Movies
           </Link>

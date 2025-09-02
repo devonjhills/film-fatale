@@ -7,27 +7,24 @@ export function BackgroundProvider() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Check if current page should have film noir background
-    const isPersonDetailPage = pathname.startsWith("/person/");
-    const isTVSeasonPage = pathname.match(/^\/tv\/[^/]+\/season\/[^/]+/);
-    const isMovieDetailPage = pathname.startsWith("/movie/");
-    const isTVShowDetailPage = pathname.startsWith("/tv/") && !isTVSeasonPage;
+    const isDetailPage =
+      pathname.startsWith("/movie/") || pathname.startsWith("/tv/");
+    const isSeasonPage = pathname.match(/^\/tv\/[^/]+\/season\/[^/]+/);
 
-    // Apply film noir background class for person pages, TV season pages, and non-detail pages
-    const shouldHaveFilmNoirBg =
-      isPersonDetailPage ||
-      isTVSeasonPage ||
-      (!isMovieDetailPage && !isTVShowDetailPage);
-
-    if (shouldHaveFilmNoirBg) {
-      document.body.classList.add("film-noir-bg");
+    // Apply sophisticated noir background pattern for non-detail pages or season pages
+    if (!isDetailPage || isSeasonPage) {
+      document.body.style.background = `
+        radial-gradient(ellipse 120% 80% at 30% 0%, hsl(var(--primary) / 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 100% 60% at 70% 100%, hsl(var(--accent) / 0.06) 0%, transparent 60%),
+        linear-gradient(135deg, hsl(var(--muted) / 0.3) 0%, transparent 40%, hsl(var(--muted) / 0.2) 100%),
+        hsl(var(--background))
+      `;
     } else {
-      document.body.classList.remove("film-noir-bg");
+      document.body.style.background = "";
     }
 
-    // Cleanup on unmount
     return () => {
-      document.body.classList.remove("film-noir-bg");
+      document.body.style.background = "";
     };
   }, [pathname]);
 

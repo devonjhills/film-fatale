@@ -27,13 +27,13 @@ const statusOptions = [
     value: "plan_to_watch",
     label: "Plan to Watch",
     icon: Clock,
-    color: "text-gray-600",
+    color: "text-muted-foreground",
   },
   {
     value: "watching",
     label: "Watching",
     icon: Play,
-    color: "text-blue-600",
+    color: "text-primary",
   },
   {
     value: "completed",

@@ -20,23 +20,23 @@ export function Footer() {
         <div className="grid grid-cols-3 gap-8 md:gap-12 justify-items-center">
           {/* Movies */}
           <div className="space-y-3">
-            <h3 className="text-base text-noir-subheading">Movies</h3>
+            <h3 className="font-semibold">Movies</h3>
             <div className="space-y-2">
               <Link
                 href="/movies/popular"
-                className="block text-sm text-body text-muted-foreground hover:text-foreground transition-colors"
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Popular Movies
               </Link>
               <Link
                 href="/movies/top-rated"
-                className="block text-sm text-body text-muted-foreground hover:text-foreground transition-colors"
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Top Rated
               </Link>
               <Link
                 href="/movies/now-playing"
-                className="block text-sm text-body text-muted-foreground hover:text-foreground transition-colors"
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Now Playing
               </Link>
@@ -45,23 +45,23 @@ export function Footer() {
 
           {/* TV Shows */}
           <div className="space-y-3">
-            <h3 className="text-base text-noir-subheading">TV Shows</h3>
+            <h3 className="font-semibold">TV Shows</h3>
             <div className="space-y-2">
               <Link
                 href="/tv/popular"
-                className="block text-sm text-body text-muted-foreground hover:text-foreground transition-colors"
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Popular Shows
               </Link>
               <Link
                 href="/tv/top-rated"
-                className="block text-sm text-body text-muted-foreground hover:text-foreground transition-colors"
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Top Rated
               </Link>
               <Link
                 href="/tv/on-the-air"
-                className="block text-sm text-body text-muted-foreground hover:text-foreground transition-colors"
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 On The Air
               </Link>
@@ -70,23 +70,23 @@ export function Footer() {
 
           {/* Support & Legal */}
           <div className="space-y-3">
-            <h3 className="text-base text-noir-subheading">Support</h3>
+            <h3 className="font-semibold">Support</h3>
             <div className="space-y-2">
               <Link
                 href="/about"
-                className="block text-sm text-body text-muted-foreground hover:text-foreground transition-colors"
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 About Us
               </Link>
               <Link
                 href="/privacy"
-                className="block text-sm text-body text-muted-foreground hover:text-foreground transition-colors"
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/terms"
-                className="block text-sm text-body text-muted-foreground hover:text-foreground transition-colors"
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Terms of Service
               </Link>
@@ -96,11 +96,11 @@ export function Footer() {
 
         {/* Bottom */}
         <div className="mt-8 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="text-sm text-body text-muted-foreground">
+          <div className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} FilmFatale All rights reserved.
           </div>
 
-          <div className="flex items-center space-x-4 text-sm text-body text-muted-foreground">
+          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
             <span>Powered by</span>
             <Link
               href="https://www.themoviedb.org/"

@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Pin } from "lucide-react";
+import { Pin } from "lucide-react";
 import { cn, formatVoteAverage } from "@/lib/utils";
 import { getImageUrl } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
+import { RatingBadge } from "@/components/ui/rating-badge";
 import { Card } from "@/components/ui/card";
 import { ViewAllButton } from "@/components/ui/view-all-button";
 import type { Movie, TVShow } from "@/lib/types";
@@ -35,7 +36,7 @@ export function FeaturedSection({
     <section className={cn("space-y-8", className)}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl text-serif-heading">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight">
             {title}
           </h2>
           {showTrending && (
@@ -79,7 +80,7 @@ export function FeaturedSection({
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
-                      <span className="text-sm text-body">No Image</span>
+                      <span className="text-sm text-sm">No Image</span>
                     </div>
                   )}
 
@@ -89,25 +90,20 @@ export function FeaturedSection({
                   {/* Content positioning */}
                   <div className="absolute inset-0 flex flex-col justify-end p-4">
                     <div className="space-y-3">
-                      <h3 className="text-serif-subheading text-xl text-white leading-tight line-clamp-2">
+                      <h3 className="font-serif font-semibold text-xl text-white dark:text-white leading-tight line-clamp-2">
                         {title}
                       </h3>
 
                       <div className="flex items-center gap-2">
                         {item.vote_average > 0 && (
-                          <Badge
-                            variant="secondary"
-                            className="gap-1 glass-subtle text-xs"
-                          >
-                            <Star className="h-3 w-3 fill-current" />
-                            <span className="text-readable">{rating}</span>
-                          </Badge>
+                          <RatingBadge
+                            rating={rating}
+                            variant="overlay"
+                            size="sm"
+                          />
                         )}
                         {releaseDate && (
-                          <Badge
-                            variant="outline"
-                            className="text-xs border-white/30 text-white"
-                          >
+                          <Badge variant="outline" className="text-xs">
                             {new Date(releaseDate).getFullYear()}
                           </Badge>
                         )}

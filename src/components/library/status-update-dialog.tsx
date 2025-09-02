@@ -127,7 +127,7 @@ export function StatusUpdateDialog({
                     <Star
                       className={`h-5 w-5 ${
                         starValue <= rating
-                          ? "fill-yellow-400 text-yellow-400"
+                          ? "fill-accent text-accent"
                           : "text-muted-foreground"
                       }`}
                     />

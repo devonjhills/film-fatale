@@ -34,7 +34,7 @@ export function Navigation() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 w-full border-b glass-strong">
+    <nav className="fixed top-0 left-0 right-0 z-50 w-full border-b glass-card">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between w-full">
           {/* Left: Logo */}
@@ -59,26 +59,26 @@ export function Navigation() {
             <div className="flex items-center space-x-1">
               <NextLink
                 href="/"
-                className="nav-link inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm text-readable transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Movies
               </NextLink>
               <NextLink
                 href="/tv"
-                className="nav-link inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm text-readable transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 TV Shows
               </NextLink>
               <NextLink
                 href="/search"
-                className="nav-link inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm text-readable transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Search
               </NextLink>
               {user && (
                 <NextLink
                   href="/library"
-                  className="nav-link inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm text-readable transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   My Library
                 </NextLink>
@@ -108,7 +108,7 @@ export function Navigation() {
                 <Button
                   variant="ghost"
                   size="lg"
-                  className="h-12 w-12 p-0 rounded-lg"
+                  className="h-12 w-12 p-0 rounded-lg cursor-pointer hover:bg-primary/10"
                 >
                   {user ? (
                     <div className="relative">
@@ -128,7 +128,7 @@ export function Navigation() {
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" className="w-56 p-2">
                 {user ? (
                   <>
                     <DropdownMenuLabel className="flex items-center gap-3 py-3">
@@ -140,10 +140,10 @@ export function Navigation() {
                             : "U"}
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm text-readable text-foreground">
+                        <span className="text-sm font-medium">
                           {user.name || "User"}
                         </span>
-                        <span className="text-xs text-body text-muted-foreground truncate">
+                        <span className="text-xs text-muted-foreground truncate">
                           {user.email}
                         </span>
                       </div>
@@ -151,26 +151,26 @@ export function Navigation() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => router.push("/library")}
-                      className="flex items-center py-2.5"
+                      className="flex items-center py-2.5 cursor-pointer hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary rounded-md transition-colors"
                     >
-                      <Bookmark className="h-4 w-4 mr-3 text-muted-foreground" />
-                      <span className="text-readable">My Library</span>
+                      <Bookmark className="h-4 w-4 mr-3" />
+                      <span className="font-medium">My Library</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => signOut()}
-                      className="flex items-center py-2.5 text-destructive focus:text-destructive"
+                      className="flex items-center py-2.5 text-destructive hover:text-destructive focus:text-destructive cursor-pointer hover:bg-destructive/10 focus:bg-destructive/10 rounded-md transition-colors"
                     >
                       <LogOut className="h-4 w-4 mr-3" />
-                      <span className="text-readable">Sign Out</span>
+                      <span className="font-medium">Sign Out</span>
                     </DropdownMenuItem>
                   </>
                 ) : (
                   <DropdownMenuItem
                     onClick={() => router.push("/signin")}
-                    className="flex items-center py-2.5"
+                    className="flex items-center py-2.5 cursor-pointer hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary rounded-md transition-colors"
                   >
-                    <User className="h-4 w-4 mr-3 text-muted-foreground" />
-                    <span className="text-readable">Sign In</span>
+                    <User className="h-4 w-4 mr-3" />
+                    <span className="font-medium">Sign In</span>
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
@@ -201,21 +201,21 @@ export function Navigation() {
             <div className="flex flex-col space-y-2">
               <NextLink
                 href="/"
-                className="block px-4 py-3 text-sm text-readable text-foreground hover:bg-accent hover:text-accent-foreground rounded-lg mx-2"
+                className="block px-4 py-3 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-lg mx-2 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Movies
               </NextLink>
               <NextLink
                 href="/tv"
-                className="block px-4 py-3 text-sm text-readable text-foreground hover:bg-accent hover:text-accent-foreground rounded-lg mx-2"
+                className="block px-4 py-3 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-lg mx-2 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 TV Shows
               </NextLink>
               <NextLink
                 href="/search"
-                className="block px-4 py-3 text-sm text-readable text-foreground hover:bg-accent hover:text-accent-foreground rounded-lg mx-2"
+                className="block px-4 py-3 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-lg mx-2 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Search
@@ -223,7 +223,7 @@ export function Navigation() {
               {user && (
                 <NextLink
                   href="/library"
-                  className="block px-4 py-3 text-sm text-readable text-foreground hover:bg-accent hover:text-accent-foreground rounded-lg mx-2"
+                  className="block px-4 py-3 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-lg mx-2 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   My Library

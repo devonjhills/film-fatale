@@ -130,12 +130,12 @@ export function RotatingHeroSection({
         </>
       )}
 
-      <div className="absolute inset-0 flex items-center justify-center p-12 z-10">
+      <div className="absolute inset-0 flex items-center justify-center p-6 md:p-12 z-10">
         <div className="container mx-auto">
-          <div className="glass-strong rounded-xl p-8 md:p-12 max-w-6xl mx-auto">
+          <div className="glass-hero rounded-lg p-6 md:p-10 max-w-5xl mx-auto">
             <div className="flex items-center gap-8">
               {/* Poster Container with Multiple Images */}
-              <div className="w-36 md:w-48 aspect-[2/3] relative rounded-lg overflow-hidden shadow-lg flex-shrink-0">
+              <div className="w-32 md:w-44 aspect-[2/3] relative rounded-md overflow-hidden shadow-lg flex-shrink-0">
                 {currentItem.poster_path ? (
                   <OptimizedImage
                     key={`hero-poster-${currentItem.id}`}
@@ -167,7 +167,7 @@ export function RotatingHeroSection({
               </div>
 
               <div className="flex-1 space-y-4">
-                <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-serif-heading leading-tight drop-shadow-2xl">
+                <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold tracking-tight leading-tight drop-shadow-2xl text-foreground">
                   {"title" in currentItem
                     ? currentItem.title
                     : currentItem.name}
@@ -188,7 +188,7 @@ export function RotatingHeroSection({
                 </div>
 
                 {currentItem.overview && (
-                  <p className="text-base md:text-lg leading-relaxed line-clamp-3 max-w-3xl text-body">
+                  <p className="text-sm md:text-base leading-relaxed line-clamp-3 max-w-3xl text-foreground/85 drop-shadow-lg">
                     {currentItem.overview}
                   </p>
                 )}

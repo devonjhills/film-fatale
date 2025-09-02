@@ -110,7 +110,7 @@ export function EpisodeProgress({
                   variant="outline"
                   onClick={markNextEpisodeWatched}
                   disabled={isUpdating}
-                  className="h-7 w-7 p-0 hover:bg-accent hover:border-primary transition-colors duration-200"
+                  className="h-7 w-7 p-0 hover:bg-primary/10 hover:border-primary transition-colors duration-200"
                 >
                   {isUpdating ? (
                     <div className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />

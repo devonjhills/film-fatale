@@ -83,14 +83,10 @@ export function PersonCreditsCard({
 
               {rating && rating > 0 && (
                 <div className="flex items-center gap-1">
-                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                  <Star className="h-3 w-3 fill-accent text-accent" />
                   <span className="font-medium">{rating}</span>
                 </div>
               )}
-
-              <Badge variant="outline" className="text-xs px-1.5 py-0.5 h-auto">
-                {credit.media_type === "movie" ? "Movie" : "TV"}
-              </Badge>
             </div>
           </div>
         </div>

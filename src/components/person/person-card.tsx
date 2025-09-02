@@ -76,10 +76,10 @@ export function PersonCard({
 
               {/* Text overlay at bottom */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent p-3">
-                <h4 className="font-serif font-semibold text-white text-sm leading-tight line-clamp-2 mb-1 drop-shadow-lg">
+                <h4 className="font-serif font-semibold text-white dark:text-white text-sm leading-tight line-clamp-2 mb-1 drop-shadow-lg">
                   {person.name}
                 </h4>
-                <p className="text-xs text-white/80 line-clamp-1 font-medium">
+                <p className="text-xs text-white/80 dark:text-white/80 line-clamp-1 font-medium">
                   {role}
                 </p>
               </div>
