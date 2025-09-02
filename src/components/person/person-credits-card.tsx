@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Film, Calendar, Star } from "lucide-react";
 import { getImageUrl } from "@/lib/api";
 

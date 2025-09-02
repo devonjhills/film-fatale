@@ -7,7 +7,6 @@ interface TVCardProps {
   size?: "sm" | "md" | "lg";
   showYear?: boolean;
   showRating?: boolean;
-  showOverview?: boolean;
 }
 
 export function TVCard(props: TVCardProps) {
@@ -19,7 +18,6 @@ export function TVCard(props: TVCardProps) {
       size={props.size}
       showYear={props.showYear}
       showRating={props.showRating}
-      showOverview={props.showOverview}
     />
   );
 }

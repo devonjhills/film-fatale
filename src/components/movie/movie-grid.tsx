@@ -9,7 +9,6 @@ interface MovieGridProps {
   cardSize?: "sm" | "md" | "lg";
   showYear?: boolean;
   showRating?: boolean;
-  showOverview?: boolean;
   emptyMessage?: string;
 }
 
@@ -24,7 +23,6 @@ export function MovieGrid(props: MovieGridProps) {
       cardSize={props.cardSize}
       showYear={props.showYear}
       showRating={props.showRating}
-      showOverview={props.showOverview}
     />
   );
 }

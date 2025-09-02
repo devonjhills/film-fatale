@@ -80,7 +80,7 @@ export function FeaturedSection({
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
-                      <span className="text-sm text-sm">No Image</span>
+                      <span className="text-sm">No Image</span>
                     </div>
                   )}
 

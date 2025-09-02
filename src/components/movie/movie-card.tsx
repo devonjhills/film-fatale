@@ -7,7 +7,6 @@ interface MovieCardProps {
   size?: "sm" | "md" | "lg";
   showYear?: boolean;
   showRating?: boolean;
-  showOverview?: boolean;
   priority?: boolean;
 }
 
@@ -20,7 +19,6 @@ export function MovieCard(props: MovieCardProps) {
       size={props.size}
       showYear={props.showYear}
       showRating={props.showRating}
-      showOverview={props.showOverview}
       priority={props.priority}
     />
   );

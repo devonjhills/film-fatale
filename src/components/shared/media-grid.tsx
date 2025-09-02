@@ -13,7 +13,6 @@ interface MediaGridProps {
   cardSize?: "sm" | "md" | "lg";
   showYear?: boolean;
   showRating?: boolean;
-  showOverview?: boolean;
   columns?: {
     sm?: number;
     md?: number;
@@ -31,7 +30,6 @@ export function MediaGrid({
   cardSize = "md",
   showYear = true,
   showRating = true,
-  showOverview = false,
   columns = { sm: 2, md: 4, lg: 5, xl: 6 },
 }: MediaGridProps) {
   // Handle loading state
@@ -96,7 +94,6 @@ export function MediaGrid({
           size={cardSize}
           showYear={showYear}
           showRating={showRating}
-          showOverview={showOverview}
           priority={index < 8} // Prioritize first 8 images for better top row coverage
         />
       ))}

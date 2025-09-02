@@ -23,7 +23,6 @@ interface MediaCardProps {
   size?: "sm" | "md" | "lg";
   showYear?: boolean;
   showRating?: boolean;
-  showOverview?: boolean;
   priority?: boolean;
 }
 

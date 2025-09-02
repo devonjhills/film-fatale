@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { MediaGrid } from "@/components/shared/media-grid";
 import { PaginatedContent } from "@/components/ui/paginated-content";
 import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";

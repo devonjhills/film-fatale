@@ -35,7 +35,6 @@ interface MediaSectionProps {
   cardSize?: "sm" | "md" | "lg";
   showYear?: boolean;
   showRating?: boolean;
-  showOverview?: boolean;
 }
 
 const badgeIcons: Record<
@@ -62,7 +61,6 @@ export function MediaSection({
   cardSize = "md",
   showYear = true,
   showRating = true,
-  showOverview = false,
 }: MediaSectionProps) {
   const displayItems = items.slice(0, limit);
 
@@ -117,7 +115,6 @@ export function MediaSection({
           cardSize={cardSize}
           showYear={showYear}
           showRating={showRating}
-          showOverview={showOverview}
         />
       </section>
     </InViewAnimation>

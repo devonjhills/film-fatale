@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import {
   Calendar,
@@ -420,7 +419,6 @@ export function MovieDetailsPage({ movieId }: MovieDetailsPageProps) {
                   cardSize="md"
                   showYear={true}
                   showRating={true}
-                  showOverview={false}
                 />
               </CardContent>
             </Card>

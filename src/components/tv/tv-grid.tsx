@@ -9,7 +9,6 @@ interface TVGridProps {
   cardSize?: "sm" | "md" | "lg";
   showYear?: boolean;
   showRating?: boolean;
-  showOverview?: boolean;
   emptyMessage?: string;
 }
 
@@ -24,7 +23,6 @@ export function TVGrid(props: TVGridProps) {
       cardSize={props.cardSize}
       showYear={props.showYear}
       showRating={props.showRating}
-      showOverview={props.showOverview}
     />
   );
 }
