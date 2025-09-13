@@ -4,50 +4,50 @@
 
 @layer base {
   :root {
-    /* Modern Film Noir Light Theme - Sophisticated & Elegant */
-    --background: 220 15% 97%; /* Cool pearl white */
-    --foreground: 220 40% 8%; /* Rich midnight blue */
-    --card: 220 20% 98%; /* Pristine white cards */
-    --card-foreground: 220 40% 8%;
-    --popover: 220 20% 98%;
-    --popover-foreground: 220 40% 8%;
-    --primary: 220 60% 25%; /* Deeper midnight blue */
-    --primary-foreground: 220 15% 97%;
-    --secondary: 220 15% 88%; /* Soft silver */
-    --secondary-foreground: 220 40% 15%;
-    --muted: 220 10% 90%; /* Light ash */
-    --muted-foreground: 220 20% 40%;
-    --accent: 25 70% 55%; /* Warm amber gold */
-    --accent-foreground: 220 40% 8%;
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 220 15% 97%;
-    --border: 220 15% 85%;
-    --input: 220 10% 94%;
-    --ring: 220 60% 25%;
-    --radius: 0.75rem;
+    /* Film Noir Material Light Theme - Clean & Accessible */
+    --background: 0 0% 100%; /* Pure white */
+    --foreground: 222 47% 11%; /* Deep charcoal */
+    --card: 0 0% 100%; /* Pure white cards */
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 222 47% 11%; /* Deep charcoal primary */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 210 40% 96%; /* Soft blue-gray */
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%; /* Subtle background */
+    --muted-foreground: 215 16% 47%; /* Medium gray */
+    --accent: 24 88% 50%; /* Warm amber accent */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 214 32% 91%; /* Light border */
+    --input: 214 32% 91%;
+    --ring: 222 47% 11%;
+    --radius: 0.5rem;
   }
 
   .dark {
-    /* Modern Film Noir Dark Theme - Dramatic & Moody */
-    --background: 220 30% 3%; /* Deep noir blue-black */
-    --foreground: 35 25% 92%; /* Warm platinum */
-    --card: 220 25% 6%; /* Shadow blue-black */
-    --card-foreground: 35 25% 92%;
-    --popover: 220 25% 6%;
-    --popover-foreground: 35 25% 92%;
-    --primary: 25 75% 65%; /* Warm golden amber */
-    --primary-foreground: 220 30% 3%;
-    --secondary: 220 20% 12%; /* Dark slate */
-    --secondary-foreground: 35 20% 85%;
-    --muted: 220 15% 8%; /* Deep shadow */
-    --muted-foreground: 220 10% 65%;
-    --accent: 35 60% 50%; /* Rich bronze gold */
-    --accent-foreground: 220 25% 95%;
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 35 25% 92%;
-    --border: 220 20% 15%;
-    --input: 220 15% 8%;
-    --ring: 25 75% 65%;
+    /* Film Noir Material Dark Theme - Smooth & Accessible */
+    --background: 222 84% 4%; /* Rich dark charcoal */
+    --foreground: 213 31% 91%; /* Clean light gray */
+    --card: 222 84% 5%; /* Subtle card elevation */
+    --card-foreground: 213 31% 91%;
+    --popover: 222 84% 5%;
+    --popover-foreground: 213 31% 91%;
+    --primary: 213 31% 91%; /* Light foreground as primary */
+    --primary-foreground: 222 84% 4%;
+    --secondary: 217 33% 17%; /* Balanced dark surface */
+    --secondary-foreground: 213 31% 91%;
+    --muted: 217 33% 17%; /* Consistent muted surface */
+    --muted-foreground: 215 20% 65%; /* Readable muted text */
+    --accent: 24 88% 50%; /* Consistent amber accent */
+    --accent-foreground: 222 84% 4%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 213 31% 91%;
+    --border: 217 33% 17%; /* Subtle borders */
+    --input: 217 33% 17%;
+    --ring: 213 31% 91%;
   }
 }
 
@@ -61,6 +61,9 @@
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
   h1,
@@ -75,44 +78,47 @@
 
 @layer utilities {
   .glass-card {
-    @apply bg-card/95 backdrop-blur-sm border border-border/50 shadow-lg;
+    @apply bg-card/95 backdrop-blur-sm border border-border shadow-lg;
+    transition: all 0.2s ease;
   }
 
   .glass-hero {
-    @apply bg-background/70 backdrop-blur-lg border border-border/40 shadow-2xl;
+    @apply bg-background/85 backdrop-blur-md border border-border/60 shadow-xl;
+    transition: all 0.3s ease;
   }
 
   .dark .glass-hero {
-    @apply bg-background/60 border-border/30;
+    @apply bg-background/80 border-border/40;
   }
 
   .glass-section {
-    @apply bg-card/80 backdrop-blur-sm border border-border/30 shadow-lg;
+    @apply bg-card/90 backdrop-blur-sm border border-border/60 shadow-md;
+    transition: all 0.2s ease;
   }
 
   .section-gradient-primary {
     background: linear-gradient(
       135deg,
-      hsl(var(--primary) / 0.06) 0%,
-      hsl(var(--accent) / 0.08) 50%,
-      hsl(var(--primary) / 0.04) 100%
+      hsl(var(--muted) / 0.3) 0%,
+      hsl(var(--accent) / 0.05) 50%,
+      hsl(var(--muted) / 0.2) 100%
     );
   }
 
   .section-gradient-secondary {
     background: linear-gradient(
       225deg,
-      hsl(var(--accent) / 0.04) 0%,
-      hsl(var(--muted) / 0.15) 50%,
-      hsl(var(--secondary) / 0.08) 100%
+      hsl(var(--accent) / 0.03) 0%,
+      hsl(var(--muted) / 0.2) 50%,
+      hsl(var(--secondary) / 0.1) 100%
     );
   }
 
   .section-gradient-accent {
     background: linear-gradient(
       45deg,
-      hsl(var(--accent) / 0.03) 0%,
-      hsl(var(--primary) / 0.05) 100%
+      hsl(var(--accent) / 0.02) 0%,
+      hsl(var(--muted) / 0.1) 100%
     );
   }
 
@@ -134,8 +140,8 @@
     @apply fixed inset-0 -z-[9] pointer-events-none;
     background: linear-gradient(
       to bottom,
-      hsl(var(--background) / 0.1) 0%,
-      hsl(var(--background) / 0.7) 70%,
+      hsl(var(--background) / 0.2) 0%,
+      hsl(var(--background) / 0.8) 60%,
       hsl(var(--background)) 100%
     );
   }
@@ -163,5 +169,12 @@
     .animate-fade-in-up {
       animation: none;
     }
+  }
+
+  .text-shadow-strong {
+    text-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.8),
+      0 4px 8px rgba(0, 0, 0, 0.6),
+      0 8px 16px rgba(0, 0, 0, 0.4);
   }
 }

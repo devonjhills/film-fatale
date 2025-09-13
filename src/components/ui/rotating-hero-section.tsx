@@ -107,7 +107,10 @@ export function RotatingHeroSection({
           />
         );
       })}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+      {/* Multiple overlays for better text legibility */}
+      <div className="absolute inset-0 bg-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30" />
 
       {featuredItems.length > 1 && (
         <>
@@ -130,77 +133,51 @@ export function RotatingHeroSection({
         </>
       )}
 
-      <div className="absolute inset-0 flex items-center justify-center p-6 md:p-12 z-10">
+      <div className="absolute inset-0 flex items-end p-6 md:p-12 z-10">
         <div className="container mx-auto">
-          <div className="glass-hero rounded-lg p-6 md:p-10 max-w-5xl mx-auto">
-            <div className="flex items-center gap-8">
-              {/* Poster Container with Multiple Images */}
-              <div className="w-32 md:w-44 aspect-[2/3] relative rounded-md overflow-hidden shadow-lg flex-shrink-0">
-                {currentItem.poster_path ? (
-                  <OptimizedImage
-                    key={`hero-poster-${currentItem.id}`}
-                    src={getImageUrl(currentItem.poster_path, "poster", "w342")}
-                    alt={
-                      "title" in currentItem
-                        ? currentItem.title
-                        : currentItem.name
-                    }
-                    fill
-                    aspectRatio="poster"
-                    className="object-cover"
-                    quality={85}
-                    priority
-                    sizes="(max-width: 768px) 144px, 192px"
-                  />
-                ) : null}
+          <div className="max-w-4xl">
+            <div className="space-y-6">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold tracking-tight leading-tight text-white drop-shadow-2xl text-shadow-strong">
+                {"title" in currentItem ? currentItem.title : currentItem.name}
+              </h1>
 
-                {/* Fallback for items without posters */}
-                {!currentItem.poster_path && (
-                  <div className="absolute inset-0 bg-muted/50 rounded-lg flex items-center justify-center">
-                    {mediaType === "movie" ? (
-                      <Info className="h-16 w-16 text-muted-foreground" />
-                    ) : (
-                      <Play className="h-16 w-16 text-muted-foreground" />
-                    )}
-                  </div>
+              <div className="flex flex-wrap items-center gap-3">
+                {currentItem.vote_average > 0 && (
+                  <Badge
+                    variant="secondary"
+                    className="gap-1 bg-black/60 text-white border-white/20"
+                  >
+                    <Star className="h-4 w-4 fill-current" />
+                    {rating}
+                  </Badge>
+                )}
+                {releaseDate && (
+                  <Badge
+                    variant="outline"
+                    className="bg-black/40 text-white border-white/30"
+                  >
+                    {new Date(releaseDate).getFullYear()}
+                  </Badge>
                 )}
               </div>
 
-              <div className="flex-1 space-y-4">
-                <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold tracking-tight leading-tight drop-shadow-2xl text-foreground">
-                  {"title" in currentItem
-                    ? currentItem.title
-                    : currentItem.name}
-                </h1>
+              {currentItem.overview && (
+                <p className="text-base md:text-lg leading-relaxed line-clamp-2 max-w-2xl text-white/90 drop-shadow-lg">
+                  {currentItem.overview}
+                </p>
+              )}
 
-                <div className="flex flex-wrap items-center gap-3">
-                  {currentItem.vote_average > 0 && (
-                    <Badge variant="secondary" className="gap-1">
-                      <Star className="h-4 w-4 fill-current" />
-                      {rating}
-                    </Badge>
-                  )}
-                  {releaseDate && (
-                    <Badge variant="outline">
-                      {new Date(releaseDate).getFullYear()}
-                    </Badge>
-                  )}
-                </div>
-
-                {currentItem.overview && (
-                  <p className="text-sm md:text-base leading-relaxed line-clamp-3 max-w-3xl text-foreground/85 drop-shadow-lg">
-                    {currentItem.overview}
-                  </p>
-                )}
-
-                <div className="flex flex-wrap gap-3">
-                  <Button asChild>
-                    <Link href={`/${mediaType}/${currentItem.id}`}>
-                      <Info className="h-4 w-4 mr-2" />
-                      View Details
-                    </Link>
-                  </Button>
-                </div>
+              <div className="flex gap-3 pt-2">
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-white text-black hover:bg-white/90"
+                >
+                  <Link href={`/${mediaType}/${currentItem.id}`}>
+                    <Info className="h-4 w-4 mr-2" />
+                    More Info
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>

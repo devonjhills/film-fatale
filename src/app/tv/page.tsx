@@ -9,46 +9,51 @@ export default async function TVPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Rotating Hero Section for TV */}
+      {/* Hero Section */}
       {featured.length > 0 && (
         <RotatingHeroSection
           items={featured}
           mediaType="tv"
-          className="mb-8 sm:mb-12 md:mb-16"
+          className="mb-16"
         />
       )}
 
-      {/* TV Show Sections */}
-      <div className="container mx-auto px-4 space-y-10 md:space-y-16 pb-8 md:pb-12">
-        {/* Binge-Worthy Series - Featured Layout */}
-        <FeaturedSection
-          title="Binge-Worthy Series"
-          items={popular}
-          mediaType="tv"
-          limit={6}
-          showTrending={true}
-          viewAllHref="/tv/popular"
-        />
-
+      {/* Content Sections */}
+      <div className="container mx-auto px-4 space-y-20 pb-16">
         {/* On The Air */}
-        <MediaSection
-          title="On The Air"
-          items={onTheAir}
-          mediaType="tv"
-          href="/tv/on-the-air"
-          limit={12}
-          badge="Playing Now"
-        />
+        <section>
+          <MediaSection
+            title="On The Air"
+            items={onTheAir}
+            mediaType="tv"
+            href="/tv/on-the-air"
+            limit={12}
+            badge="Airing Now"
+          />
+        </section>
+
+        {/* Popular */}
+        <section>
+          <MediaSection
+            title="Popular TV Shows"
+            items={popular}
+            mediaType="tv"
+            href="/tv/popular"
+            limit={12}
+          />
+        </section>
 
         {/* Top Rated */}
-        <MediaSection
-          title="Top Rated"
-          items={topRated}
-          mediaType="tv"
-          href="/tv/top-rated"
-          limit={12}
-          badge="Critics' Choice"
-        />
+        <section>
+          <MediaSection
+            title="Top Rated"
+            items={topRated}
+            mediaType="tv"
+            href="/tv/top-rated"
+            limit={12}
+            badge="Critics' Choice"
+          />
+        </section>
       </div>
     </div>
   );

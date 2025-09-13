@@ -33,10 +33,10 @@ export function FeaturedSection({
   if (featuredItems.length === 0) return null;
 
   return (
-    <section className={cn("space-y-8", className)}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight">
+    <section className={cn("space-y-10", className)}>
+      <div className="flex items-end justify-between">
+        <div className="space-y-2">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold tracking-tight">
             {title}
           </h2>
           {showTrending && (
@@ -49,7 +49,7 @@ export function FeaturedSection({
         {viewAllHref && <ViewAllButton href={viewAllHref} />}
       </div>
 
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {featuredItems.map((item, index) => {
           const title =
             "title" in item ? item.title : "name" in item ? item.name : "";
@@ -68,7 +68,7 @@ export function FeaturedSection({
 
           return (
             <Link key={item.id} href={`/${mediaType}/${item.id}`}>
-              <Card className="group transition-all duration-300 hover:shadow-lg hover:scale-[1.02] h-[240px] overflow-hidden">
+              <Card className="group transition-all duration-200 hover:shadow-xl hover:scale-[1.02] h-[280px] overflow-hidden">
                 <div className="relative h-full">
                   {backdropUrl ? (
                     <Image
@@ -85,12 +85,12 @@ export function FeaturedSection({
                   )}
 
                   {/* Enhanced gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
                   {/* Content positioning */}
-                  <div className="absolute inset-0 flex flex-col justify-end p-4">
+                  <div className="absolute inset-0 flex flex-col justify-end p-5">
                     <div className="space-y-3">
-                      <h3 className="font-serif font-semibold text-xl text-white dark:text-white leading-tight line-clamp-2">
+                      <h3 className="font-serif font-semibold text-xl text-white leading-tight line-clamp-2">
                         {title}
                       </h3>
 
@@ -103,7 +103,10 @@ export function FeaturedSection({
                           />
                         )}
                         {releaseDate && (
-                          <Badge variant="outline" className="text-xs">
+                          <Badge
+                            variant="outline"
+                            className="text-xs bg-white/10 text-white border-white/20"
+                          >
                             {new Date(releaseDate).getFullYear()}
                           </Badge>
                         )}
@@ -112,7 +115,7 @@ export function FeaturedSection({
                   </div>
 
                   {/* Hover effect overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-accent/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                 </div>
               </Card>
             </Link>
