@@ -61,6 +61,8 @@
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
+    /* Prevent layout shift from scrollbar appearing/disappearing */
+    overflow-y: scroll;
   }
 
   h1,

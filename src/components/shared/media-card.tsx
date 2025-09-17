@@ -63,8 +63,13 @@ export function MediaCard({
   return (
     <div className={cn(sizeClasses[size], "group h-full")}>
       <Link href={`/${mediaType}/${item.id}`} className="block h-full">
-        <div className={cn("space-y-3 h-full flex flex-col", className)}>
-          <div className="relative aspect-[2/3] overflow-hidden rounded-md elevation-1 group-hover:elevation-2 flex-shrink-0">
+        <div
+          className={cn(
+            "space-y-3 h-full flex flex-col transition-all duration-300",
+            className,
+          )}
+        >
+          <div className="relative aspect-[2/3] overflow-hidden rounded-md elevation-1 group-hover:elevation-3 transition-all duration-300 flex-shrink-0">
             {imageUrl ? (
               <OptimizedImage
                 src={imageUrl}
@@ -91,12 +96,12 @@ export function MediaCard({
             )}
           </div>
 
-          <div className="space-y-1 flex-grow flex flex-col justify-start min-h-0">
-            <h3 className="font-medium text-sm leading-tight line-clamp-2">
+          <div className="space-y-1.5 flex-grow flex flex-col justify-start min-h-0">
+            <h3 className="font-semibold text-sm leading-tight line-clamp-2 tracking-tight group-hover:text-primary transition-colors duration-200">
               {title}
             </h3>
             {showYear && releaseDate && (
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground font-medium">
                 {new Date(releaseDate).getFullYear()}
               </p>
             )}

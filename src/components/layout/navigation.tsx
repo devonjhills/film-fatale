@@ -60,7 +60,7 @@ export function Navigation() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 w-full bg-background border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 w-full bg-background/95 backdrop-blur-md border-b border-border elevation-2">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center w-full relative">
           {/* Left: Logo */}
@@ -85,20 +85,20 @@ export function Navigation() {
             <div className="flex items-center space-x-1">
               <NextLink
                 href="/"
-                className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-muted hover:elevation-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Movies
               </NextLink>
               <NextLink
                 href="/tv"
-                className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-muted hover:elevation-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 TV Shows
               </NextLink>
               {user && (
                 <NextLink
                   href="/library"
-                  className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-muted hover:elevation-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   My Library
                 </NextLink>
@@ -124,8 +124,13 @@ export function Navigation() {
             </form>
 
             {/* Mobile Search Icon - Show on small screens */}
-            <NextLink href="/search" className="md:hidden">
-              <Button variant="ghost" size="icon" aria-label="Search">
+            <NextLink href="/search" className="md:hidden flex-shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Search"
+                className="flex-shrink-0"
+              >
                 <Search className="h-5 w-5" />
               </Button>
             </NextLink>
@@ -134,7 +139,7 @@ export function Navigation() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="md:hidden flex-shrink-0"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -145,9 +150,13 @@ export function Navigation() {
               )}
             </Button>
             {/* Auth Dropdown */}
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="cursor-pointer">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="cursor-pointer flex-shrink-0"
+                >
                   {user ? (
                     <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
                       {user.email
@@ -161,7 +170,12 @@ export function Navigation() {
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 p-2">
+              <DropdownMenuContent
+                align="end"
+                className="w-56 p-2 elevation-3"
+                sideOffset={5}
+                alignOffset={0}
+              >
                 {user ? (
                   <>
                     <DropdownMenuLabel className="flex items-center gap-3 py-3">
@@ -214,6 +228,7 @@ export function Navigation() {
               variant="ghost"
               size="icon"
               aria-label="Toggle theme"
+              className="flex-shrink-0"
             >
               {!mounted ? (
                 // Show a neutral icon during SSR to prevent hydration mismatch
@@ -229,7 +244,7 @@ export function Navigation() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-border/30 py-4">
+          <div className="md:hidden border-t border-border/30 py-4 bg-background/95 backdrop-blur-md elevation-1">
             <div className="flex flex-col space-y-3">
               {/* Mobile Search */}
               <div className="px-2">
@@ -248,14 +263,14 @@ export function Navigation() {
               </div>
               <NextLink
                 href="/"
-                className="block px-4 py-3 text-sm font-medium hover:bg-muted rounded-md mx-2"
+                className="block px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-muted hover:elevation-1 rounded-md mx-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Movies
               </NextLink>
               <NextLink
                 href="/tv"
-                className="block px-4 py-3 text-sm font-medium hover:bg-muted rounded-md mx-2"
+                className="block px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-muted hover:elevation-1 rounded-md mx-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 TV Shows
@@ -263,7 +278,7 @@ export function Navigation() {
               {user && (
                 <NextLink
                   href="/library"
-                  className="block px-4 py-3 text-sm font-medium hover:bg-muted rounded-md mx-2"
+                  className="block px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-muted hover:elevation-1 rounded-md mx-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   My Library

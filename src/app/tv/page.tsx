@@ -6,20 +6,20 @@ export default async function TVPage() {
   const { onTheAir, topRated } = await fetchFeaturedTVShows();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       {onTheAir.length > 0 && (
         <RotatingHeroSection
           items={onTheAir.slice(0, 5)}
           mediaType="tv"
-          className="mb-16"
+          className="mb-20"
         />
       )}
 
       {/* Content Sections */}
-      <div className="container mx-auto px-4 space-y-20 pb-16">
+      <div className="container mx-auto px-4 space-y-24 pb-20">
         {/* On The Air */}
-        <section>
+        <section className="space-y-8">
           <MediaSection
             title="On The Air"
             items={onTheAir}
@@ -30,8 +30,11 @@ export default async function TVPage() {
           />
         </section>
 
+        {/* Divider */}
+        <div className="divider opacity-30" />
+
         {/* Top Rated */}
-        <section>
+        <section className="space-y-8">
           <MediaSection
             title="Top Rated"
             items={topRated}

@@ -6,20 +6,20 @@ export default async function Home() {
   const { nowPlaying, topRated } = await fetchFeaturedMovies();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       {nowPlaying.length > 0 && (
         <RotatingHeroSection
           items={nowPlaying.slice(0, 5)}
           mediaType="movie"
-          className="mb-16"
+          className="mb-20"
         />
       )}
 
       {/* Content Sections */}
-      <div className="container mx-auto px-4 space-y-20 pb-16">
+      <div className="container mx-auto px-4 space-y-24 pb-20">
         {/* Now Playing */}
-        <section>
+        <section className="space-y-8">
           <MediaSection
             title="Now Playing"
             items={nowPlaying}
@@ -30,8 +30,11 @@ export default async function Home() {
           />
         </section>
 
+        {/* Divider */}
+        <div className="divider opacity-30" />
+
         {/* Top Rated */}
-        <section>
+        <section className="space-y-8">
           <MediaSection
             title="Top Rated"
             items={topRated}
