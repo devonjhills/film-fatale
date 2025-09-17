@@ -1,18 +1,16 @@
 import { RotatingHeroSection } from "@/components/ui/rotating-hero-section";
-import { FeaturedSection } from "@/components/ui/featured-section";
 import { MediaSection } from "@/components/shared/media-section";
 import { fetchFeaturedTVShows } from "@/lib/data-fetching";
 
 export default async function TVPage() {
-  const { onTheAir, popular, topRated, featured } =
-    await fetchFeaturedTVShows();
+  const { onTheAir, topRated } = await fetchFeaturedTVShows();
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      {featured.length > 0 && (
+      {onTheAir.length > 0 && (
         <RotatingHeroSection
-          items={featured}
+          items={onTheAir.slice(0, 5)}
           mediaType="tv"
           className="mb-16"
         />
@@ -29,17 +27,6 @@ export default async function TVPage() {
             href="/tv/on-the-air"
             limit={12}
             badge="Airing Now"
-          />
-        </section>
-
-        {/* Popular */}
-        <section>
-          <MediaSection
-            title="Popular TV Shows"
-            items={popular}
-            mediaType="tv"
-            href="/tv/popular"
-            limit={12}
           />
         </section>
 

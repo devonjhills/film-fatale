@@ -16,11 +16,22 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/components/providers/auth-provider";
-import { Moon, Sun, LogOut, User, Bookmark, Menu, X } from "lucide-react";
+import {
+  Moon,
+  Sun,
+  LogOut,
+  User,
+  Bookmark,
+  Menu,
+  X,
+  Search,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export function Navigation() {
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const { user, signOut } = useAuth();
@@ -33,10 +44,25 @@ export function Navigation() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      const searchUrl = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
+
+      // Close mobile menu if open
+      setMobileMenuOpen(false);
+
+      // Always use push to ensure proper navigation and state updates
+      router.push(searchUrl);
+
+      setSearchQuery("");
+    }
+  };
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 w-full border-b glass-card">
+    <nav className="fixed top-0 left-0 right-0 z-50 w-full bg-background border-b border-border">
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between w-full">
+        <div className="flex h-16 items-center w-full relative">
           {/* Left: Logo */}
           <div className="flex-shrink-0">
             <Link
@@ -54,31 +80,25 @@ export function Navigation() {
             </Link>
           </div>
 
-          {/* Center: Navigation Links */}
-          <div className="hidden md:flex items-center justify-center flex-1">
+          {/* Center: Navigation Links - Absolutely centered on page */}
+          <div className="hidden md:flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
             <div className="flex items-center space-x-1">
               <NextLink
                 href="/"
-                className="inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Movies
               </NextLink>
               <NextLink
                 href="/tv"
-                className="inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 TV Shows
-              </NextLink>
-              <NextLink
-                href="/search"
-                className="inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                Search
               </NextLink>
               {user && (
                 <NextLink
                   href="/library"
-                  className="inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   My Library
                 </NextLink>
@@ -86,13 +106,35 @@ export function Navigation() {
             </div>
           </div>
 
-          {/* Right: Controls */}
-          <div className="flex items-center space-x-2 flex-shrink-0">
+          {/* Right: Search and Controls */}
+          <div className="flex items-center space-x-2 flex-shrink-0 ml-auto">
+            {/* Search Bar - Show on md+ screens */}
+            <form
+              onSubmit={handleSearch}
+              className="relative w-48 hidden md:flex"
+            >
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+              <Input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 h-10 w-full"
+              />
+            </form>
+
+            {/* Mobile Search Icon - Show on small screens */}
+            <NextLink href="/search" className="md:hidden">
+              <Button variant="ghost" size="icon" aria-label="Search">
+                <Search className="h-5 w-5" />
+              </Button>
+            </NextLink>
+
             {/* Mobile Menu Toggle */}
             <Button
               variant="ghost"
-              size="lg"
-              className="h-12 w-12 p-0 rounded-lg md:hidden"
+              size="icon"
+              className="md:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -105,26 +147,17 @@ export function Navigation() {
             {/* Auth Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  className="h-12 w-12 p-0 rounded-lg cursor-pointer hover:bg-primary/10"
-                >
+                <Button variant="ghost" size="icon" className="cursor-pointer">
                   {user ? (
-                    <div className="relative">
-                      {/* User Avatar with initials */}
-                      <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold border-2 border-primary/20">
-                        {user.email
-                          ? user.email.charAt(0).toUpperCase()
-                          : user.name
-                            ? user.name.charAt(0).toUpperCase()
-                            : "U"}
-                      </div>
-                      {/* Online indicator */}
-                      <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 border-2 border-background" />
+                    <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
+                      {user.email
+                        ? user.email.charAt(0).toUpperCase()
+                        : user.name
+                          ? user.name.charAt(0).toUpperCase()
+                          : "U"}
                     </div>
                   ) : (
-                    <User className="h-7 w-7" />
+                    <User className="h-5 w-5" />
                   )}
                 </Button>
               </DropdownMenuTrigger>
@@ -151,26 +184,26 @@ export function Navigation() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => router.push("/library")}
-                      className="flex items-center py-2.5 cursor-pointer hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary rounded-md transition-colors"
+                      className="flex items-center py-2 cursor-pointer"
                     >
                       <Bookmark className="h-4 w-4 mr-3" />
-                      <span className="font-medium">My Library</span>
+                      <span>My Library</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => signOut()}
-                      className="flex items-center py-2.5 text-destructive hover:text-destructive focus:text-destructive cursor-pointer hover:bg-destructive/10 focus:bg-destructive/10 rounded-md transition-colors"
+                      className="flex items-center py-2 text-destructive cursor-pointer"
                     >
                       <LogOut className="h-4 w-4 mr-3" />
-                      <span className="font-medium">Sign Out</span>
+                      <span>Sign Out</span>
                     </DropdownMenuItem>
                   </>
                 ) : (
                   <DropdownMenuItem
                     onClick={() => router.push("/signin")}
-                    className="flex items-center py-2.5 cursor-pointer hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary rounded-md transition-colors"
+                    className="flex items-center py-2 cursor-pointer"
                   >
                     <User className="h-4 w-4 mr-3" />
-                    <span className="font-medium">Sign In</span>
+                    <span>Sign In</span>
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
@@ -179,8 +212,7 @@ export function Navigation() {
             <Button
               onClick={toggleTheme}
               variant="ghost"
-              size="lg"
-              className="h-12 w-12 p-0 rounded-lg"
+              size="icon"
               aria-label="Toggle theme"
             >
               {!mounted ? (
@@ -198,32 +230,40 @@ export function Navigation() {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-border/30 py-4">
-            <div className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-3">
+              {/* Mobile Search */}
+              <div className="px-2">
+                <form onSubmit={handleSearch} className="relative">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="text"
+                      placeholder="Search movies, TV shows..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10 pr-4 h-10 w-full"
+                    />
+                  </div>
+                </form>
+              </div>
               <NextLink
                 href="/"
-                className="block px-4 py-3 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-lg mx-2 transition-colors"
+                className="block px-4 py-3 text-sm font-medium hover:bg-muted rounded-md mx-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Movies
               </NextLink>
               <NextLink
                 href="/tv"
-                className="block px-4 py-3 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-lg mx-2 transition-colors"
+                className="block px-4 py-3 text-sm font-medium hover:bg-muted rounded-md mx-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 TV Shows
               </NextLink>
-              <NextLink
-                href="/search"
-                className="block px-4 py-3 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-lg mx-2 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Search
-              </NextLink>
               {user && (
                 <NextLink
                   href="/library"
-                  className="block px-4 py-3 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-lg mx-2 transition-colors"
+                  className="block px-4 py-3 text-sm font-medium hover:bg-muted rounded-md mx-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   My Library

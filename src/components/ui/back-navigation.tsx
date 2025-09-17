@@ -37,7 +37,7 @@ export function BackNavigation({
         size={size}
         onClick={handleBack}
         className={cn(
-          "gap-2 font-serif border-0 bg-transparent hover:bg-background/60 hover:text-primary transition-all duration-300",
+          "gap-2 font-serif border-0 bg-transparent hover:bg-background/60 hover:text-primary transition-all duration-300 rounded-full",
           className,
         )}
       >

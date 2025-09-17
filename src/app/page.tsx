@@ -1,18 +1,16 @@
 import { RotatingHeroSection } from "@/components/ui/rotating-hero-section";
-import { FeaturedSection } from "@/components/ui/featured-section";
 import { MediaSection } from "@/components/shared/media-section";
 import { fetchFeaturedMovies } from "@/lib/data-fetching";
 
 export default async function Home() {
-  const { nowPlaying, popular, topRated, featured } =
-    await fetchFeaturedMovies();
+  const { nowPlaying, topRated } = await fetchFeaturedMovies();
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      {featured.length > 0 && (
+      {nowPlaying.length > 0 && (
         <RotatingHeroSection
-          items={featured}
+          items={nowPlaying.slice(0, 5)}
           mediaType="movie"
           className="mb-16"
         />
@@ -29,17 +27,6 @@ export default async function Home() {
             href="/movies/now-playing"
             limit={12}
             badge="In Theaters"
-          />
-        </section>
-
-        {/* Popular */}
-        <section>
-          <MediaSection
-            title="Popular Movies"
-            items={popular}
-            mediaType="movie"
-            href="/movies/popular"
-            limit={12}
           />
         </section>
 

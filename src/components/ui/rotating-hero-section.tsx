@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Star, Info, Play, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn, formatVoteAverage } from "@/lib/utils";
 import { getImageUrl } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
@@ -153,8 +153,8 @@ export function RotatingHeroSection({
                 )}
                 {releaseDate && (
                   <Badge
-                    variant="outline"
-                    className="bg-black/40 text-white border-white/30"
+                    variant="secondary"
+                    className="bg-black/60 text-white border-none"
                   >
                     {new Date(releaseDate).getFullYear()}
                   </Badge>

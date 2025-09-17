@@ -87,7 +87,7 @@ export function DetailsHero({
       {/* Hero Section */}
       <div className="relative py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="glass-hero rounded-xl p-8 md:p-12">
+          <div className="bg-background/60 backdrop-blur-sm border border-border/50 rounded-md p-8 md:p-12 elevation-2">
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
               {/* Poster */}
               <div className="flex-shrink-0">
@@ -127,17 +127,7 @@ export function DetailsHero({
                   {/* Watch Now Footer - Seamlessly attached */}
                   {watchProviders?.flatrate?.length && (
                     <div className="w-60 md:w-72 lg:w-80 mx-auto lg:mx-0">
-                      <div
-                        className="rounded-b-lg rounded-t-none p-3 shadow-xl border-t-0"
-                        style={{
-                          background: "hsl(var(--glass-bg))",
-                          backdropFilter: "blur(16px) saturate(180%)",
-                          border: "1px solid hsl(var(--glass-border))",
-                          borderTop: "none",
-                          boxShadow:
-                            "0 8px 32px hsl(var(--glass-shadow)), inset 0 1px 0 hsl(var(--glass-border))",
-                        }}
-                      >
+                      <div className="rounded-b-md rounded-t-none p-3 bg-card border border-border border-t-0 elevation-1">
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-center space-y-0.5">
                             <div className="text-[10px] text-muted-foreground leading-tight">
@@ -189,7 +179,7 @@ export function DetailsHero({
                     {usCertification && <Badge>{usCertification}</Badge>}
 
                     {releaseDate && (
-                      <Badge variant="outline" className="gap-1">
+                      <Badge variant="secondary" className="gap-1">
                         <Calendar className="h-3 w-3" />
                         <span>
                           {new Date(
@@ -202,14 +192,14 @@ export function DetailsHero({
                     )}
 
                     {runtime && (
-                      <Badge variant="outline" className="gap-1">
+                      <Badge variant="secondary" className="gap-1">
                         <Clock className="h-3 w-3" />
                         <span>{runtime}</span>
                       </Badge>
                     )}
 
                     {isTVShowDetails(item) && item.number_of_seasons && (
-                      <Badge variant="outline">
+                      <Badge variant="secondary">
                         {item.number_of_seasons} Season
                         {item.number_of_seasons !== 1 ? "s" : ""}
                       </Badge>
@@ -234,7 +224,7 @@ export function DetailsHero({
                             ? item.genres
                             : []
                         ).map((genre: { id: number; name: string }) => (
-                          <Badge key={genre.id} variant="outline">
+                          <Badge key={genre.id} variant="secondary">
                             {genre.name}
                           </Badge>
                         ))}

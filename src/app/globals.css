@@ -4,50 +4,50 @@
 
 @layer base {
   :root {
-    /* Film Noir Material Light Theme - Clean & Accessible */
+    /* Simplified Film Noir Material Design - High Contrast & Performance */
     --background: 0 0% 100%; /* Pure white */
-    --foreground: 222 47% 11%; /* Deep charcoal */
-    --card: 0 0% 100%; /* Pure white cards */
-    --card-foreground: 222 47% 11%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 222 47% 11%; /* Deep charcoal primary */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 210 40% 96%; /* Soft blue-gray */
-    --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96%; /* Subtle background */
-    --muted-foreground: 215 16% 47%; /* Medium gray */
-    --accent: 24 88% 50%; /* Warm amber accent */
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 214 32% 91%; /* Light border */
-    --input: 214 32% 91%;
-    --ring: 222 47% 11%;
-    --radius: 0.5rem;
+    --foreground: 0 0% 0%; /* Pure black */
+    --card: 0 0% 100%; /* Pure white */
+    --card-foreground: 0 0% 0%; /* Pure black */
+    --popover: 0 0% 100%; /* Pure white */
+    --popover-foreground: 0 0% 0%; /* Pure black */
+    --primary: 0 0% 0%; /* Pure black */
+    --primary-foreground: 0 0% 100%; /* Pure white */
+    --secondary: 0 0% 96%; /* Light gray */
+    --secondary-foreground: 0 0% 0%; /* Pure black */
+    --muted: 0 0% 96%; /* Light gray background */
+    --muted-foreground: 0 0% 45%; /* Medium gray text */
+    --accent: 0 84% 50%; /* Classic red accent */
+    --accent-foreground: 0 0% 100%; /* White on red */
+    --destructive: 0 84% 50%; /* Red for destructive */
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%; /* Light gray border */
+    --input: 0 0% 96%; /* Light gray input bg */
+    --ring: 0 0% 0%; /* Black focus ring */
+    --radius: 0.375rem; /* 6px radius */
   }
 
   .dark {
-    /* Film Noir Material Dark Theme - Smooth & Accessible */
-    --background: 222 84% 4%; /* Rich dark charcoal */
-    --foreground: 213 31% 91%; /* Clean light gray */
-    --card: 222 84% 5%; /* Subtle card elevation */
-    --card-foreground: 213 31% 91%;
-    --popover: 222 84% 5%;
-    --popover-foreground: 213 31% 91%;
-    --primary: 213 31% 91%; /* Light foreground as primary */
-    --primary-foreground: 222 84% 4%;
-    --secondary: 217 33% 17%; /* Balanced dark surface */
-    --secondary-foreground: 213 31% 91%;
-    --muted: 217 33% 17%; /* Consistent muted surface */
-    --muted-foreground: 215 20% 65%; /* Readable muted text */
-    --accent: 24 88% 50%; /* Consistent amber accent */
-    --accent-foreground: 222 84% 4%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 213 31% 91%;
-    --border: 217 33% 17%; /* Subtle borders */
-    --input: 217 33% 17%;
-    --ring: 213 31% 91%;
+    /* Simplified Film Noir Dark Mode - High Contrast */
+    --background: 0 0% 0%; /* Pure black */
+    --foreground: 0 0% 100%; /* Pure white */
+    --card: 0 0% 4%; /* Very dark gray */
+    --card-foreground: 0 0% 100%; /* Pure white */
+    --popover: 0 0% 4%; /* Very dark gray */
+    --popover-foreground: 0 0% 100%; /* Pure white */
+    --primary: 0 0% 100%; /* Pure white */
+    --primary-foreground: 0 0% 0%; /* Pure black */
+    --secondary: 0 0% 8%; /* Dark gray */
+    --secondary-foreground: 0 0% 100%; /* Pure white */
+    --muted: 0 0% 8%; /* Dark gray background */
+    --muted-foreground: 0 0% 65%; /* Light gray text */
+    --accent: 0 84% 50%; /* Classic red accent */
+    --accent-foreground: 0 0% 100%; /* White on red */
+    --destructive: 0 84% 50%; /* Red for destructive */
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 15%; /* Dark gray border */
+    --input: 0 0% 8%; /* Dark gray input bg */
+    --ring: 0 0% 100%; /* White focus ring */
   }
 }
 
@@ -61,9 +61,6 @@
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
-    transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
   }
 
   h1,
@@ -77,61 +74,70 @@
 }
 
 @layer utilities {
-  .glass-card {
-    @apply bg-card/95 backdrop-blur-sm border border-border shadow-lg;
-    transition: all 0.2s ease;
+  /* Material Design Elevation Shadows - Simple & Performance-focused */
+  .elevation-1 {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.12),
+      0 1px 2px rgba(0, 0, 0, 0.24);
   }
 
-  .glass-hero {
-    @apply bg-background/85 backdrop-blur-md border border-border/60 shadow-xl;
-    transition: all 0.3s ease;
+  .elevation-2 {
+    box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.16),
+      0 3px 6px rgba(0, 0, 0, 0.23);
   }
 
-  .dark .glass-hero {
-    @apply bg-background/80 border-border/40;
+  .elevation-3 {
+    box-shadow:
+      0 10px 20px rgba(0, 0, 0, 0.19),
+      0 6px 6px rgba(0, 0, 0, 0.23);
   }
 
-  .glass-section {
-    @apply bg-card/90 backdrop-blur-sm border border-border/60 shadow-md;
-    transition: all 0.2s ease;
+  /* Dark mode shadow adjustments */
+  .dark .elevation-1 {
+    box-shadow:
+      0 1px 3px rgba(255, 255, 255, 0.1),
+      0 1px 2px rgba(255, 255, 255, 0.06);
   }
 
-  .section-gradient-primary {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--muted) / 0.3) 0%,
-      hsl(var(--accent) / 0.05) 50%,
-      hsl(var(--muted) / 0.2) 100%
-    );
+  .dark .elevation-2 {
+    box-shadow:
+      0 3px 6px rgba(255, 255, 255, 0.12),
+      0 3px 6px rgba(255, 255, 255, 0.08);
   }
 
-  .section-gradient-secondary {
-    background: linear-gradient(
-      225deg,
-      hsl(var(--accent) / 0.03) 0%,
-      hsl(var(--muted) / 0.2) 50%,
-      hsl(var(--secondary) / 0.1) 100%
-    );
+  .dark .elevation-3 {
+    box-shadow:
+      0 10px 20px rgba(255, 255, 255, 0.15),
+      0 6px 6px rgba(255, 255, 255, 0.1);
   }
 
-  .section-gradient-accent {
-    background: linear-gradient(
-      45deg,
-      hsl(var(--accent) / 0.02) 0%,
-      hsl(var(--muted) / 0.1) 100%
-    );
+  /* Simple divider - Clean line */
+  .divider {
+    @apply h-px bg-border w-full;
   }
 
-  .noir-divider {
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      hsl(var(--border)) 50%,
-      transparent 100%
-    );
+  /* Material Design spacing scale (8px grid) */
+  .spacing-xs {
+    margin: 0.5rem; /* 8px */
+  }
+  .spacing-sm {
+    margin: 1rem; /* 16px */
+  }
+  .spacing-md {
+    margin: 1.5rem; /* 24px */
+  }
+  .spacing-lg {
+    margin: 2rem; /* 32px */
+  }
+  .spacing-xl {
+    margin: 2.5rem; /* 40px */
+  }
+  .spacing-2xl {
+    margin: 3rem; /* 48px */
   }
 
+  /* Fixed backdrop for detail pages */
   .backdrop-container {
     @apply fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat;
   }
@@ -148,33 +154,5 @@
 
   .detail-page {
     @apply relative z-10 min-h-screen;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fade-in-up {
-    animation: fadeInUp 0.4s ease-out;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .animate-fade-in-up {
-      animation: none;
-    }
-  }
-
-  .text-shadow-strong {
-    text-shadow:
-      0 2px 4px rgba(0, 0, 0, 0.8),
-      0 4px 8px rgba(0, 0, 0, 0.6),
-      0 8px 16px rgba(0, 0, 0, 0.4);
   }
 }
