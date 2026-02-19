@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import {
   User,
   Calendar,
@@ -29,6 +28,7 @@ import { BackNavigation } from "@/components/ui/back-navigation";
 import { PaginatedContent } from "@/components/ui/paginated-content";
 import { Badge } from "@/components/ui/badge";
 import { PersonCreditsCard } from "./person-credits-card";
+import { notFound } from "next/navigation";
 
 interface PersonDetailsPageProps {
   personId: number;
@@ -171,24 +171,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
   }
 
   if (isError || !person) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <User className="h-16 w-16 text-muted-foreground mx-auto" />
-          <h1 className="text-2xl font-bold">Person Not Found</h1>
-          <p className="text-muted-foreground">
-            The person you&apos;re looking for doesn&apos;t exist or has been
-            removed.
-          </p>
-          <Link
-            href="/"
-            className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-          >
-            Back to Home
-          </Link>
-        </div>
-      </div>
-    );
+    return notFound();
   }
 
   const profileUrl = getImageUrl(person.profile_path, "profile", "h632");

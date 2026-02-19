@@ -51,6 +51,9 @@ export async function generateMetadata({
     return {
       title,
       description,
+      alternates: {
+        canonical: `/tv/${tvId}`,
+      },
       keywords: [
         tvShow.name,
         "TV show",
@@ -64,7 +67,8 @@ export async function generateMetadata({
       openGraph: {
         title,
         description,
-        type: "website",
+        type: "video.tv_show",
+        url: `/tv/${tvId}`,
         images: posterUrl ? [posterUrl] : [],
       },
       twitter: {

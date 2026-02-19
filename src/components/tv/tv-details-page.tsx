@@ -22,6 +22,7 @@ import { DetailsHero } from "@/components/ui/details-hero";
 import { CastGrid } from "@/components/person/cast-grid";
 import { PersonCard } from "@/components/person/person-card";
 import { TVGrid } from "@/components/tv/tv-grid";
+import { notFound } from "next/navigation";
 import { EpisodeTracker } from "@/components/tv/episode-tracker";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -182,24 +183,7 @@ export function TVDetailsPage({ tvId }: TVDetailsPageProps) {
   }
 
   if (isError || !tvShow) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Film className="h-16 w-16 text-muted-foreground mx-auto" />
-          <h1 className="text-2xl font-bold">TV Show Not Found</h1>
-          <p className="text-muted-foreground">
-            The TV show you&apos;re looking for doesn&apos;t exist or has been
-            removed.
-          </p>
-          <Link
-            href="/tv"
-            className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-          >
-            Back to TV Shows
-          </Link>
-        </div>
-      </div>
-    );
+    return notFound();
   }
 
   const rating = formatVoteAverage(tvShow.vote_average);

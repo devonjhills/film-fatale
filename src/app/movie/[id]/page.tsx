@@ -48,6 +48,9 @@ export async function generateMetadata({
     return {
       title,
       description,
+      alternates: {
+        canonical: `/movie/${movieId}`,
+      },
       keywords: [
         movie.title,
         "movie",
@@ -60,7 +63,8 @@ export async function generateMetadata({
       openGraph: {
         title,
         description,
-        type: "website",
+        type: "video.movie",
+        url: `/movie/${movieId}`,
         images: posterUrl ? [posterUrl] : [],
       },
       twitter: {

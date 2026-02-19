@@ -33,6 +33,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://www.filmfatale.app"),
   title: {
     default: "FilmFatale - Discover Movies and TV Shows",
     template: "%s | FilmFatale",
@@ -50,6 +51,8 @@ export const metadata: Metadata = {
     "movie database",
     "watchlist",
     "tracking",
+    "streaming",
+    "cinema",
   ],
   authors: [{ name: "FilmFatale" }],
   creator: "FilmFatale",
@@ -60,7 +63,7 @@ export const metadata: Metadata = {
       "Discover your next favorite movie or TV show with FilmFatale. Create your personal library and track your watching progress.",
     type: "website",
     locale: "en_US",
-    url: "https://www.filmfatale.app",
+    url: "/",
     siteName: "FilmFatale",
   },
   twitter: {

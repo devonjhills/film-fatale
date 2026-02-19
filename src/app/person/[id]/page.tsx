@@ -72,6 +72,9 @@ export async function generateMetadata({
     return {
       title,
       description,
+      alternates: {
+        canonical: `/person/${personId}`,
+      },
       keywords: [
         person.name,
         person.known_for_department,
@@ -90,6 +93,7 @@ export async function generateMetadata({
         title,
         description,
         type: "profile",
+        url: `/person/${personId}`,
         images: person.profile_path
           ? [`https://image.tmdb.org/t/p/w780${person.profile_path}`]
           : undefined,
