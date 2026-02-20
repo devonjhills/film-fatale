@@ -238,6 +238,11 @@
     100% { background-position: 200% 0; }
   }
 
+  @keyframes shimmer-sweep {
+    from { transform: translateX(-150%); }
+    to { transform: translateX(150%); }
+  }
+
   @keyframes pulse-glow {
     0%, 100% { box-shadow: 0 0 8px hsl(var(--primary) / 0.3); }
     50% { box-shadow: 0 0 24px hsl(var(--primary) / 0.6); }

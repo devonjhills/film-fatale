@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { BackgroundProvider } from "@/components/providers/background-provider";
+import { PageTransition } from "@/components/providers/page-transition";
 import { Navigation } from "@/components/layout/navigation";
 import { Footer } from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -95,6 +96,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://image.tmdb.org" />
+        <link rel="preconnect" href="https://api.themoviedb.org" />
+        <link rel="dns-prefetch" href="https://image.tmdb.org" />
+        <link rel="dns-prefetch" href="https://api.themoviedb.org" />
+      </head>
       <body
         className={`${inter.variable} ${crimsonPro.variable} ${jetbrains.variable} font-sans antialiased min-h-screen flex flex-col`}
       >
@@ -108,8 +115,10 @@ export default function RootLayout({
             <TooltipProvider>
               <BackgroundProvider />
               <Navigation />
-              <main id="main-content" className="flex-1 pt-16">
-                {children}
+              <main id="main-content" className="flex-1 pt-16 flex flex-col">
+                <PageTransition>
+                  {children}
+                </PageTransition>
               </main>
               <Footer />
             </TooltipProvider>

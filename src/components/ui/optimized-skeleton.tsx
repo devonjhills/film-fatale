@@ -14,12 +14,10 @@ function OptimizedSkeleton({
   ...props
 }: OptimizedSkeletonProps) {
   const variants = {
-    default: "animate-pulse bg-primary/10",
-    shimmer:
-      "relative overflow-hidden bg-primary/10 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent",
-    pulse:
-      "animate-pulse bg-gradient-to-r from-primary/10 via-primary/20 to-primary/10 bg-[length:200%_100%] animate-[gradient_1.5s_ease-in-out_infinite]",
-    wave: "bg-primary/10 animate-[wave_1.5s_ease-in-out_infinite]",
+    default: "animate-pulse bg-muted",
+    shimmer: "shimmer rounded-md",
+    pulse: "animate-pulse bg-muted",
+    wave: "animate-pulse bg-muted",
   };
 
   const speeds = {
@@ -31,93 +29,74 @@ function OptimizedSkeleton({
   return (
     <div
       className={cn("rounded-md", variants[variant], speeds[speed], className)}
-      style={{
-        backgroundSize: variant === "pulse" ? "200% 100%" : undefined,
-      }}
       {...props}
     />
   );
 }
 
-// Film noir inspired skeleton for compact cards
+// Mirrors MediaCard exactly: aspect-[2/3] poster + text below
 function MediaCardSkeleton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   const sizeClasses = {
-    sm: "w-[160px] h-[280px]",
-    md: "w-[180px] h-[310px]",
-    lg: "w-[200px] h-[340px]",
+    sm: "w-full max-w-[160px] mx-auto",
+    md: "w-full max-w-[170px] mx-auto",
+    lg: "w-full max-w-[180px] mx-auto",
   };
 
   return (
-    <div className={cn("group", sizeClasses[size])}>
-      <div className="relative overflow-hidden rounded-lg shadow-lg bg-muted/50">
-        {/* Poster skeleton with noir overlay */}
-        <OptimizedSkeleton variant="shimmer" className="aspect-[2/3] w-full" />
-
-        {/* Noir gradient overlay skeleton */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-
-        {/* Rating skeleton */}
-        <div className="absolute top-2 right-2">
-          <OptimizedSkeleton
-            className="h-6 w-12 rounded-md bg-muted"
-            variant="shimmer"
-          />
+    <div className={cn(sizeClasses[size], "h-full")}>
+      <div className="space-y-3 h-full flex flex-col">
+        {/* Poster — exact aspect ratio match */}
+        <div className="relative aspect-[2/3] overflow-hidden rounded-md flex-shrink-0">
+          <OptimizedSkeleton variant="shimmer" className="absolute inset-0 rounded-md" />
+          {/* Rating badge position */}
+          <div className="absolute top-2 right-2">
+            <OptimizedSkeleton className="h-5 w-10 rounded" variant="shimmer" />
+          </div>
         </div>
 
-        {/* Text overlay skeleton at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-3">
-          <OptimizedSkeleton
-            className="h-4 w-full mb-1 bg-muted"
-            variant="shimmer"
-          />
-          <OptimizedSkeleton
-            className="h-3 w-1/2 bg-amber-200/20"
-            variant="shimmer"
-          />
+        {/* Title + year — below the poster, same as real card */}
+        <div className="space-y-1.5 flex-grow">
+          <OptimizedSkeleton className="h-[14px] w-full" variant="shimmer" />
+          <OptimizedSkeleton className="h-[14px] w-3/4" variant="shimmer" />
+          <OptimizedSkeleton className="h-[11px] w-1/3 mt-0.5" variant="shimmer" />
         </div>
       </div>
     </div>
   );
 }
 
+// Mirrors RotatingHeroSection exactly: h-[420px] md:h-[620px] lg:h-[720px], content at bottom-left
 function HeroSectionSkeleton() {
   return (
-    <div className="relative h-96 md:h-[500px] overflow-hidden bg-muted/20">
-      {/* Background image skeleton */}
+    <div className="relative h-[420px] md:h-[620px] lg:h-[720px] overflow-hidden">
+      {/* Full background shimmer */}
       <OptimizedSkeleton
         variant="shimmer"
-        className="absolute inset-0"
         speed="slow"
+        className="absolute inset-0 rounded-none"
       />
 
-      {/* Content overlay skeleton */}
-      <div className="absolute inset-0 flex items-center justify-center p-12 z-10">
-        <div className="container mx-auto">
-          <div className="bg-background/80 backdrop-blur-sm rounded-lg p-8 max-w-5xl mx-auto">
-            <div className="flex items-center gap-8">
-              {/* Poster skeleton */}
-              <OptimizedSkeleton
-                className="w-36 md:w-48 aspect-[2/3] rounded-lg flex-shrink-0"
-                variant="shimmer"
-              />
+      {/* Gradient overlays matching the real hero */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-              {/* Content skeleton */}
-              <div className="flex-1 space-y-4">
-                <OptimizedSkeleton
-                  className="h-12 md:h-16 w-3/4"
-                  variant="shimmer"
-                />
-                <div className="flex gap-3">
-                  <OptimizedSkeleton className="h-6 w-16" variant="shimmer" />
-                  <OptimizedSkeleton className="h-6 w-12" variant="shimmer" />
-                </div>
-                <div className="space-y-2">
-                  <OptimizedSkeleton className="h-4 w-full" variant="shimmer" />
-                  <OptimizedSkeleton className="h-4 w-5/6" variant="shimmer" />
-                  <OptimizedSkeleton className="h-4 w-2/3" variant="shimmer" />
-                </div>
-                <OptimizedSkeleton className="h-10 w-32" variant="shimmer" />
-              </div>
+      {/* Content anchored at bottom-left, matching real hero layout */}
+      <div className="absolute inset-0 flex items-end p-6 md:p-12">
+        <div className="container mx-auto">
+          <div className="max-w-4xl space-y-4">
+            {/* Title skeleton */}
+            <div className="space-y-2">
+              <OptimizedSkeleton className="h-10 md:h-14 lg:h-16 w-2/3 bg-white/15" variant="shimmer" />
+              <OptimizedSkeleton className="h-10 md:h-14 lg:h-16 w-1/2 bg-white/15" variant="shimmer" />
+            </div>
+            {/* Badges */}
+            <div className="flex gap-3">
+              <OptimizedSkeleton className="h-6 w-16 rounded-full bg-white/15" variant="shimmer" />
+              <OptimizedSkeleton className="h-6 w-12 rounded-full bg-white/15" variant="shimmer" />
+            </div>
+            {/* Buttons */}
+            <div className="flex gap-3">
+              <OptimizedSkeleton className="h-10 w-32 bg-white/15" variant="shimmer" />
+              <OptimizedSkeleton className="h-10 w-28 bg-white/15" variant="shimmer" />
             </div>
           </div>
         </div>
@@ -126,20 +105,21 @@ function HeroSectionSkeleton() {
   );
 }
 
+// Grid columns match MediaGrid defaults: grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6
 function MediaSectionSkeleton({ cardCount = 6 }: { cardCount?: number }) {
   return (
-    <div className="space-y-6">
-      {/* Section header skeleton */}
+    <div className="space-y-4 md:space-y-6">
+      {/* Section header — matches MediaSection header layout */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <OptimizedSkeleton className="h-8 w-48" variant="shimmer" />
-          <OptimizedSkeleton className="h-6 w-20" variant="shimmer" />
+          <OptimizedSkeleton className="h-8 w-44 md:h-9 md:w-56" variant="shimmer" />
+          <OptimizedSkeleton className="h-6 w-20 rounded-full" variant="shimmer" />
         </div>
-        <OptimizedSkeleton className="h-6 w-16" variant="shimmer" />
+        <OptimizedSkeleton className="h-9 w-24 rounded-md" variant="shimmer" />
       </div>
 
-      {/* Cards grid skeleton - film noir layout max 6 columns */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 justify-items-center px-2">
+      {/* Cards grid — same breakpoints as MediaGrid default columns */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-5 md:gap-6 lg:gap-8 justify-items-center">
         {Array.from({ length: cardCount }).map((_, i) => (
           <MediaCardSkeleton key={i} />
         ))}
