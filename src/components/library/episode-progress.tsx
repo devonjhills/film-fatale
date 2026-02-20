@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Check } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 import { useState, useEffect } from "react";
 
 interface EpisodeProgressProps {
@@ -115,7 +115,7 @@ export function EpisodeProgress({
                   {isUpdating ? (
                     <div className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   ) : (
-                    <Check className="h-4 w-4 text-primary" />
+                    <Icons.Check className="h-4 w-4 text-primary" />
                   )}
                 </Button>
               </TooltipTrigger>
@@ -127,7 +127,7 @@ export function EpisodeProgress({
           </div>
         ) : (
           <Badge variant="default" className="text-xs font-medium">
-            <Check className="h-3 w-3 mr-1" />
+            <Icons.Check className="h-3 w-3 mr-1" />
             Complete
           </Badge>
         )}

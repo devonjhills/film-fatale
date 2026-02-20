@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { AlertTriangle, RotateCcw, Home } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
 
 export default function Error({
@@ -20,7 +20,7 @@ export default function Error({
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center space-y-6 max-w-md mx-auto px-4">
         <div className="space-y-4">
-          <AlertTriangle className="h-24 w-24 text-destructive mx-auto" />
+          <Icons.AlertTriangle className="h-24 w-24 text-destructive mx-auto" />
           <h1 className="text-2xl font-bold text-destructive">
             Something went wrong!
           </h1>
@@ -48,14 +48,14 @@ export default function Error({
             onClick={reset}
             className="inline-flex items-center justify-center space-x-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
           >
-            <RotateCcw className="h-4 w-4" />
+            <Icons.RotateCcw className="h-4 w-4" />
             <span>Try again</span>
           </button>
           <Link
             href="/"
             className="inline-flex items-center justify-center space-x-2 px-6 py-3 border border-input rounded-lg hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors"
           >
-            <Home className="h-4 w-4" />
+            <Icons.Home className="h-4 w-4" />
             <span>Go home</span>
           </Link>
         </div>

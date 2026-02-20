@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/providers/auth-provider";
-import { Bookmark } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 
 export default function WatchlistPage() {
   const { user, loading } = useAuth();
@@ -24,7 +24,7 @@ export default function WatchlistPage() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center space-y-4">
-        <Bookmark className="h-16 w-16 mx-auto text-muted-foreground animate-pulse" />
+        <Icons.Bookmark className="h-16 w-16 mx-auto text-muted-foreground animate-pulse" />
         <h1 className="text-2xl font-bold">Redirecting to your library...</h1>
         <p className="text-muted-foreground">
           Your watchlist is now part of your movie library.

@@ -32,7 +32,6 @@ export function MediaGrid({
   showRating = true,
   columns = { sm: 2, md: 4, lg: 5, xl: 6 },
 }: MediaGridProps) {
-  // Handle loading state
   if (isLoading) {
     return (
       <div
@@ -49,14 +48,11 @@ export function MediaGrid({
     );
   }
 
-  // Handle error state
   if (error) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center space-y-3 border rounded-lg p-6">
-          <p className="text-destructive font-semibold">
-            Failed to load content
-          </p>
+      <div className="flex items-center justify-center py-16">
+        <div className="text-center space-y-3 glass rounded-xl p-8">
+          <p className="text-destructive font-semibold text-lg">Failed to load content</p>
           <p className="text-sm text-muted-foreground">
             {error.message || "Something went wrong"}
           </p>
@@ -65,11 +61,10 @@ export function MediaGrid({
     );
   }
 
-  // Handle empty state
   if (!items.length) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center space-y-3 border rounded-lg p-6">
+      <div className="flex items-center justify-center py-16">
+        <div className="text-center space-y-3 glass rounded-xl p-8">
           <p className="text-muted-foreground">
             No {mediaType === "movie" ? "movies" : "TV shows"} found
           </p>
@@ -94,7 +89,8 @@ export function MediaGrid({
           size={cardSize}
           showYear={showYear}
           showRating={showRating}
-          priority={index < 8} // Prioritize first 8 images for better top row coverage
+          priority={index < 8}
+          index={index}
         />
       ))}
     </div>
@@ -102,17 +98,13 @@ export function MediaGrid({
 }
 
 function getGridClasses(columns: MediaGridProps["columns"]) {
-  // Optimized for smaller cards (~160-180px) with more spacing
-  // More columns = better spacing between cards
   const smCols = columns?.sm || 3;
   const mdCols = columns?.md || 4;
   const lgCols = columns?.lg || 5;
   const xlCols = columns?.xl || 6;
 
   return cn([
-    // Mobile: 3 columns (smaller cards fit better)
     smCols === 2 ? "grid-cols-2" : smCols === 4 ? "grid-cols-4" : "grid-cols-3",
-    // Small tablets: 4 columns
     mdCols === 3
       ? "sm:grid-cols-3"
       : mdCols === 5
@@ -120,7 +112,6 @@ function getGridClasses(columns: MediaGridProps["columns"]) {
         : mdCols === 6
           ? "sm:grid-cols-6"
           : "sm:grid-cols-4",
-    // Medium screens: 5 columns
     lgCols === 4
       ? "md:grid-cols-4"
       : lgCols === 6
@@ -128,7 +119,6 @@ function getGridClasses(columns: MediaGridProps["columns"]) {
         : lgCols === 7
           ? "md:grid-cols-7"
           : "md:grid-cols-5",
-    // Large screens: 6 columns
     xlCols === 5
       ? "lg:grid-cols-5"
       : xlCols === 7

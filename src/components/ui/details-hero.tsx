@@ -1,13 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import {
-  Calendar,
-  Clock,
-  Film as FilmIcon,
-  MonitorPlay as TvIcon,
-  Star,
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { Icons } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { getImageUrl } from "@/lib/api";
 import { WatchStatusButton } from "@/components/shared/watch-status-button";
@@ -40,15 +35,30 @@ interface DetailsHeroProps {
   watchProviders?: WatchProviderRegion;
 }
 
+const EASE = [0.4, 0, 0.2, 1] as [number, number, number, number];
+
+const stagger = {
+  container: {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+  },
+  item: {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: EASE },
+    },
+  },
+};
+
 export function DetailsHero({
   item,
   mediaType,
   trailer,
   watchProviders,
 }: DetailsHeroProps) {
-  // Use highest quality backdrop for CSS background
   const backdropUrl = getImageUrl(item.backdrop_path, "backdrop", "original");
-  // Use higher quality poster for larger display
   const posterUrl = getImageUrl(item.poster_path, "poster", "w500");
   const rating = formatVoteAverage(item.vote_average);
   const releaseDate = formatDate(
@@ -56,13 +66,9 @@ export function DetailsHero({
   );
   const runtime = isMovieDetails(item) ? formatRuntime(item.runtime) : null;
   const title = isMovieDetails(item) ? item.title : item.name;
-
-  // Get US MPAA rating for movies
   const usCertification = isMovieDetails(item)
     ? getUSCertification(item.release_dates)
     : null;
-
-  // External links - raw date for ExternalLinks component
   const rawReleaseDate = isMovieDetails(item)
     ? item.release_date
     : item.first_air_date;
@@ -72,13 +78,14 @@ export function DetailsHero({
       {/* Fixed Backdrop Background */}
       {backdropUrl && (
         <>
-          <div
+          <motion.div
             className="backdrop-container"
-            style={{
-              backgroundImage: `url(${backdropUrl})`,
-            }}
+            style={{ backgroundImage: `url(${backdropUrl})` }}
             role="img"
             aria-label={`${title} backdrop`}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           />
           <div className="backdrop-overlay" />
         </>
@@ -87,19 +94,24 @@ export function DetailsHero({
       {/* Hero Section */}
       <div className="relative py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="bg-background/60 backdrop-blur-sm border border-border/50 rounded-md p-8 md:p-12 elevation-2">
+          <div className="glass border border-border/40 rounded-xl p-8 md:p-12 elevation-2">
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-              {/* Poster */}
-              <div className="flex-shrink-0">
+
+              {/* Poster column */}
+              <motion.div
+                className="flex-shrink-0"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
                 <div className="space-y-0">
-                  {/* Poster Image */}
                   <div className="relative w-60 md:w-72 lg:w-80 aspect-[2/3] mx-auto lg:mx-0 max-h-[600px]">
                     {posterUrl ? (
                       <Image
                         src={posterUrl}
                         alt={title}
                         fill
-                        className={`object-cover shadow-xl ${
+                        className={`object-cover shadow-2xl ${
                           watchProviders?.flatrate?.length
                             ? "rounded-t-lg rounded-b-none"
                             : "rounded-lg"
@@ -109,25 +121,24 @@ export function DetailsHero({
                       />
                     ) : (
                       <div
-                        className={`flex h-full w-full items-center justify-center bg-muted shadow-xl ${
+                        className={`flex h-full w-full items-center justify-center bg-muted shadow-2xl ${
                           watchProviders?.flatrate?.length
                             ? "rounded-t-lg rounded-b-none"
                             : "rounded-lg"
                         }`}
                       >
                         {mediaType === "movie" ? (
-                          <FilmIcon className="h-24 w-24 text-muted-foreground" />
+                          <Icons.Film className="h-24 w-24 text-muted-foreground" />
                         ) : (
-                          <TvIcon className="h-24 w-24 text-muted-foreground" />
+                          <Icons.MonitorPlay className="h-24 w-24 text-muted-foreground" />
                         )}
                       </div>
                     )}
                   </div>
 
-                  {/* Watch Now Footer - Seamlessly attached */}
                   {watchProviders?.flatrate?.length && (
                     <div className="w-60 md:w-72 lg:w-80 mx-auto lg:mx-0">
-                      <div className="rounded-b-md rounded-t-none p-3 bg-card border border-border border-t-0 elevation-1">
+                      <div className="rounded-b-lg rounded-t-none p-3 bg-card border border-border border-t-0 elevation-1">
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-center space-y-0.5">
                             <div className="text-[10px] text-muted-foreground leading-tight">
@@ -143,19 +154,24 @@ export function DetailsHero({
                     </div>
                   )}
                 </div>
-              </div>
+              </motion.div>
 
-              {/* Title and Content */}
-              <div className="flex-1 space-y-8">
+              {/* Title + Content column */}
+              <motion.div
+                className="flex-1 space-y-8"
+                variants={stagger.container}
+                initial="hidden"
+                animate="visible"
+              >
                 {/* Primary Information */}
-                <div className="space-y-6">
+                <motion.div variants={stagger.item} className="space-y-6">
                   <div>
                     <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[0.9] tracking-tight text-foreground drop-shadow-2xl">
                       {title}
                     </h1>
                     {((isMovieDetails(item) && item.tagline) ||
                       (isTVShowDetails(item) && item.tagline)) && (
-                      <p className="font-serif text-lg md:text-xl lg:text-2xl text-foreground/90 italic mt-6 leading-relaxed drop-shadow-2xl">
+                      <p className="font-serif text-lg md:text-xl lg:text-2xl text-foreground/75 italic mt-5 leading-relaxed">
                         &ldquo;
                         {isMovieDetails(item)
                           ? item.tagline
@@ -166,51 +182,49 @@ export function DetailsHero({
                       </p>
                     )}
                   </div>
+                </motion.div>
 
-                  {/* Metadata */}
-                  <div className="flex flex-wrap items-center gap-2.5">
-                    {item.vote_average > 0 && (
-                      <Badge variant="secondary" className="gap-1">
-                        <Star className="h-3 w-3 fill-current" />
-                        <span>{rating}</span>
-                      </Badge>
-                    )}
+                {/* Metadata badges */}
+                <motion.div
+                  variants={stagger.item}
+                  className="flex flex-wrap items-center gap-2.5"
+                >
+                  {item.vote_average > 0 && (
+                    <Badge variant="secondary" className="gap-1.5">
+                      <Icons.Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      <span>{rating}</span>
+                    </Badge>
+                  )}
+                  {usCertification && <Badge>{usCertification}</Badge>}
+                  {releaseDate && (
+                    <Badge variant="secondary" className="gap-1">
+                      <Icons.Calendar className="h-3 w-3" />
+                      <span>
+                        {new Date(
+                          isMovieDetails(item)
+                            ? item.release_date
+                            : item.first_air_date,
+                        ).getFullYear()}
+                      </span>
+                    </Badge>
+                  )}
+                  {runtime && (
+                    <Badge variant="secondary" className="gap-1">
+                      <Icons.Clock className="h-3 w-3" />
+                      <span>{runtime}</span>
+                    </Badge>
+                  )}
+                  {isTVShowDetails(item) && item.number_of_seasons && (
+                    <Badge variant="secondary">
+                      {item.number_of_seasons} Season
+                      {item.number_of_seasons !== 1 ? "s" : ""}
+                    </Badge>
+                  )}
+                </motion.div>
 
-                    {usCertification && <Badge>{usCertification}</Badge>}
-
-                    {releaseDate && (
-                      <Badge variant="secondary" className="gap-1">
-                        <Calendar className="h-3 w-3" />
-                        <span>
-                          {new Date(
-                            isMovieDetails(item)
-                              ? item.release_date
-                              : item.first_air_date,
-                          ).getFullYear()}
-                        </span>
-                      </Badge>
-                    )}
-
-                    {runtime && (
-                      <Badge variant="secondary" className="gap-1">
-                        <Clock className="h-3 w-3" />
-                        <span>{runtime}</span>
-                      </Badge>
-                    )}
-
-                    {isTVShowDetails(item) && item.number_of_seasons && (
-                      <Badge variant="secondary">
-                        {item.number_of_seasons} Season
-                        {item.number_of_seasons !== 1 ? "s" : ""}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-
-                {/* Genres and Overview */}
-                <div className="space-y-6">
-                  {((isMovieDetails(item) && item.genres) ||
-                    (isTVShowDetails(item) && item.genres)) &&
+                {/* Genres + Overview */}
+                <motion.div variants={stagger.item} className="space-y-5">
+                  {(isMovieDetails(item) || isTVShowDetails(item)) &&
                     (isMovieDetails(item)
                       ? item.genres
                       : isTVShowDetails(item)
@@ -224,7 +238,7 @@ export function DetailsHero({
                             ? item.genres
                             : []
                         ).map((genre: { id: number; name: string }) => (
-                          <Badge key={genre.id} variant="secondary">
+                          <Badge key={genre.id} variant="outline" className="border-border/60">
                             {genre.name}
                           </Badge>
                         ))}
@@ -232,14 +246,17 @@ export function DetailsHero({
                     )}
 
                   {item.overview && (
-                    <p className="text-base md:text-lg leading-relaxed max-w-4xl text-foreground/90 font-light">
+                    <p className="text-base md:text-lg leading-relaxed max-w-4xl text-foreground/85 font-light">
                       {item.overview}
                     </p>
                   )}
-                </div>
+                </motion.div>
 
-                {/* Actions */}
-                <div className="flex flex-wrap gap-4">
+                {/* Action buttons */}
+                <motion.div
+                  variants={stagger.item}
+                  className="flex flex-wrap gap-3"
+                >
                   {trailer && (
                     <TrailerModal trailer={trailer} title={title} size="lg" />
                   )}
@@ -256,21 +273,20 @@ export function DetailsHero({
                   />
 
                   <ShareButton
-                    title={`${title} - ${
-                      mediaType === "movie" ? "Movie" : "TV Show"
-                    } Details`}
-                    text={`Check out "${title}" on this ${
-                      mediaType === "movie" ? "movie" : "TV show"
-                    } app!`}
+                    title={`${title} - ${mediaType === "movie" ? "Movie" : "TV Show"} Details`}
+                    text={`Check out "${title}" on FilmFatale!`}
                   />
-                </div>
+                </motion.div>
 
-                {/* Additional Info */}
+                {/* External links */}
                 {((isMovieDetails(item) && item.external_ids?.imdb_id) ||
                   (isTVShowDetails(item) && item.external_ids?.imdb_id) ||
                   (isMovieDetails(item) && item.homepage) ||
                   (isTVShowDetails(item) && item.homepage)) && (
-                  <div className="pt-4 border-t">
+                  <motion.div
+                    variants={stagger.item}
+                    className="pt-4 border-t border-border/50"
+                  >
                     <ExternalLinks
                       externalIds={
                         isMovieDetails(item)
@@ -289,9 +305,9 @@ export function DetailsHero({
                       title={title}
                       releaseDate={rawReleaseDate}
                     />
-                  </div>
+                  </motion.div>
                 )}
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

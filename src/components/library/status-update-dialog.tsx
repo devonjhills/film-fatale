@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Star } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 
 interface StatusUpdateDialogProps {
   item: ViewingHistoryItem;
@@ -124,7 +124,7 @@ export function StatusUpdateDialog({
                     className="p-1 hover:bg-muted rounded"
                     title={`Rate ${starValue} star${starValue !== 1 ? "s" : ""}`}
                   >
-                    <Star
+                    <Icons.Star
                       className={`h-5 w-5 ${
                         starValue <= rating
                           ? "fill-accent text-accent"

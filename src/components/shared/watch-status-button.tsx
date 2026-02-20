@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Play, Check, X, Clock } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 
 interface WatchStatusButtonProps {
   tmdb_id: number;
@@ -26,19 +26,19 @@ const statusOptions = [
   {
     value: "plan_to_watch",
     label: "Plan to Watch",
-    icon: Clock,
+    icon: Icons.Clock,
     color: "text-muted-foreground",
   },
   {
     value: "watching",
     label: "Watching",
-    icon: Play,
+    icon: Icons.Play,
     color: "text-primary",
   },
   {
     value: "completed",
     label: "Completed",
-    icon: Check,
+    icon: Icons.Check,
     color: "text-green-600",
   },
 ] as const;
@@ -134,7 +134,7 @@ export function WatchStatusButton({
   const currentOption = statusOptions.find(
     (option) => option.value === currentStatus,
   );
-  const CurrentIcon = currentOption?.icon || Clock;
+  const CurrentIcon = currentOption?.icon || Icons.Clock;
 
   return (
     <DropdownMenu>
@@ -147,7 +147,7 @@ export function WatchStatusButton({
         >
           <CurrentIcon className="h-4 w-4" />
           {loading ? "Updating..." : currentOption?.label || "Add to List"}
-          <ChevronDown className="h-3 w-3" />
+          <Icons.ChevronDown className="h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -175,7 +175,7 @@ export function WatchStatusButton({
               onClick={handleRemove}
               className="text-destructive gap-2"
             >
-              <X className="h-4 w-4" />
+              <Icons.X className="h-4 w-4" />
               Remove from History
             </DropdownMenuItem>
           </>

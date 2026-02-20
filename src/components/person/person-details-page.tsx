@@ -2,19 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import {
-  User,
-  Calendar,
-  Globe,
-  ExternalLink,
-  Film,
-  ChevronDown,
-  ChevronUp,
-  Info,
-  Tv,
-  FileText,
-  Link as LinkIcon,
-} from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 import { usePersonDetails } from "@/lib/hooks/api-hooks";
 import { getImageUrl } from "@/lib/api";
 import { formatDate, calculateAge } from "@/lib/utils";
@@ -296,7 +284,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center bg-muted rounded-lg">
-                  <User className="h-24 w-24 text-muted-foreground" />
+                  <Icons.User className="h-24 w-24 text-muted-foreground" />
                 </div>
               )}
             </div>
@@ -305,7 +293,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl font-serif font-bold text-foreground">
-                  <Info className="h-5 w-5 text-primary" />
+                  <Icons.Info className="h-5 w-5 text-primary" />
                   Personal Info
                 </CardTitle>
               </CardHeader>
@@ -336,7 +324,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                     </h4>
                     <div className="text-base font-medium space-y-1">
                       <div className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
                         <span>{birthDate}</span>
                         {age !== null && !person.deathday && (
                           <span className="text-muted-foreground">
@@ -346,7 +334,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                       </div>
                       {person.place_of_birth && (
                         <div className="flex items-center space-x-1">
-                          <Globe className="h-4 w-4 text-muted-foreground" />
+                          <Icons.Globe className="h-4 w-4 text-muted-foreground" />
                           <span>{person.place_of_birth}</span>
                         </div>
                       )}
@@ -361,7 +349,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                     </h4>
                     <div className="text-base font-medium">
                       <div className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
                         <span>{deathDate}</span>
                         {age !== null && (
                           <span className="text-muted-foreground">
@@ -393,7 +381,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-xl font-serif font-bold text-foreground">
-                    <LinkIcon className="h-5 w-5 text-primary" />
+                    <Icons.LinkIcon className="h-5 w-5 text-primary" />
                     External Links
                   </CardTitle>
                 </CardHeader>
@@ -405,7 +393,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                       rel="noopener noreferrer"
                       className="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors"
                     >
-                      <ExternalLink className="h-4 w-4" />
+                      <Icons.ExternalLink className="h-4 w-4" />
                       <span>IMDB</span>
                     </a>
                   )}
@@ -416,7 +404,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                       rel="noopener noreferrer"
                       className="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors"
                     >
-                      <ExternalLink className="h-4 w-4" />
+                      <Icons.ExternalLink className="h-4 w-4" />
                       <span>Instagram</span>
                     </a>
                   )}
@@ -427,7 +415,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                       rel="noopener noreferrer"
                       className="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors"
                     >
-                      <ExternalLink className="h-4 w-4" />
+                      <Icons.ExternalLink className="h-4 w-4" />
                       <span>Twitter</span>
                     </a>
                   )}
@@ -450,13 +438,13 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
               <div className="lg:hidden flex flex-wrap gap-4 text-sm">
                 {person.birthday && (
                   <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
                     <span>{formatDate(person.birthday)}</span>
                   </div>
                 )}
                 {person.place_of_birth && (
                   <div className="flex items-center gap-1">
-                    <Globe className="h-4 w-4 text-muted-foreground" />
+                    <Icons.Globe className="h-4 w-4 text-muted-foreground" />
                     <span>{person.place_of_birth}</span>
                   </div>
                 )}
@@ -468,7 +456,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                    <FileText className="h-6 w-6 text-primary" />
+                    <Icons.FileText className="h-6 w-6 text-primary" />
                     Biography
                   </CardTitle>
                 </CardHeader>
@@ -490,7 +478,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                      <Film className="h-6 w-6 text-primary" />
+                      <Icons.Film className="h-6 w-6 text-primary" />
                       <span>Movie Credits</span>
                       <span className="text-base font-medium text-muted-foreground ml-2 font-sans">
                         ({movieCredits.length} total)
@@ -511,12 +499,12 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                         {movieCreditsExpanded ? (
                           <>
                             Show Less
-                            <ChevronUp className="h-4 w-4" />
+                            <Icons.ChevronUp className="h-4 w-4" />
                           </>
                         ) : (
                           <>
                             Show All
-                            <ChevronDown className="h-4 w-4" />
+                            <Icons.ChevronDown className="h-4 w-4" />
                           </>
                         )}
                       </Button>
@@ -564,7 +552,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                      <Tv className="h-6 w-6 text-primary" />
+                      <Icons.Tv className="h-6 w-6 text-primary" />
                       <span>TV Credits</span>
                       <span className="text-base font-medium text-muted-foreground ml-2 font-sans">
                         ({tvCredits.length} total)
@@ -585,12 +573,12 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
                         {tvCreditsExpanded ? (
                           <>
                             Show Less
-                            <ChevronUp className="h-4 w-4" />
+                            <Icons.ChevronUp className="h-4 w-4" />
                           </>
                         ) : (
                           <>
                             Show All
-                            <ChevronDown className="h-4 w-4" />
+                            <Icons.ChevronDown className="h-4 w-4" />
                           </>
                         )}
                       </Button>

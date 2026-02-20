@@ -52,9 +52,7 @@ const nextConfig: NextConfig = {
   },
 
   // Performance optimizations
-  experimental: {
-    optimizePackageImports: ["lucide-react", "@radix-ui/react-icons"],
-  },
+  // removed lucide-react and @radix-ui/react-icons from optimizePackageImports
 
   // Turbopack configuration (now stable)
   turbopack: {

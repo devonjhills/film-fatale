@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { InViewAnimation } from "@/components/ui/progressive-loader";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Film, Star, Pin, ArrowRight } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 
 interface MediaItem {
   id: number;
@@ -41,9 +41,9 @@ const badgeIcons: Record<
   string,
   React.ComponentType<{ className?: string }>
 > = {
-  "In Theaters": Film,
-  "Playing Now": Film,
-  "Critics' Choice": Star,
+  "In Theaters": Icons.Film,
+  "Playing Now": Icons.Film,
+  "Critics' Choice": Icons.Star,
 };
 
 export function MediaSection({
@@ -79,7 +79,7 @@ export function MediaSection({
             {/* Badges */}
             {showTrending && (
               <Badge variant="secondary" className="gap-1">
-                <Pin className="h-3 w-3 fill-current" />
+                <Icons.Pin className="h-3 w-3 fill-current" />
                 <span>Trending</span>
               </Badge>
             )}
@@ -100,7 +100,7 @@ export function MediaSection({
             <Button variant="outline" asChild>
               <Link href={href}>
                 View All
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <Icons.ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           )}

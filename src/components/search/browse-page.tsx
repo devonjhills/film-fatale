@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Search, X, SlidersHorizontal } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 import { useMultiSearch } from "@/lib/hooks/api-hooks";
 import { debounce } from "@/lib/utils";
 import { SearchResults } from "./search-results";
@@ -150,7 +150,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
             <div className="space-y-6">
               {/* Search Box */}
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                <Icons.Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Search for movies, TV shows, people..."
@@ -164,7 +164,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
                     className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:text-foreground transition-colors"
                     aria-label="Clear search"
                   >
-                    <X className="h-5 w-5" />
+                    <Icons.X className="h-5 w-5" />
                   </button>
                 )}
               </div>
@@ -173,7 +173,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
               <div className="border-t pt-4">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+                    <Icons.SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
                     <h3 className="text-sm font-medium">Filters</h3>
                   </div>
                   {hasActiveFilters && (
@@ -305,7 +305,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
         {!debouncedQuery && (
           <Card>
             <CardContent className="p-12 text-center">
-              <Search className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
+              <Icons.Search className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
               <h2 className="text-2xl font-semibold mb-3">Start Your Search</h2>
               <p className="text-muted-foreground leading-relaxed max-w-md mx-auto">
                 Enter a movie title, TV show, or person&apos;s name to discover

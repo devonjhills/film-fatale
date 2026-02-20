@@ -7,19 +7,19 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
+      {/* Cinematic Hero */}
       {nowPlaying.length > 0 && (
         <RotatingHeroSection
           items={nowPlaying.slice(0, 5)}
           mediaType="movie"
-          className="mb-20"
+          className="mb-16"
         />
       )}
 
       {/* Content Sections */}
-      <div className="container mx-auto px-4 space-y-24 pb-20">
+      <div className="container mx-auto px-4 space-y-20 pb-24">
         {/* Now Playing */}
-        <section className="space-y-8">
+        <section>
           <MediaSection
             title="Now Playing"
             items={nowPlaying}
@@ -30,11 +30,10 @@ export default async function Home() {
           />
         </section>
 
-        {/* Divider */}
-        <div className="divider opacity-30" />
+        <div className="divider opacity-20" />
 
         {/* Top Rated */}
-        <section className="space-y-8">
+        <section>
           <MediaSection
             title="Top Rated"
             items={topRated}

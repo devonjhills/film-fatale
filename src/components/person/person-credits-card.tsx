@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { Film, Calendar, Star } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 import { getImageUrl } from "@/lib/api";
 
 interface MediaCredit {
@@ -51,7 +51,7 @@ export function PersonCreditsCard({
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-muted rounded-md">
-                <Film className="h-6 w-6 text-muted-foreground" />
+                <Icons.Film className="h-6 w-6 text-muted-foreground" />
               </div>
             )}
           </div>
@@ -75,14 +75,14 @@ export function PersonCreditsCard({
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
               {year && (
                 <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
+                  <Icons.Calendar className="h-3 w-3" />
                   <span className="font-medium">{year}</span>
                 </div>
               )}
 
               {rating && rating > 0 && (
                 <div className="flex items-center gap-1">
-                  <Star className="h-3 w-3 fill-accent text-accent" />
+                  <Icons.Star className="h-3 w-3 fill-accent text-accent" />
                   <span className="font-medium">{rating}</span>
                 </div>
               )}

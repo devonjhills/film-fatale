@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 interface RatingBadgeProps {
@@ -41,7 +41,7 @@ export function RatingBadge({
         className,
       )}
     >
-      <Star className={cn(iconSizes[size], "fill-current")} />
+      <Icons.Star className={cn(iconSizes[size], "fill-current")} />
       <span className="font-semibold">{rating}</span>
     </div>
   );

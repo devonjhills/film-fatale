@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 interface BackNavigationProps {
@@ -41,7 +41,7 @@ export function BackNavigation({
           className,
         )}
       >
-        <ArrowLeftIcon className="h-4 w-4" />
+        <Icons.ArrowLeft className="h-4 w-4" />
         <span className="hidden sm:inline">Back</span>
       </Button>
     </div>

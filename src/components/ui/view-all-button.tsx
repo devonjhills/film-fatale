@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +25,7 @@ export function ViewAllButton({
     >
       <Link href={href}>
         <span>View All</span>
-        <ArrowRightIcon className="h-4 w-4" />
+        <Icons.ArrowRight className="h-4 w-4" />
       </Link>
     </Button>
   );

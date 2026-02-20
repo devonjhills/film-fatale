@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Share1Icon as ShareIcon, CheckIcon } from "@radix-ui/react-icons";
+import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 interface ShareButtonProps {
@@ -72,9 +72,9 @@ export function ShareButton({
       title={copied ? "URL Copied!" : "Share this page"}
     >
       {copied ? (
-        <CheckIcon className="h-4 w-4" />
+        <Icons.Check className="h-4 w-4" />
       ) : (
-        <ShareIcon className="h-4 w-4" />
+        <Icons.Share className="h-4 w-4" />
       )}
       {copied ? "Copied!" : "Share"}
     </Button>

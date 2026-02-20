@@ -1,6 +1,6 @@
 "use client";
 
-import { Film, Globe, Popcorn } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 import { getRottenTomatoesSearchUrl, formatYear } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -31,17 +31,17 @@ export function ExternalLinks({
       url: externalIds?.imdb_id
         ? `https://www.imdb.com/title/${externalIds.imdb_id}`
         : null,
-      icon: Film,
+      icon: Icons.Film,
     },
     {
       name: "Official Site",
       url: homepage,
-      icon: Globe,
+      icon: Icons.Globe,
     },
     {
       name: "Rotten Tomatoes",
       url: rottenTomatoesUrl,
-      icon: Popcorn,
+      icon: Icons.Popcorn,
     },
   ].filter((link) => link.url);
 

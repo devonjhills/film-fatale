@@ -1,67 +1,39 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
+
+// ─── ProgressiveLoader ─────────────────────────────────────────────────────
 
 interface ProgressiveLoaderProps {
   children: React.ReactNode;
   delay?: number;
-  threshold?: number;
   className?: string;
-  fallback?: React.ReactNode;
 }
 
 export function ProgressiveLoader({
   children,
   delay = 0,
-  threshold = 0.1,
   className,
-  fallback,
 }: ProgressiveLoaderProps) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [hasLoaded, setHasLoaded] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            setIsVisible(true);
-            setTimeout(() => setHasLoaded(true), 100);
-          }, delay);
-          observer.disconnect();
-        }
-      },
-      { threshold },
-    );
-
-    const currentRef = ref.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-      observer.disconnect();
-    };
-  }, [delay, threshold]);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      className={cn(
-        "transition-all duration-300 ease-out",
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
-        className,
-      )}
+      initial={{ opacity: 0, y: 16 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+      transition={{ duration: 0.4, delay: delay / 1000, ease: [0.4, 0, 0.2, 1] }}
+      className={className}
     >
-      {hasLoaded ? children : fallback}
-    </div>
+      {children}
+    </motion.div>
   );
 }
+
+// ─── StaggeredList ─────────────────────────────────────────────────────────
 
 interface StaggeredListProps {
   children: React.ReactNode[];
@@ -74,41 +46,59 @@ export function StaggeredList({
   staggerDelay = 50,
   className,
 }: StaggeredListProps) {
-  const [visibleItems, setVisibleItems] = useState(new Set<number>());
-
-  useEffect(() => {
-    children.forEach((_, index) => {
-      setTimeout(() => {
-        setVisibleItems((prev) => new Set([...prev, index]));
-      }, index * staggerDelay);
-    });
-  }, [children, staggerDelay]);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
 
   return (
-    <div className={className}>
+    <motion.div
+      ref={ref}
+      className={className}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={{
+        hidden: {},
+        visible: { transition: { staggerChildren: staggerDelay / 1000 } },
+      }}
+    >
       {children.map((child, index) => (
-        <div
+        <motion.div
           key={index}
-          className={cn(
-            "transition-all duration-300 ease-out",
-            visibleItems.has(index)
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4",
-          )}
+          variants={{
+            hidden: { opacity: 0, y: 16 },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] },
+            },
+          }}
         >
           {child}
-        </div>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }
 
+// ─── InViewAnimation ───────────────────────────────────────────────────────
+
+type AnimationType = "fadeUp" | "fadeIn" | "slideLeft" | "slideRight" | "scale";
+
+const animationMap: Record<
+  AnimationType,
+  { hidden: Record<string, number>; visible: Record<string, number> }
+> = {
+  fadeUp: { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } },
+  fadeIn: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
+  slideLeft: { hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } },
+  slideRight: { hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } },
+  scale: { hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1 } },
+};
+
 interface InViewAnimationProps {
   children: React.ReactNode;
-  animation?: "fadeUp" | "fadeIn" | "slideLeft" | "slideRight" | "scale";
+  animation?: AnimationType;
   delay?: number;
   duration?: number;
-  threshold?: number;
   className?: string;
   startVisible?: boolean;
 }
@@ -117,67 +107,34 @@ export function InViewAnimation({
   children,
   animation = "fadeUp",
   delay = 0,
-  duration = 300,
-  threshold = 0.1,
+  duration = 400,
   className,
   startVisible = false,
 }: InViewAnimationProps) {
-  const [isVisible, setIsVisible] = useState(startVisible);
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // If already visible, skip intersection observer
-    if (startVisible) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), delay);
-          observer.disconnect();
-        }
-      },
-      { threshold },
-    );
-
-    const currentRef = ref.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-      observer.disconnect();
-    };
-  }, [delay, threshold, startVisible]);
-
-  const animations = {
-    fadeUp: isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
-    fadeIn: isVisible ? "opacity-100" : "opacity-0",
-    slideLeft: isVisible
-      ? "opacity-100 translate-x-0"
-      : "opacity-0 translate-x-4",
-    slideRight: isVisible
-      ? "opacity-100 translate-x-0"
-      : "opacity-0 -translate-x-4",
-    scale: isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95",
-  };
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
+  const anim = animationMap[animation];
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      className={cn(
-        "transition-all ease-out",
-        animations[animation],
-        className,
-      )}
-      style={{
-        transitionDuration: `${duration}ms`,
+      initial={startVisible ? "visible" : "hidden"}
+      animate={startVisible || isInView ? "visible" : "hidden"}
+      variants={{
+        hidden: anim.hidden,
+        visible: {
+          ...anim.visible,
+          transition: {
+            duration: duration / 1000,
+            delay: delay / 1000,
+            ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+          },
+        },
       }}
+      className={cn(className)}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
 

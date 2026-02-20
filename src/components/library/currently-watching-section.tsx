@@ -3,7 +3,7 @@
 import { ViewingHistoryItem } from "@/lib/types";
 import { ViewingHistoryCard } from "./viewing-history-card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Play } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -27,7 +27,7 @@ export function CurrentlyWatchingSection({
       <div className="space-y-6">
         <div className="space-y-3">
           <h2 className="text-xl font-semibold flex items-center gap-2">
-            <Clock className="h-5 w-5" />
+            <Icons.Clock className="h-5 w-5" />
             Currently Watching
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -54,7 +54,7 @@ export function CurrentlyWatchingSection({
       <Card className="p-12 text-center">
         <div className="max-w-md mx-auto space-y-6">
           <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-            <Play className="h-10 w-10 text-primary" />
+            <Icons.Play className="h-10 w-10 text-primary" />
           </div>
           <div className="space-y-3">
             <h3 className="text-xl font-semibold">
@@ -85,7 +85,7 @@ export function CurrentlyWatchingSection({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h2 className="text-2xl font-bold flex items-center gap-3">
-            <Clock className="h-6 w-6 text-primary" />
+            <Icons.Clock className="h-6 w-6 text-primary" />
             Currently Watching
           </h2>
           <Badge variant="secondary" className="px-3 py-1">
