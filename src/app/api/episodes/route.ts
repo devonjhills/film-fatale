@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { EpisodeProgress } from "@/lib/types";
 import { headers } from "next/headers";
-import { sql } from "@vercel/postgres";
+import { sql } from "@/lib/db";
 
 // In-memory storage for development
 const episodeProgressData = new Map<string, EpisodeProgress[]>();

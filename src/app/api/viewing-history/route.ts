@@ -8,7 +8,7 @@ import {
   EpisodeProgress,
 } from "@/lib/types";
 import { headers } from "next/headers";
-import { sql } from "@vercel/postgres";
+import { sql } from "@/lib/db";
 
 // In-memory storage for development
 const viewingHistoryData = new Map<string, ViewingHistoryItem[]>();

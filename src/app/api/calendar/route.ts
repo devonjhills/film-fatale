@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { CalendarDay, CalendarMonth } from "@/lib/types";
 import { headers } from "next/headers";
-import { sql } from "@vercel/postgres";
+import { sql } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   try {
@@ -32,7 +32,16 @@ export async function GET(request: NextRequest) {
     // Production: Use Postgres
     const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
     if (dbUrl) {
-      const { rows } = await sql`
+      interface CalendarRow {
+        watch_date: string;
+        tmdb_id: number;
+        media_type: "movie" | "tv";
+        title: string;
+        poster_path: string | null;
+        session_count: number;
+      }
+
+      const { rows } = (await sql`
         SELECT 
           DATE(last_watched_at) as watch_date,
           tmdb_id,
@@ -47,7 +56,7 @@ export async function GET(request: NextRequest) {
         AND DATE(last_watched_at) <= ${endISO}
         GROUP BY DATE(last_watched_at), tmdb_id, media_type, title, poster_path
         ORDER BY watch_date ASC
-      `;
+      `) as { rows: CalendarRow[] };
 
       // Group by date
       const dayMap = new Map<string, CalendarDay>();

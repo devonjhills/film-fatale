@@ -1,0 +1,24 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_version = "20"
+  included_files = ["src/app/api/**/*.ts"]
+
+[[redirects]]
+  from = "/auth/*"
+  to = "/api/auth/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/.next/server/pages/:splat"
+  status = 200
+  force = false
