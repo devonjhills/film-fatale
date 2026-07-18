@@ -59,6 +59,10 @@ Wrangler secrets for production values.
 See [CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md) for the external Cloudflare steps,
 database setup, Access configuration, and deployment verification.
 
+The production Worker is connected to the GitHub `main` branch through
+Cloudflare Workers Builds. A successful build from `main` automatically updates
+the live deployment.
+
 ## Self-hosting
 
 Other users can clone the repository and create their own Worker, D1 database,
