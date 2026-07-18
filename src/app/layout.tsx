@@ -98,9 +98,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://image.tmdb.org" />
-        <link rel="preconnect" href="https://api.themoviedb.org" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
-        <link rel="dns-prefetch" href="https://api.themoviedb.org" />
       </head>
       <body
         className={`${inter.variable} ${crimsonPro.variable} ${jetbrains.variable} font-sans antialiased min-h-screen flex flex-col`}

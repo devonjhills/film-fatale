@@ -1,66 +1,50 @@
 "use client";
 
-import { createContext, useContext } from "react";
-import { useSession, signIn, signOut, signUp } from "@/lib/auth-client";
-import type { User, Session } from "@/lib/auth";
+import { createContext, useContext, useEffect, useState } from "react";
+import type { AccessUser } from "@/lib/access-auth";
 
 type AuthContextType = {
-  user: User | null;
-  session: Session | null;
+  user: AccessUser | null;
   loading: boolean;
-  signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (
-    email: string,
-    password: string,
-    name?: string,
-  ) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { data: session, isPending: loading } = useSession();
-  const user = session?.user ?? null;
+  const [user, setUser] = useState<AccessUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const signInWithEmail = async (email: string, password: string) => {
-    const result = await signIn.email({
-      email,
-      password,
-    });
-    if (result.error) {
-      throw new Error(result.error.message);
-    }
-  };
+  useEffect(() => {
+    const controller = new AbortController();
 
-  const signUpWithEmail = async (
-    email: string,
-    password: string,
-    name?: string,
-  ) => {
-    const result = await signUp.email({
-      email,
-      password,
-      name: name || email.split("@")[0], // Use email prefix as default name
-    });
-    if (result.error) {
-      throw new Error(result.error.message);
-    }
-  };
+    fetch("/api/me", { cache: "no-store", signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) return null;
+        const data = (await response.json()) as { user: AccessUser };
+        return data.user;
+      })
+      .then((accessUser) => setUser(accessUser))
+      .catch((error: unknown) => {
+        if (error instanceof Error && error.name !== "AbortError") {
+          setUser(null);
+        }
+      })
+      .finally(() => setLoading(false));
 
-  const handleSignOut = async () => {
-    await signOut();
+    return () => controller.abort();
+  }, []);
+
+  const signOut = () => {
+    window.location.assign("/cdn-cgi/access/logout");
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        session,
         loading,
-        signInWithEmail,
-        signUpWithEmail,
-        signOut: handleSignOut,
+        signOut,
       }}
     >
       {children}

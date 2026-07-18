@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/access-auth";
 import {
   ViewingHistoryItem,
   WatchStatus,
@@ -7,8 +7,8 @@ import {
   SeasonProgress,
   EpisodeProgress,
 } from "@/lib/types";
-import { headers } from "next/headers";
-import { sql } from "@/lib/db";
+import { hasDatabase, sql } from "@/lib/db";
+import { fetchTMDBServer } from "@/lib/tmdb-server";
 
 // In-memory storage for development
 const viewingHistoryData = new Map<string, ViewingHistoryItem[]>();
@@ -16,15 +16,10 @@ const episodeProgressData = new Map<string, EpisodeProgress[]>();
 
 // Helper function to get TV show details from TMDB
 async function getTVShowDetails(tmdbId: number) {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/tv/${tmdbId}?api_key=${process.env.NEXT_PUBLIC_MOVIE_API_KEY}`,
+  return fetchTMDBServer<{ seasons: { season_number: number; episode_count: number }[] }>(
+    `/tv/${tmdbId}`,
+    { next: { revalidate: 86400 } },
   );
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch TV show details");
-  }
-
-  return response.json();
 }
 
 // Helper function to calculate TV show progress
@@ -39,14 +34,13 @@ async function calculateTVProgress(
     // Get user's episode progress
     let userEpisodes: EpisodeProgress[] = [];
 
-    const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (dbUrl) {
+    if (hasDatabase()) {
       const { rows } = await sql`
         SELECT * FROM episode_progress 
         WHERE user_id = ${userId} AND tmdb_id = ${tmdbId}
         ORDER BY season_number ASC, episode_number ASC
       `;
-      userEpisodes = rows as EpisodeProgress[];
+      userEpisodes = rows as unknown as EpisodeProgress[];
     } else {
       // Development: Use in-memory storage
       const allUserEpisodes = episodeProgressData.get(userId) || [];
@@ -125,47 +119,9 @@ async function calculateTVProgress(
   }
 }
 
-// Database initialization function
-async function initDatabase() {
-  const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-  if (!dbUrl) {
-    return; // Skip if no database URL (development mode)
-  }
-
-  try {
-    await sql`
-      CREATE TABLE IF NOT EXISTS viewing_history (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        tmdb_id INTEGER NOT NULL,
-        media_type TEXT NOT NULL,
-        title TEXT NOT NULL,
-        poster_path TEXT,
-        overview TEXT,
-        release_date TEXT,
-        vote_average REAL,
-        status TEXT NOT NULL,
-        watch_count INTEGER DEFAULT 1,
-        started_at TIMESTAMP,
-        completed_at TIMESTAMP,
-        last_watched_at TIMESTAMP,
-        notes TEXT,
-        rating INTEGER CHECK (rating >= 1 AND rating <= 10),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(user_id, tmdb_id, media_type)
-      );
-    `;
-  } catch (error) {
-    console.error("Viewing history database initialization error:", error);
-  }
-}
-
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getSession();
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -179,11 +135,8 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "20");
     const offset = (page - 1) * limit;
 
-    // Production: Use Postgres
-    const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (dbUrl) {
-      await initDatabase();
-
+    // Persistent storage: D1
+    if (hasDatabase()) {
       let query = `
         SELECT * FROM viewing_history 
         WHERE user_id = $1
@@ -314,9 +267,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getSession();
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -350,11 +301,8 @@ export async function POST(request: NextRequest) {
     const now = new Date().toISOString();
     const id = `${session.user.id}-${tmdb_id}-${media_type}`;
 
-    // Production: Use Postgres
-    const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (dbUrl) {
-      await initDatabase();
-
+    // Persistent storage: D1
+    if (hasDatabase()) {
       try {
         // Check if item already exists
         const { rows: existingRows } = await sql`
@@ -535,9 +483,7 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getSession();
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -554,9 +500,8 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Production: Use Postgres
-    const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (dbUrl) {
+    // Persistent storage: D1
+    if (hasDatabase()) {
       await sql`
         DELETE FROM viewing_history 
         WHERE user_id = ${session.user.id} 

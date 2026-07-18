@@ -1,22 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/access-auth";
 import { TVShowProgress, SeasonProgress, EpisodeProgress } from "@/lib/types";
-import { headers } from "next/headers";
-import { sql } from "@/lib/db";
+import { hasDatabase, sql } from "@/lib/db";
+import { fetchTMDBServer } from "@/lib/tmdb-server";
 
 // In-memory storage for development
 const episodeProgressData = new Map<string, EpisodeProgress[]>();
 
 async function getTVShowDetails(tmdbId: number) {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/tv/${tmdbId}?api_key=${process.env.NEXT_PUBLIC_MOVIE_API_KEY}`,
+  return fetchTMDBServer<{ seasons: { season_number: number; episode_count: number }[] }>(
+    `/tv/${tmdbId}`,
+    { next: { revalidate: 86400 } },
   );
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch TV show details");
-  }
-
-  return response.json();
 }
 
 export async function GET(
@@ -24,9 +19,7 @@ export async function GET(
   { params }: { params: Promise<{ tmdb_id: string }> },
 ) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getSession();
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -38,17 +31,16 @@ export async function GET(
     // Get TV show details from TMDB
     const tvShowDetails = await getTVShowDetails(tmdb_id);
 
-    // Production: Use Postgres
-    const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+    // Persistent storage: D1
     let userEpisodes: EpisodeProgress[] = [];
 
-    if (dbUrl) {
+    if (hasDatabase()) {
       const { rows } = await sql`
         SELECT * FROM episode_progress 
         WHERE user_id = ${session.user.id} AND tmdb_id = ${tmdb_id}
         ORDER BY season_number ASC, episode_number ASC
       `;
-      userEpisodes = rows as EpisodeProgress[];
+      userEpisodes = rows as unknown as EpisodeProgress[];
     } else {
       // Development: Use in-memory storage
       const allUserEpisodes = episodeProgressData.get(session.user.id) || [];

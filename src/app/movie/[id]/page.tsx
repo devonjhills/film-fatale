@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MovieDetailsPage } from "@/components/movie/movie-details-page";
+import { fetchTMDBServer } from "@/lib/tmdb-server";
+import type { MovieDetails } from "@/lib/types";
 
 interface MoviePageProps {
   params: Promise<{
@@ -22,21 +24,10 @@ export async function generateMetadata({
   }
 
   try {
-    const API_KEY = process.env.NEXT_PUBLIC_MOVIE_API_KEY;
-    if (!API_KEY) {
-      throw new Error("API key not configured");
-    }
-
-    const response = await fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`,
-      { next: { revalidate: 86400 } }, // Cache for 24 hours
+    const movie = await fetchTMDBServer<MovieDetails>(
+      `/movie/${movieId}`,
+      { next: { revalidate: 86400 } },
     );
-
-    if (!response.ok) {
-      throw new Error("Movie not found");
-    }
-
-    const movie = await response.json();
     const title = `${movie.title} (${new Date(movie.release_date).getFullYear()}) - FilmFatale`;
     const description =
       movie.overview ||

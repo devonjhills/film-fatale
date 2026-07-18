@@ -1,31 +1,19 @@
-import { ENDPOINTS } from "./constants";
+import { TMDB_PATHS } from "./constants";
 import { createOptimizedCache, CACHE_TAGS } from "./cache-utils";
 import type { Movie, TVShow, TMDBResponse } from "./types";
+import { fetchTMDBServer } from "./tmdb-server";
 
 /**
  * Generic TMDB API fetcher with enhanced caching and error handling
  */
 async function fetchFromTMDB<T>(endpoint: string): Promise<T[]> {
-  const API_KEY = process.env.NEXT_PUBLIC_MOVIE_API_KEY;
-
-  if (!API_KEY) {
-    console.error("TMDB API key is not configured");
-    return [];
-  }
-
   try {
-    const response = await fetch(`${endpoint}?api_key=${API_KEY}`, {
+    const data = await fetchTMDBServer<TMDBResponse<T>>(endpoint, {
       next: {
         revalidate: 3600, // Cache for 1 hour
         tags: [CACHE_TAGS.MOVIES, CACHE_TAGS.TV_SHOWS], // Tag for invalidation
       },
     });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const data: TMDBResponse<T> = await response.json();
     return data.results || [];
   } catch (error) {
     console.error(`Error fetching from ${endpoint}:`, error);
@@ -67,9 +55,9 @@ export const fetchTVShows = createOptimizedCache(
 export const fetchFeaturedMovies = createOptimizedCache(
   async () => {
     const [nowPlaying, popular, topRated] = await Promise.all([
-      fetchFromTMDB<Movie>(ENDPOINTS.moviesNowPlaying),
-      fetchFromTMDB<Movie>(ENDPOINTS.moviesPopular),
-      fetchFromTMDB<Movie>(ENDPOINTS.moviesTopRated),
+      fetchFromTMDB<Movie>(TMDB_PATHS.moviesNowPlaying),
+      fetchFromTMDB<Movie>(TMDB_PATHS.moviesPopular),
+      fetchFromTMDB<Movie>(TMDB_PATHS.moviesTopRated),
     ]);
 
     return {
@@ -92,9 +80,9 @@ export const fetchFeaturedMovies = createOptimizedCache(
 export const fetchFeaturedTVShows = createOptimizedCache(
   async () => {
     const [onTheAir, popular, topRated] = await Promise.all([
-      fetchFromTMDB<TVShow>(ENDPOINTS.tvOnTheAir),
-      fetchFromTMDB<TVShow>(ENDPOINTS.tvPopular),
-      fetchFromTMDB<TVShow>(ENDPOINTS.tvTopRated),
+      fetchFromTMDB<TVShow>(TMDB_PATHS.tvOnTheAir),
+      fetchFromTMDB<TVShow>(TMDB_PATHS.tvPopular),
+      fetchFromTMDB<TVShow>(TMDB_PATHS.tvTopRated),
     ]);
 
     return {

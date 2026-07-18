@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/access-auth";
 import { EpisodeProgress } from "@/lib/types";
-import { headers } from "next/headers";
-import { sql } from "@/lib/db";
+import { hasDatabase, sql } from "@/lib/db";
 
 // In-memory storage for development
 const episodeProgressData = new Map<string, EpisodeProgress[]>();
@@ -18,29 +17,46 @@ async function handleBatchUpdate(
   }[],
 ) {
   const now = new Date().toISOString();
-  const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-
-  if (dbUrl) {
-    await initDatabase();
-
+  if (hasDatabase()) {
     try {
-      // Use individual SQL queries for safety - still much faster than HTTP requests
-      for (const ep of episodes) {
-        const id = `${session.user.id}-${tmdb_id}-${ep.season_number}-${ep.episode_number}`;
-        const watchedAt = ep.watched ? now : null;
+      // D1 Free permits 50 queries per Worker invocation. Ten rows per SQL
+      // statement stays below its 100-bound-parameter limit and makes even a
+      // long season only a handful of database operations.
+      for (let start = 0; start < episodes.length; start += 10) {
+        const chunk = episodes.slice(start, start + 10);
+        const params: (string | number | boolean | null)[] = [];
+        const values = chunk.map((ep) => {
+          const watchedAt = ep.watched ? now : null;
+          const row = [
+            `${session.user.id}-${tmdb_id}-${ep.season_number}-${ep.episode_number}`,
+            session.user.id,
+            tmdb_id,
+            ep.season_number,
+            ep.episode_number,
+            ep.watched,
+            watchedAt,
+            now,
+            now,
+          ];
+          const placeholders = row.map((value) => {
+            params.push(value);
+            return `$${params.length}`;
+          });
+          return `(${placeholders.join(", ")})`;
+        });
 
-        await sql`
-          INSERT INTO episode_progress (
-            id, user_id, tmdb_id, season_number, episode_number, watched, watched_at, created_at, updated_at
-          ) VALUES (
-            ${id}, ${session.user.id}, ${tmdb_id}, ${ep.season_number}, ${ep.episode_number}, 
-            ${ep.watched}, ${watchedAt}, ${now}, ${now}
-          ) ON CONFLICT (user_id, tmdb_id, season_number, episode_number) 
-          DO UPDATE SET 
-            watched = ${ep.watched},
-            watched_at = ${watchedAt},
-            updated_at = ${now}
-        `;
+        await sql.query(
+          `INSERT INTO episode_progress (
+            id, user_id, tmdb_id, season_number, episode_number, watched,
+            watched_at, created_at, updated_at
+          ) VALUES ${values.join(", ")}
+          ON CONFLICT (user_id, tmdb_id, season_number, episode_number)
+          DO UPDATE SET
+            watched = excluded.watched,
+            watched_at = excluded.watched_at,
+            updated_at = excluded.updated_at`,
+          params,
+        );
       }
 
       return NextResponse.json({ success: true, updated: episodes.length });
@@ -89,38 +105,9 @@ async function handleBatchUpdate(
   }
 }
 
-// Database initialization function
-async function initDatabase() {
-  const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-  if (!dbUrl) {
-    return; // Skip if no database URL (development mode)
-  }
-
-  try {
-    await sql`
-      CREATE TABLE IF NOT EXISTS episode_progress (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        tmdb_id INTEGER NOT NULL,
-        season_number INTEGER NOT NULL,
-        episode_number INTEGER NOT NULL,
-        watched BOOLEAN DEFAULT FALSE,
-        watched_at TIMESTAMP,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(user_id, tmdb_id, season_number, episode_number)
-      );
-    `;
-  } catch (error) {
-    console.error("Episode progress database initialization error:", error);
-  }
-}
-
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getSession();
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -134,11 +121,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Missing tmdb_id" }, { status: 400 });
     }
 
-    // Production: Use Postgres
-    const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (dbUrl) {
-      await initDatabase();
-
+    // Persistent storage: D1
+    if (hasDatabase()) {
       let query = `
         SELECT * FROM episode_progress 
         WHERE user_id = $1 AND tmdb_id = $2
@@ -187,9 +171,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getSession();
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -199,14 +181,31 @@ export async function POST(request: NextRequest) {
     const { tmdb_id, season_number, episode_number, watched, episodes } = body;
 
     // Handle batch operations
-    if (episodes && Array.isArray(episodes)) {
+    if (Array.isArray(episodes)) {
+      const validBatch =
+        Number.isInteger(tmdb_id) &&
+        episodes.length > 0 &&
+        episodes.length <= 400 &&
+        episodes.every(
+          (episode) =>
+            Number.isInteger(episode?.season_number) &&
+            Number.isInteger(episode?.episode_number) &&
+            typeof episode?.watched === "boolean",
+        );
+      if (!validBatch) {
+        return NextResponse.json(
+          { error: "Invalid episode batch" },
+          { status: 400 },
+        );
+      }
       return await handleBatchUpdate(session, tmdb_id, episodes);
     }
 
     if (
       !tmdb_id ||
       season_number === undefined ||
-      episode_number === undefined
+      episode_number === undefined ||
+      typeof watched !== "boolean"
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -217,11 +216,8 @@ export async function POST(request: NextRequest) {
     const now = new Date().toISOString();
     const id = `${session.user.id}-${tmdb_id}-${season_number}-${episode_number}`;
 
-    // Production: Use Postgres
-    const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (dbUrl) {
-      await initDatabase();
-
+    // Persistent storage: D1
+    if (hasDatabase()) {
       try {
         // Upsert episode progress
         const watchedAt = watched ? now : null;

@@ -18,25 +18,9 @@ import type {
 import { ENDPOINTS, API_CONFIG, SWR_CONFIG } from "../constants";
 import { formatMovieResults } from "../api";
 
-// Get API key from environment
-const API_KEY = process.env.NEXT_PUBLIC_MOVIE_API_KEY;
-
-if (!API_KEY) {
-  console.error(
-    "TMDB API key is not configured. Please set NEXT_PUBLIC_MOVIE_API_KEY environment variable.",
-  );
-}
-
 // Custom fetcher with error handling
 const fetcher = async <T>(url: string): Promise<T> => {
-  if (!API_KEY) {
-    throw new Error("TMDB API key is not configured");
-  }
-
-  const separator = url.includes("?") ? "&" : "?";
-  const fullUrl = `${url}${separator}api_key=${API_KEY}`;
-
-  const response = await fetch(fullUrl);
+  const response = await fetch(url);
 
   if (!response.ok) {
     const errorData: TMDBError = await response.json().catch(() => ({

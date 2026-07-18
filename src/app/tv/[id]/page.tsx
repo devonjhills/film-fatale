@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TVDetailsPage } from "@/components/tv/tv-details-page";
+import { fetchTMDBServer } from "@/lib/tmdb-server";
+import type { TVShowDetails } from "@/lib/types";
 
 interface TVPageProps {
   params: Promise<{
@@ -22,21 +24,10 @@ export async function generateMetadata({
   }
 
   try {
-    const API_KEY = process.env.NEXT_PUBLIC_MOVIE_API_KEY;
-    if (!API_KEY) {
-      throw new Error("API key not configured");
-    }
-
-    const response = await fetch(
-      `https://api.themoviedb.org/3/tv/${tvId}?api_key=${API_KEY}`,
-      { next: { revalidate: 86400 } }, // Cache for 24 hours
+    const tvShow = await fetchTMDBServer<TVShowDetails>(
+      `/tv/${tvId}`,
+      { next: { revalidate: 86400 } },
     );
-
-    if (!response.ok) {
-      throw new Error("TV show not found");
-    }
-
-    const tvShow = await response.json();
     const year = tvShow.first_air_date
       ? new Date(tvShow.first_air_date).getFullYear()
       : "";

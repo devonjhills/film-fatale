@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/access-auth";
 import { CalendarDay, CalendarMonth } from "@/lib/types";
-import { headers } from "next/headers";
-import { sql } from "@/lib/db";
+import { hasDatabase, sql } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getSession();
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -29,9 +26,8 @@ export async function GET(request: NextRequest) {
     const startISO = startDate.toISOString().split("T")[0];
     const endISO = endDate.toISOString().split("T")[0];
 
-    // Production: Use Postgres
-    const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (dbUrl) {
+    // Persistent storage: D1
+    if (hasDatabase()) {
       interface CalendarRow {
         watch_date: string;
         tmdb_id: number;
@@ -56,7 +52,7 @@ export async function GET(request: NextRequest) {
         AND DATE(last_watched_at) <= ${endISO}
         GROUP BY DATE(last_watched_at), tmdb_id, media_type, title, poster_path
         ORDER BY watch_date ASC
-      `) as { rows: CalendarRow[] };
+      `) as unknown as { rows: CalendarRow[] };
 
       // Group by date
       const dayMap = new Map<string, CalendarDay>();

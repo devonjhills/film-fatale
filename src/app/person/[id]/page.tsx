@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PersonDetailsPage } from "@/components/person/person-details-page";
 import type { PersonDetails } from "@/lib/types";
-import { ENDPOINTS, API_CONFIG } from "@/lib/constants";
+import { API_CONFIG, TMDB_PATHS } from "@/lib/constants";
+import { fetchTMDBServer } from "@/lib/tmdb-server";
 
 interface PersonPageProps {
   params: Promise<{
@@ -14,27 +15,17 @@ interface PersonPageProps {
 async function fetchPersonDetails(
   personId: number,
 ): Promise<PersonDetails | null> {
-  const API_KEY = process.env.NEXT_PUBLIC_MOVIE_API_KEY;
-  if (!API_KEY) {
-    return null;
-  }
-
   try {
-    const queryParams = new URLSearchParams({
-      language: API_CONFIG.language,
-      append_to_response: API_CONFIG.append_to_response.person,
-      api_key: API_KEY,
-    });
-
-    const response = await fetch(
-      `${ENDPOINTS.personDetails(personId)}?${queryParams}`,
+    return await fetchTMDBServer<PersonDetails>(
+      TMDB_PATHS.personDetails(personId),
+      {
+        params: {
+          language: API_CONFIG.language,
+          append_to_response: API_CONFIG.append_to_response.person,
+        },
+        next: { revalidate: 86400 },
+      },
     );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    return await response.json();
   } catch {
     return null;
   }

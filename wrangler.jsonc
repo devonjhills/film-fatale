@@ -1,0 +1,38 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "film-fatale",
+	"main": ".open-next/worker.js",
+	"workers_dev": true,
+	"preview_urls": true,
+	"compatibility_date": "2026-07-16",
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	"routes": [
+		{
+			"pattern": "filmfatale.app",
+			"custom_domain": true
+		},
+		{
+			"pattern": "www.filmfatale.app",
+			"custom_domain": true
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "film-fatale",
+			"database_id": "0e99164d-2f34-4be8-bbfc-b70e2ff38677",
+			"migrations_dir": "migrations"
+		}
+	],
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1
+	}
+}

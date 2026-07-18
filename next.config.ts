@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+
+initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -7,6 +10,9 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
+    // TMDB already provides correctly sized variants. Serving them directly
+    // avoids consuming Cloudflare Images transformations for this private app.
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -40,7 +46,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/_next/image:path*",
+        source: "/_next/image/:path*",
         headers: [
           {
             key: "Cache-Control",

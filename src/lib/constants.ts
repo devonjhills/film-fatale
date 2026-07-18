@@ -1,33 +1,52 @@
 // TMDB API Base Configuration
-export const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+export const TMDB_API_BASE_URL = "/api/tmdb";
 export const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
+
+export const TMDB_PATHS = {
+  movieDetails: (id: number) => `/movie/${id}`,
+  moviesNowPlaying: "/movie/now_playing",
+  moviesPopular: "/movie/popular",
+  moviesTopRated: "/movie/top_rated",
+  movieDiscover: "/discover/movie",
+  movieWatchProviders: (id: number) => `/movie/${id}/watch/providers`,
+  tvDetails: (id: number) => `/tv/${id}`,
+  tvSeasonDetails: (tvId: number, seasonNumber: number) =>
+    `/tv/${tvId}/season/${seasonNumber}`,
+  tvOnTheAir: "/tv/on_the_air",
+  tvPopular: "/tv/popular",
+  tvTopRated: "/tv/top_rated",
+  tvDiscover: "/discover/tv",
+  tvWatchProviders: (id: number) => `/tv/${id}/watch/providers`,
+  personDetails: (id: number) => `/person/${id}`,
+  searchMulti: "/search/multi",
+} as const;
 
 // API Endpoints
 export const ENDPOINTS = {
   // Movie endpoints
-  movieDetails: (id: number) => `${TMDB_BASE_URL}/movie/${id}`,
-  moviesNowPlaying: `${TMDB_BASE_URL}/movie/now_playing`,
-  moviesPopular: `${TMDB_BASE_URL}/movie/popular`,
-  moviesTopRated: `${TMDB_BASE_URL}/movie/top_rated`,
-  movieDiscover: `${TMDB_BASE_URL}/discover/movie`,
+  movieDetails: (id: number) => `${TMDB_API_BASE_URL}${TMDB_PATHS.movieDetails(id)}`,
+  moviesNowPlaying: `${TMDB_API_BASE_URL}${TMDB_PATHS.moviesNowPlaying}`,
+  moviesPopular: `${TMDB_API_BASE_URL}${TMDB_PATHS.moviesPopular}`,
+  moviesTopRated: `${TMDB_API_BASE_URL}${TMDB_PATHS.moviesTopRated}`,
+  movieDiscover: `${TMDB_API_BASE_URL}${TMDB_PATHS.movieDiscover}`,
   movieWatchProviders: (id: number) =>
-    `${TMDB_BASE_URL}/movie/${id}/watch/providers`,
+    `${TMDB_API_BASE_URL}${TMDB_PATHS.movieWatchProviders(id)}`,
 
   // TV endpoints
-  tvDetails: (id: number) => `${TMDB_BASE_URL}/tv/${id}`,
+  tvDetails: (id: number) => `${TMDB_API_BASE_URL}${TMDB_PATHS.tvDetails(id)}`,
   tvSeasonDetails: (tvId: number, seasonNumber: number) =>
-    `${TMDB_BASE_URL}/tv/${tvId}/season/${seasonNumber}`,
-  tvOnTheAir: `${TMDB_BASE_URL}/tv/on_the_air`,
-  tvPopular: `${TMDB_BASE_URL}/tv/popular`,
-  tvTopRated: `${TMDB_BASE_URL}/tv/top_rated`,
-  tvDiscover: `${TMDB_BASE_URL}/discover/tv`,
-  tvWatchProviders: (id: number) => `${TMDB_BASE_URL}/tv/${id}/watch/providers`,
+    `${TMDB_API_BASE_URL}${TMDB_PATHS.tvSeasonDetails(tvId, seasonNumber)}`,
+  tvOnTheAir: `${TMDB_API_BASE_URL}${TMDB_PATHS.tvOnTheAir}`,
+  tvPopular: `${TMDB_API_BASE_URL}${TMDB_PATHS.tvPopular}`,
+  tvTopRated: `${TMDB_API_BASE_URL}${TMDB_PATHS.tvTopRated}`,
+  tvDiscover: `${TMDB_API_BASE_URL}${TMDB_PATHS.tvDiscover}`,
+  tvWatchProviders: (id: number) => `${TMDB_API_BASE_URL}${TMDB_PATHS.tvWatchProviders(id)}`,
 
   // Person endpoints
-  personDetails: (id: number) => `${TMDB_BASE_URL}/person/${id}`,
+  personDetails: (id: number) => `${TMDB_API_BASE_URL}${TMDB_PATHS.personDetails(id)}`,
 
   // Search endpoints
-  searchMulti: `${TMDB_BASE_URL}/search/multi`,
+  searchMulti: `${TMDB_API_BASE_URL}${TMDB_PATHS.searchMulti}`,
 } as const;
 
 // Image URL builders - Optimized sizes for responsive design
