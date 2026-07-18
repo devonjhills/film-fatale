@@ -27,7 +27,7 @@ export function RatingBadge({
   };
 
   const variantClasses = {
-    overlay: "bg-foreground/90 text-background backdrop-blur-sm shadow-lg",
+    overlay: "bg-black/75 text-white shadow-lg",
     inline: "bg-muted/80 text-foreground border border-border/50",
     subtle: "bg-transparent text-foreground/80",
   };

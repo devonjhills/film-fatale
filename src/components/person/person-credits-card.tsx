@@ -37,7 +37,7 @@ export function PersonCreditsCard({
 
   return (
     <Link href={`/${credit.media_type}/${credit.id}`} className={className}>
-      <Card className="group overflow-hidden border border-border/50 bg-background/60 backdrop-blur-sm transition-all duration-500 hover:shadow-lg hover:scale-[1.02] hover:border-primary/30 h-full">
+      <Card className="group h-full overflow-hidden transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/45">
         <div className="flex gap-3 p-3">
           {/* Poster */}
           <div className="relative w-16 h-24 flex-shrink-0">

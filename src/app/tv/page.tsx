@@ -6,44 +6,34 @@ export default async function TVPage() {
   const { onTheAir, topRated } = await fetchFeaturedTVShows();
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
+    <div className="min-h-screen">
       {onTheAir.length > 0 && (
         <RotatingHeroSection
           items={onTheAir.slice(0, 5)}
           mediaType="tv"
-          className="mb-20"
         />
       )}
 
-      {/* Content Sections */}
-      <div className="container mx-auto px-4 space-y-24 pb-20">
-        {/* On The Air */}
-        <section className="space-y-8">
-          <MediaSection
-            title="On The Air"
-            items={onTheAir}
-            mediaType="tv"
-            href="/tv/on-the-air"
-            limit={12}
-            badge="Airing Now"
-          />
-        </section>
+      <div className="site-container space-y-20 py-16 md:space-y-24 md:py-24">
+        <MediaSection
+          title="On The Air"
+          items={onTheAir}
+          mediaType="tv"
+          href="/tv/on-the-air"
+          limit={12}
+          badge="Airing now"
+        />
 
-        {/* Divider */}
-        <div className="divider opacity-30" />
+        <div className="editorial-rule opacity-70" />
 
-        {/* Top Rated */}
-        <section className="space-y-8">
-          <MediaSection
-            title="Top Rated"
-            items={topRated}
-            mediaType="tv"
-            href="/tv/top-rated"
-            limit={12}
-            badge="Critics' Choice"
-          />
-        </section>
+        <MediaSection
+          title="The Essential List"
+          items={topRated}
+          mediaType="tv"
+          href="/tv/top-rated"
+          limit={12}
+          badge="The highest rated"
+        />
       </div>
     </div>
   );

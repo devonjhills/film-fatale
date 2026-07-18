@@ -40,7 +40,7 @@ export function PersonCard({
     return (
       <Link href={linkPath} className={className}>
         <div className="group cursor-pointer w-[140px]">
-          <Card className="relative overflow-hidden border-0 bg-transparent transition-all duration-500 hover:scale-[1.03] h-[240px] flex flex-col">
+          <Card className="relative flex h-[240px] flex-col overflow-hidden border-border/60 bg-card transition-colors duration-200 hover:border-primary/40">
             {/* Person Photo */}
             <div className="relative flex-1 rounded-lg overflow-hidden shadow-lg">
               <Avatar className="w-full h-full rounded-lg">
@@ -51,7 +51,7 @@ export function PersonCard({
                       : undefined
                   }
                   alt={person.name}
-                  className="object-cover transition-all duration-500 group-hover:brightness-110 w-full h-full rounded-lg"
+                  className="size-full rounded-md object-cover transition-transform duration-200 group-hover:scale-[1.02]"
                 />
                 <AvatarFallback className="text-lg font-serif font-semibold w-full h-full rounded-lg bg-muted flex items-center justify-center">
                   {fallbackInitials}
@@ -66,7 +66,7 @@ export function PersonCard({
                 <div className="absolute top-2 right-2">
                   <Badge
                     variant="secondary"
-                    className="text-xs bg-background/90 backdrop-blur-sm"
+                    className="bg-background/90 text-xs"
                   >
                     {person.episode_count} ep
                     {person.episode_count !== 1 ? "s" : ""}
@@ -76,10 +76,10 @@ export function PersonCard({
 
               {/* Text overlay at bottom */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent p-3">
-                <h4 className="font-serif font-semibold text-white dark:text-white text-sm leading-tight line-clamp-2 mb-1 drop-shadow-lg">
+                <h4 className="mb-1 line-clamp-2 font-serif text-sm font-semibold leading-tight text-white drop-shadow-lg">
                   {person.name}
                 </h4>
-                <p className="text-xs text-white/80 dark:text-white/80 line-clamp-1 font-medium">
+                <p className="line-clamp-1 text-xs font-medium text-white/80">
                   {role}
                 </p>
               </div>
@@ -95,10 +95,10 @@ export function PersonCard({
 
   return (
     <Link href={linkPath} className={className}>
-      <div className="group cursor-pointer flex items-center space-x-4 p-3 rounded-full bg-background/30 backdrop-blur-sm border border-border/30 transition-all duration-500 hover:bg-background/60 hover:shadow-lg hover:border-primary/40">
+      <div className="group flex cursor-pointer items-center space-x-4 rounded-md border border-border/60 bg-card/70 p-3 transition-colors duration-200 hover:border-primary/40 hover:bg-card">
         {/* Person Avatar with noir styling */}
         <div className="relative">
-          <Avatar className="h-16 w-16 flex-shrink-0 ring-2 ring-border/20 group-hover:ring-primary/50 transition-all duration-500">
+          <Avatar className="size-16 flex-shrink-0 ring-1 ring-border/70 transition-colors duration-200 group-hover:ring-primary/50">
             <AvatarImage
               src={
                 person.profile_path
@@ -106,7 +106,7 @@ export function PersonCard({
                   : undefined
               }
               alt={person.name}
-              className="object-cover object-center transition-all duration-500 group-hover:brightness-110 group-hover:scale-105"
+              className="object-cover object-center transition-transform duration-200 group-hover:scale-[1.02]"
             />
             <AvatarFallback className="text-sm font-serif font-semibold bg-muted">
               {fallbackInitials}

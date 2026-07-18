@@ -22,7 +22,7 @@ function SeasonDetailsSkeleton() {
     <div className="min-h-screen">
       {/* Header Skeleton */}
       <div className="relative bg-muted p-8">
-        <div className="container mx-auto space-y-4">
+        <div className="site-container space-y-4">
           <div className="flex items-center gap-2">
             <Skeleton className="h-8 w-8 rounded-full" />
             <Skeleton className="h-6 w-24" />
@@ -44,7 +44,7 @@ function SeasonDetailsSkeleton() {
       </div>
 
       {/* Content Skeleton */}
-      <div className="container mx-auto px-4 py-8 space-y-8">
+      <div className="site-container space-y-8 py-8">
         {/* Season Overview Card */}
         <Card>
           <CardContent className="p-6">
@@ -182,7 +182,7 @@ export function TVSeasonDetailsPage({
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <div className="container mx-auto px-4 pt-6 pb-4">
+      <div className="site-container pb-4 pt-8">
         <div className="flex items-center justify-between gap-4">
           <BreadcrumbNavigation items={breadcrumbItems} />
           <BackNavigation fallbackHref={`/tv/${tvId}`} />
@@ -190,7 +190,7 @@ export function TVSeasonDetailsPage({
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 pb-8 space-y-8">
+      <div className="site-container space-y-8 pb-12">
         {/* Season Header */}
         <Card>
           <CardContent className="p-6">

@@ -86,7 +86,7 @@ export function MediaCardHorizontal({
       <Link href={`/${mediaType}/${item.id}`} className={className}>
         <Card
           className={cn(
-            "flex space-x-4 p-4 border border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden transition-all duration-500 hover:shadow-lg hover:scale-[1.02] hover:border-primary/30 group",
+            "group flex space-x-4 overflow-hidden border border-border/60 bg-card/70 p-4 transition-colors duration-200 hover:border-primary/40 hover:bg-card",
             "min-h-[120px] w-full",
           )}
         >
@@ -100,7 +100,7 @@ export function MediaCardHorizontal({
     <Link
       href={`/${mediaType}/${item.id}`}
       className={cn(
-        "group flex space-x-4 p-4 rounded-lg bg-background/30 backdrop-blur-sm border border-border/30 hover:bg-background/60 hover:border-primary/40 transition-all duration-500",
+        "group flex space-x-4 rounded-md border border-border/60 bg-card/70 p-4 transition-colors duration-200 hover:border-primary/40 hover:bg-card",
         "min-h-[120px] items-center w-full",
         className,
       )}

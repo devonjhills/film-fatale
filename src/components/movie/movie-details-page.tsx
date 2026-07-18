@@ -29,7 +29,7 @@ function MovieDetailsSkeleton() {
     <div className="detail-page">
       {/* Hero Skeleton */}
       <div className="relative h-96 bg-muted">
-        <div className="absolute inset-0 container mx-auto px-4 flex items-end pb-8">
+        <div className="site-container absolute inset-0 flex items-end pb-8">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 w-full">
             <div className="md:col-span-3">
               <Skeleton className="aspect-[2/3] w-full max-w-xs mx-auto md:mx-0" />
@@ -48,7 +48,7 @@ function MovieDetailsSkeleton() {
       </div>
 
       {/* Main Content Skeleton */}
-      <div className="container mx-auto px-4 py-8 space-y-8">
+      <div className="site-container space-y-8 py-8">
         {/* Movie Details Card */}
         <Card>
           <CardHeader>
@@ -196,7 +196,7 @@ export function MovieDetailsPage({ movieId }: MovieDetailsPageProps) {
       />
 
       {/* Main Content */}
-      <div className="relative container mx-auto px-4 pt-4 pb-12">
+      <div className="site-container relative pb-16 pt-6">
         {/* Breadcrumb Navigation */}
         <div className="flex items-center justify-between gap-4 mb-8">
           <BreadcrumbNavigation
@@ -209,7 +209,7 @@ export function MovieDetailsPage({ movieId }: MovieDetailsPageProps) {
         </div>
         <div className="space-y-8">
           {/* Movie Details */}
-          <Card className="glass">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
                 <Icons.Film className="h-6 w-6 text-primary" />
@@ -338,7 +338,7 @@ export function MovieDetailsPage({ movieId }: MovieDetailsPageProps) {
 
           {/* Cast */}
           {mainCast.length > 0 && (
-            <Card className="glass">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
                   <Icons.Users className="h-6 w-6 text-primary" />
@@ -357,7 +357,7 @@ export function MovieDetailsPage({ movieId }: MovieDetailsPageProps) {
 
           {/* Key Crew */}
           {keyCrew.length > 0 && (
-            <Card className="glass">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
                   <Icons.Users className="h-6 w-6 text-primary" />
@@ -380,7 +380,7 @@ export function MovieDetailsPage({ movieId }: MovieDetailsPageProps) {
 
           {/* Recommendations */}
           {recommendations.length > 0 && (
-            <Card className="glass">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
                   <Icons.Film className="h-6 w-6 text-primary" />

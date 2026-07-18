@@ -6,43 +6,34 @@ export default async function Home() {
   const { nowPlaying, topRated } = await fetchFeaturedMovies();
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Cinematic Hero */}
+    <div className="min-h-screen">
       {nowPlaying.length > 0 && (
         <RotatingHeroSection
           items={nowPlaying.slice(0, 5)}
           mediaType="movie"
-          className="mb-16"
         />
       )}
 
-      {/* Content Sections */}
-      <div className="container mx-auto px-4 space-y-20 pb-24">
-        {/* Now Playing */}
-        <section>
-          <MediaSection
-            title="Now Playing"
-            items={nowPlaying}
-            mediaType="movie"
-            href="/movies/now-playing"
-            limit={12}
-            badge="In Theaters"
-          />
-        </section>
+      <div className="site-container space-y-20 py-16 md:space-y-24 md:py-24">
+        <MediaSection
+          title="Now Playing"
+          items={nowPlaying}
+          mediaType="movie"
+          href="/movies/now-playing"
+          limit={12}
+          badge="In theaters"
+        />
 
-        <div className="divider opacity-20" />
+        <div className="editorial-rule opacity-70" />
 
-        {/* Top Rated */}
-        <section>
-          <MediaSection
-            title="Top Rated"
-            items={topRated}
-            mediaType="movie"
-            href="/movies/top-rated"
-            limit={12}
-            badge="Critics' Choice"
-          />
-        </section>
+        <MediaSection
+          title="Critically Acclaimed"
+          items={topRated}
+          mediaType="movie"
+          href="/movies/top-rated"
+          limit={12}
+          badge="The highest rated"
+        />
       </div>
     </div>
   );

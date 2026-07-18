@@ -1,12 +1,9 @@
-"use client";
-
+import Image from "next/image";
 import Link from "next/link";
 import { Icons } from "@/components/ui/icons";
 import { RatingBadge } from "@/components/ui/rating-badge";
-import { OptimizedImage } from "@/components/ui/optimized-image";
 import { cn, formatVoteAverage } from "@/lib/utils";
 import { getImageUrl } from "@/lib/api";
-import { motion } from "framer-motion";
 
 export interface MediaItem {
   id: number;
@@ -38,90 +35,62 @@ export function MediaCard({
   showYear = true,
   showRating = true,
   priority = false,
-  index = 0,
 }: MediaCardProps) {
-  const getOptimalImageSize = () => {
-    switch (size) {
-      case "sm": return "w185";
-      case "lg": return "w342";
-      default: return "w185";
-    }
-  };
-
-  const imageUrl = getImageUrl(
-    item.poster_path || null,
-    "poster",
-    getOptimalImageSize(),
-  );
-  const rating = formatVoteAverage(item.vote_average);
-  const title = item.title || item.name || "";
+  const imageSize = size === "lg" ? "w342" : "w185";
+  const imageUrl = getImageUrl(item.poster_path || null, "poster", imageSize);
+  const title = item.title || item.name || "Untitled";
   const releaseDate = item.release_date || item.first_air_date;
 
-  const sizeClasses = {
-    sm: "w-full max-w-[160px] mx-auto",
-    md: "w-full max-w-[170px] mx-auto",
-    lg: "w-full max-w-[180px] mx-auto",
-  };
-
   return (
-    <motion.div
-      className={cn(sizeClasses[size], "group h-full")}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.35,
-        delay: Math.min(index * 0.04, 0.5),
-        ease: "easeOut",
-      }}
-    >
-      <Link href={`/${mediaType}/${item.id}`} className="block h-full">
-        <div
-          className={cn(
-            "space-y-3 h-full flex flex-col transition-all duration-300",
-            className,
-          )}
-        >
-          <div className="relative aspect-[2/3] overflow-hidden rounded-md elevation-1 transition-all duration-300 flex-shrink-0 group-hover:elevation-3">
-            {/* Poster image */}
-            {imageUrl ? (
-              <OptimizedImage
-                src={imageUrl}
-                alt={title}
-                fill
-                aspectRatio="poster"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 20vw"
-                priority={priority}
-                quality={85}
+    <article className={cn("group min-w-0", className)}>
+      <Link
+        href={`/${mediaType}/${item.id}`}
+        className="block rounded-md focus-visible:outline-none"
+        aria-label={`${title}${releaseDate ? `, ${new Date(releaseDate).getFullYear()}` : ""}`}
+      >
+        <div className="poster-frame relative aspect-[2/3] overflow-hidden transition-[border-color,transform,box-shadow] duration-200 group-hover:-translate-y-1 group-hover:border-primary/55 group-hover:shadow-[0_24px_60px_oklch(0_0_0/0.5)] group-focus-visible:-translate-y-1 group-focus-visible:border-ring">
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt=""
+              fill
+              loading={priority ? "eager" : "lazy"}
+              fetchPriority={priority ? "high" : "auto"}
+              sizes="(max-width: 479px) 45vw, (max-width: 767px) 30vw, (max-width: 1279px) 22vw, 180px"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.025]"
+            />
+          ) : (
+            <div className="flex size-full items-center justify-center bg-muted">
+              <Icons.Film
+                className="size-8 text-muted-foreground/50"
+                aria-hidden="true"
               />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-muted rounded-md transition-colors group-hover:bg-muted/80">
-                <Icons.Film className="h-8 w-8 text-muted-foreground/50 transition-colors group-hover:text-primary/30" />
-              </div>
-            )}
+            </div>
+          )}
 
-            {/* Hover overlay — subtle red tint */}
-            <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/8 transition-colors duration-300 rounded-md" />
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          {showRating && item.vote_average > 0 && (
+            <div className="absolute right-2 top-2">
+              <RatingBadge
+                rating={formatVoteAverage(item.vote_average)}
+                variant="overlay"
+                size="sm"
+              />
+            </div>
+          )}
+        </div>
 
-            {showRating && item.vote_average > 0 && (
-              <div className="absolute top-2 right-2">
-                <RatingBadge rating={rating} variant="overlay" size="sm" />
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-1.5 flex-grow flex flex-col justify-start min-h-0">
-            <h3 className="font-semibold text-sm leading-tight line-clamp-2 tracking-tight group-hover:text-primary transition-colors duration-200">
-              {title}
-            </h3>
-            {showYear && releaseDate && (
-              <p className="text-xs text-muted-foreground font-medium">
-                {new Date(releaseDate).getFullYear()}
-              </p>
-            )}
-          </div>
+        <div className="pt-3">
+          <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
+            {title}
+          </h3>
+          {showYear && releaseDate && (
+            <p className="mt-1 text-xs font-medium tabular-nums text-muted-foreground">
+              {new Date(releaseDate).getFullYear()}
+            </p>
+          )}
         </div>
       </Link>
-    </motion.div>
+    </article>
   );
 }

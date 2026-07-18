@@ -1,13 +1,7 @@
-"use client";
-
-import React from "react";
-import { MediaGrid } from "./media-grid";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { InViewAnimation } from "@/components/ui/progressive-loader";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { MediaGrid } from "./media-grid";
 import { Icons } from "@/components/ui/icons";
+import { cn } from "@/lib/utils";
 
 interface MediaItem {
   id: number;
@@ -37,15 +31,6 @@ interface MediaSectionProps {
   showRating?: boolean;
 }
 
-const badgeIcons: Record<
-  string,
-  React.ComponentType<{ className?: string }>
-> = {
-  "In Theaters": Icons.Film,
-  "Playing Now": Icons.Film,
-  "Critics' Choice": Icons.Star,
-};
-
 export function MediaSection({
   title,
   items,
@@ -62,61 +47,41 @@ export function MediaSection({
   showYear = true,
   showRating = true,
 }: MediaSectionProps) {
-  const displayItems = items.slice(0, limit);
-
   return (
-    <InViewAnimation animation="fadeUp" delay={100}>
-      <section
-        className={cn("space-y-4 md:space-y-6 layout-stable", className)}
-      >
-        {/* Section Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold tracking-tight">
-              {title}
-            </h2>
-
-            {/* Badges */}
-            {showTrending && (
-              <Badge variant="secondary" className="gap-1">
-                <Icons.Pin className="h-3 w-3 fill-current" />
-                <span>Trending</span>
-              </Badge>
-            )}
-
-            {badge && (
-              <Badge variant="secondary" className="gap-1">
-                {badgeIcons[badge] &&
-                  React.createElement(badgeIcons[badge], {
-                    className: "h-3 w-3",
-                  })}
-                <span>{badge}</span>
-              </Badge>
-            )}
-          </div>
-
-          {/* View All Button */}
-          {href && showViewAll && (
-            <Button variant="outline" asChild>
-              <Link href={href}>
-                View All
-                <Icons.ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+    <section className={cn("layout-stable", className)}>
+      <div className="mb-6 flex items-end justify-between gap-4 md:mb-8">
+        <div>
+          {(badge || showTrending) && (
+            <p className="eyebrow mb-3">
+              {showTrending ? "Trending now" : badge}
+            </p>
           )}
+          <h2 className="section-title">{title}</h2>
         </div>
 
-        {/* Media Grid */}
-        <MediaGrid
-          items={displayItems}
-          mediaType={mediaType}
-          isLoading={isLoading}
-          error={error}
-          cardSize={cardSize}
-          showYear={showYear}
-          showRating={showRating}
-        />
-      </section>
-    </InViewAnimation>
+        {href && showViewAll && (
+          <Link
+            href={href}
+            className="group flex min-h-11 items-center gap-2 rounded-sm text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
+          >
+            View all
+            <Icons.ArrowRight
+              className="size-4 transition-transform group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
+          </Link>
+        )}
+      </div>
+
+      <MediaGrid
+        items={items.slice(0, limit)}
+        mediaType={mediaType}
+        isLoading={isLoading}
+        error={error}
+        cardSize={cardSize}
+        showYear={showYear}
+        showRating={showRating}
+      />
+    </section>
   );
 }

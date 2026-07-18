@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +23,12 @@ interface OptimizedImageProps {
 }
 
 export function OptimizedImage({
+  ...props
+}: OptimizedImageProps) {
+  return <OptimizedImageState key={props.src} {...props} />;
+}
+
+function OptimizedImageState({
   src,
   alt,
   width,
@@ -42,15 +48,6 @@ export function OptimizedImage({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [currentSrc, setCurrentSrc] = useState(src);
-
-  // Update internal src when prop changes (critical for rotating hero)
-  useEffect(() => {
-    if (src !== currentSrc) {
-      setCurrentSrc(src);
-      setIsLoading(true);
-      setHasError(false);
-    }
-  }, [src, currentSrc]);
 
   const handleLoad = useCallback(() => {
     setIsLoading(false);
@@ -111,8 +108,8 @@ export function OptimizedImage({
     blurDataURL: blurDataURL || defaultBlurDataURL,
     sizes: sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     className: cn(
-      "transition-all duration-300",
-      isLoading ? "scale-105 blur-sm" : "scale-100 blur-0",
+      "transition-opacity duration-200",
+      isLoading ? "opacity-0" : "opacity-100",
       className,
     ),
   };

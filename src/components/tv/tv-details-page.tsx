@@ -30,7 +30,7 @@ function TVDetailsSkeleton() {
       {/* Hero Skeleton */}
       <div className="relative h-[75vh] md:h-[85vh] bg-muted">
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-        <div className="absolute inset-0 container mx-auto px-4 flex items-end pb-16">
+        <div className="site-container absolute inset-0 flex items-end pb-16">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 w-full">
             <div className="md:col-span-3">
               <Skeleton className="aspect-[2/3] w-full max-w-xs mx-auto md:mx-0" />
@@ -54,10 +54,10 @@ function TVDetailsSkeleton() {
       </div>
 
       {/* Main Content Skeleton */}
-      <div className="relative container mx-auto px-4 pt-16 pb-12">
+      <div className="site-container relative pb-12 pt-16">
         <div className="space-y-8">
           {/* TV Show Details Card */}
-          <Card className="glass">
+          <Card>
             <CardContent className="p-6 space-y-6">
               <div className="flex items-center gap-2">
                 <Skeleton className="h-5 w-5" />
@@ -75,7 +75,7 @@ function TVDetailsSkeleton() {
           </Card>
 
           {/* Seasons Section */}
-          <Card className="glass">
+          <Card>
             <CardContent className="p-6 space-y-6">
               <div className="flex items-center gap-2">
                 <Skeleton className="h-5 w-5" />
@@ -100,7 +100,7 @@ function TVDetailsSkeleton() {
           </Card>
 
           {/* Cast Section */}
-          <Card className="glass">
+          <Card>
             <CardContent className="p-6 space-y-6">
               <div className="flex items-center gap-2">
                 <Skeleton className="h-5 w-5" />
@@ -125,7 +125,7 @@ function TVDetailsSkeleton() {
           </Card>
 
           {/* Recommendations Section */}
-          <Card className="glass">
+          <Card>
             <CardContent className="p-6 space-y-6">
               <div className="flex items-center gap-2">
                 <Skeleton className="h-5 w-5" />
@@ -258,7 +258,7 @@ export function TVDetailsPage({ tvId }: TVDetailsPageProps) {
       />
 
       {/* Main Content */}
-      <div className="relative container mx-auto px-4 pt-4 pb-12">
+      <div className="site-container relative pb-16 pt-6">
         {/* Breadcrumb Navigation */}
         <div className="flex items-center justify-between gap-4 mb-8">
           <BreadcrumbNavigation
@@ -271,7 +271,7 @@ export function TVDetailsPage({ tvId }: TVDetailsPageProps) {
         </div>
         <div className="space-y-8">
           {/* TV Show Details - Full Width */}
-          <Card className="glass">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
                 <Icons.Tv className="h-6 w-6 text-primary" />
@@ -403,7 +403,7 @@ export function TVDetailsPage({ tvId }: TVDetailsPageProps) {
 
           {/* Seasons - Full Width */}
           {tvShow.seasons && tvShow.seasons.length > 0 && (
-            <Card className="glass">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
                   <Icons.Tv className="h-6 w-6 text-primary" />
@@ -466,7 +466,7 @@ export function TVDetailsPage({ tvId }: TVDetailsPageProps) {
               {user ? (
                 <EpisodeTracker tmdb_id={tvShow.id} seasons={tvShow.seasons} />
               ) : (
-                <Card className="glass">
+                <Card>
                   <CardContent className="p-8">
                     <div className="text-center space-y-6">
                       <div className="mx-auto w-16 h-16 bg-muted rounded-full flex items-center justify-center">
@@ -506,7 +506,7 @@ export function TVDetailsPage({ tvId }: TVDetailsPageProps) {
 
           {/* Cast - Full Width */}
           {mainCast.length > 0 && (
-            <Card className="glass">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
                   <Icons.Users className="h-6 w-6 text-primary" />
@@ -524,7 +524,7 @@ export function TVDetailsPage({ tvId }: TVDetailsPageProps) {
           )}
           {/* Key Crew - Full Width */}
           {keyCrew.length > 0 && (
-            <Card className="glass">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
                   <Icons.Users className="h-6 w-6 text-primary" />
@@ -547,7 +547,7 @@ export function TVDetailsPage({ tvId }: TVDetailsPageProps) {
 
           {/* Recommendations - Full Width */}
           {recommendations.length > 0 && (
-            <Card className="glass">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
                   <Icons.Tv className="h-6 w-6 text-primary" />

@@ -116,7 +116,7 @@ export function WatchProviders({ providers, className }: WatchProvidersProps) {
       <div
         className={cn(
           "p-6 rounded-xl bg-gradient-to-br from-card/80 to-card/40",
-          "border border-border/20 backdrop-blur-sm shadow-lg",
+          "border border-border/60 shadow-lg",
           className,
         )}
       >
@@ -140,7 +140,7 @@ export function WatchProviders({ providers, className }: WatchProvidersProps) {
     <div
       className={cn(
         "space-y-6 p-6 rounded-xl bg-gradient-to-br from-card/80 to-card/40",
-        "border border-border/20 backdrop-blur-sm shadow-lg",
+        "border border-border/60 shadow-lg",
         className,
       )}
     >

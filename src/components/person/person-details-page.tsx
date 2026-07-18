@@ -25,11 +25,11 @@ interface PersonDetailsPageProps {
 function PersonDetailsSkeleton() {
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8">
+      <div className="site-container py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Profile Skeleton */}
           <div className="space-y-6">
-            <div className="bg-background/80 backdrop-blur-sm border border-border/20 rounded-lg shadow-2xl p-6">
+            <div className="surface-panel p-6">
               <div className="space-y-6">
                 <Skeleton className="aspect-[2/3] w-full max-w-sm mx-auto rounded-lg" />
                 <div className="space-y-4 text-center">
@@ -40,7 +40,7 @@ function PersonDetailsSkeleton() {
             </div>
 
             {/* Personal Information Card */}
-            <div className="bg-background/80 backdrop-blur-sm border border-border/20 rounded-lg shadow-2xl p-6">
+            <div className="surface-panel p-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Skeleton className="h-5 w-5" />
@@ -61,7 +61,7 @@ function PersonDetailsSkeleton() {
           {/* Content Skeleton */}
           <div className="lg:col-span-2 space-y-6">
             {/* Biography Card */}
-            <div className="bg-background/80 backdrop-blur-sm border border-border/20 rounded-lg shadow-2xl p-6">
+            <div className="surface-panel p-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Skeleton className="h-5 w-5" />
@@ -78,7 +78,7 @@ function PersonDetailsSkeleton() {
             </div>
 
             {/* Known For Movies Card */}
-            <div className="bg-background/80 backdrop-blur-sm border border-border/20 rounded-lg shadow-2xl p-6">
+            <div className="surface-panel p-6">
               <div className="space-y-6">
                 <div className="flex items-center gap-2">
                   <Skeleton className="h-5 w-5" />
@@ -109,7 +109,7 @@ function PersonDetailsSkeleton() {
             </div>
 
             {/* Known For TV Shows Card */}
-            <div className="bg-background/80 backdrop-blur-sm border border-border/20 rounded-lg shadow-2xl p-6">
+            <div className="surface-panel p-6">
               <div className="space-y-6">
                 <div className="flex items-center gap-2">
                   <Skeleton className="h-5 w-5" />
@@ -256,7 +256,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <div className="container mx-auto px-4 pt-6 pb-4">
+      <div className="site-container pb-4 pt-8">
         <div className="flex items-center justify-between gap-4">
           <BreadcrumbNavigation
             items={[
@@ -268,7 +268,7 @@ export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 pb-8">
+      <div className="site-container pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Profile Sidebar */}
           <div className="lg:col-span-1 space-y-6">

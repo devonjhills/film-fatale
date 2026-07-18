@@ -52,35 +52,31 @@ export function CategoryPage({
 
   return (
     <div className="min-h-screen">
-      {/* Navigation */}
-      <div className="container mx-auto px-4 pt-6 pb-4">
-        <div className="flex items-center justify-between gap-4">
-          <BreadcrumbNavigation
-            items={[
-              { label: breadcrumbParent, href: breadcrumbParentHref },
-              { label: title, current: true },
-            ]}
-          />
-          <BackNavigation fallbackHref={breadcrumbParentHref} />
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 pb-8 space-y-6 md:space-y-8">
-        {/* Header */}
-        <div className="space-y-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+      <header className="noir-page-header">
+        <div className="site-container py-10 md:py-14">
+          <div className="mb-8 flex items-center justify-between gap-4">
+            <BreadcrumbNavigation
+              items={[
+                { label: breadcrumbParent, href: breadcrumbParentHref },
+                { label: title, current: true },
+              ]}
+            />
+            <BackNavigation fallbackHref={breadcrumbParentHref} />
+          </div>
+          <p className="eyebrow mb-4">{mediaType === "movie" ? "Film archive" : "Television archive"}</p>
+          <h1 className="font-serif text-4xl font-semibold tracking-[-0.035em] sm:text-5xl md:text-6xl">
             {title}
           </h1>
           {description && (
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl">
+            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
               {description}
             </p>
           )}
         </div>
+      </header>
 
-        {/* Content */}
-        <div className="space-y-8">
-          {/* Grid */}
+      <div className="site-container py-10 md:py-14">
+        <div className="space-y-10">
           <MediaGrid
             items={data}
             mediaType={mediaType}
@@ -91,7 +87,6 @@ export function CategoryPage({
             showRating={true}
           />
 
-          {/* Pagination */}
           {!isLoading && !error && totalPages > 1 && (
             <PaginatedContent
               currentPage={currentPage}

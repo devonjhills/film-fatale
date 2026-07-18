@@ -81,7 +81,7 @@ function HeroSectionSkeleton() {
 
       {/* Content anchored at bottom-left, matching real hero layout */}
       <div className="absolute inset-0 flex items-end p-6 md:p-12">
-        <div className="container mx-auto">
+        <div className="site-container">
           <div className="max-w-4xl space-y-4">
             {/* Title skeleton */}
             <div className="space-y-2">
