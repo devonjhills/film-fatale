@@ -61,7 +61,8 @@ database setup, Access configuration, and deployment verification.
 
 The production Worker is connected to the GitHub `main` branch through
 Cloudflare Workers Builds. A successful build from `main` automatically updates
-the live deployment.
+the live deployment. The default `workers.dev` hostname and branch preview URLs
+are disabled; only the Access-protected custom domains serve the app.
 
 ## Self-hosting
 

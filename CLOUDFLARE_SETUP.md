@@ -32,14 +32,14 @@ npx wrangler secret put APP_OWNER_ID
 
 Use `owner` for `APP_OWNER_ID` and never change it after importing data.
 
-## 3. First Worker deployment
+## 3. Deploy the Worker
 
 ```bash
 npm run deploy:cloudflare
 ```
 
-Use the generated `*.workers.dev` address as a protected preview before moving
-the production domain.
+The default `*.workers.dev` hostname and branch preview URLs are disabled.
+Production is served only from the custom domains declared in `wrangler.jsonc`.
 
 ## 4. Protect the whole hostname with Access
 
@@ -47,7 +47,8 @@ In the Cloudflare dashboard:
 
 1. Go to **Zero Trust > Access controls > Applications**.
 2. Add a **Self-hosted** application.
-3. Enter the entire preview or production hostname, with no path restriction.
+3. Add both `filmfatale.app` and `www.filmfatale.app`, with no path
+   restriction.
 4. Create an **Allow** policy whose Include selector is **Emails** and whose
    value is only your exact email address. Do not use Everyone, an email domain,
    or all valid emails.
@@ -58,11 +59,11 @@ In the Cloudflare dashboard:
    settings, such as `your-team.cloudflareaccess.com`.
 8. Redeploy after changing either secret.
 
-## 5. Transfer the existing history — complete
+## 5. Verify the production data — complete
 
-The migration exported 6 viewing-history rows and 37 episode-progress rows from
-Neon, remapped them to `owner`, and imported them into D1. The private,
-git-ignored SQL export is retained locally as a cutover backup.
+The migrated viewing and episode history is stored in D1 under the stable
+`owner` identity. A private, git-ignored D1 export is retained locally as a
+cutover backup.
 
 Compare counts before cutover:
 

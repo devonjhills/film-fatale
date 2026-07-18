@@ -26,7 +26,11 @@ export async function GET(
     }
 
     const { tmdb_id: tmdbIdParam } = await params;
-    const tmdb_id = parseInt(tmdbIdParam);
+    const tmdb_id = /^\d+$/.test(tmdbIdParam) ? Number(tmdbIdParam) : NaN;
+
+    if (!Number.isSafeInteger(tmdb_id) || tmdb_id <= 0) {
+      return NextResponse.json({ error: "Invalid tmdb_id" }, { status: 400 });
+    }
 
     // Get TV show details from TMDB
     const tvShowDetails = await getTVShowDetails(tmdb_id);

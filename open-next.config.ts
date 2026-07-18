@@ -1,5 +1,5 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 
-// Start with OpenNext's platform defaults. Durable cache and D1 bindings are
-// added in later migration stages, after the base Worker build is verified.
+// OpenNext's platform defaults are sufficient for this private app. Runtime
+// bindings and required secrets are declared in wrangler.jsonc.
 export default defineCloudflareConfig();

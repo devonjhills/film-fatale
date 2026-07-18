@@ -19,6 +19,20 @@ export async function GET(request: NextRequest) {
       searchParams.get("month") || (new Date().getMonth() + 1).toString(),
     );
 
+    if (
+      !Number.isInteger(year) ||
+      year < 1900 ||
+      year > 2200 ||
+      !Number.isInteger(month) ||
+      month < 1 ||
+      month > 12
+    ) {
+      return NextResponse.json(
+        { error: "Invalid year or month" },
+        { status: 400 },
+      );
+    }
+
     // Get the first and last day of the month
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0);

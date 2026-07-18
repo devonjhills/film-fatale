@@ -6,6 +6,20 @@ import { hasDatabase, sql } from "@/lib/db";
 // In-memory storage for development
 const episodeProgressData = new Map<string, EpisodeProgress[]>();
 
+function isNonNegativeInteger(value: unknown): value is number {
+  return Number.isInteger(value) && Number(value) >= 0;
+}
+
+function isPositiveInteger(value: unknown): value is number {
+  return Number.isInteger(value) && Number(value) > 0;
+}
+
+function parsePositiveInteger(value: string | null): number | null {
+  if (!value || !/^\d+$/.test(value)) return null;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
+}
+
 // Batch update function
 async function handleBatchUpdate(
   session: { user: { id: string } },
@@ -63,7 +77,7 @@ async function handleBatchUpdate(
     } catch (dbError) {
       console.error("Batch database error:", dbError);
       return NextResponse.json(
-        { error: "Database update failed", details: String(dbError) },
+        { error: "Database update failed" },
         { status: 500 },
       );
     }
@@ -114,11 +128,21 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const tmdb_id = searchParams.get("tmdb_id");
-    const season_number = searchParams.get("season_number");
+    const tmdbId = parsePositiveInteger(searchParams.get("tmdb_id"));
+    const rawSeasonNumber = searchParams.get("season_number");
+    const seasonNumber =
+      rawSeasonNumber === null || !/^\d+$/.test(rawSeasonNumber)
+        ? null
+        : Number(rawSeasonNumber);
 
-    if (!tmdb_id) {
-      return NextResponse.json({ error: "Missing tmdb_id" }, { status: 400 });
+    if (
+      tmdbId === null ||
+      (rawSeasonNumber !== null && !isNonNegativeInteger(seasonNumber))
+    ) {
+      return NextResponse.json(
+        { error: "Invalid tmdb_id or season_number" },
+        { status: 400 },
+      );
     }
 
     // Persistent storage: D1
@@ -127,11 +151,11 @@ export async function GET(request: NextRequest) {
         SELECT * FROM episode_progress 
         WHERE user_id = $1 AND tmdb_id = $2
       `;
-      const params: (string | number)[] = [session.user.id, parseInt(tmdb_id)];
+      const params: (string | number)[] = [session.user.id, tmdbId];
 
-      if (season_number) {
+      if (seasonNumber !== null) {
         query += ` AND season_number = $3`;
-        params.push(parseInt(season_number));
+        params.push(seasonNumber);
       }
 
       query += ` ORDER BY season_number ASC, episode_number ASC`;
@@ -143,12 +167,12 @@ export async function GET(request: NextRequest) {
     // Development: Use in-memory storage
     const userEpisodes = episodeProgressData.get(session.user.id) || [];
     let filteredEpisodes = userEpisodes.filter(
-      (ep) => ep.tmdb_id === parseInt(tmdb_id),
+      (ep) => ep.tmdb_id === tmdbId,
     );
 
-    if (season_number) {
+    if (seasonNumber !== null) {
       filteredEpisodes = filteredEpisodes.filter(
-        (ep) => ep.season_number === parseInt(season_number),
+        (ep) => ep.season_number === seasonNumber,
       );
     }
 
@@ -183,13 +207,13 @@ export async function POST(request: NextRequest) {
     // Handle batch operations
     if (Array.isArray(episodes)) {
       const validBatch =
-        Number.isInteger(tmdb_id) &&
+        isPositiveInteger(tmdb_id) &&
         episodes.length > 0 &&
         episodes.length <= 400 &&
         episodes.every(
           (episode) =>
-            Number.isInteger(episode?.season_number) &&
-            Number.isInteger(episode?.episode_number) &&
+            isNonNegativeInteger(episode?.season_number) &&
+            isPositiveInteger(episode?.episode_number) &&
             typeof episode?.watched === "boolean",
         );
       if (!validBatch) {
@@ -202,9 +226,9 @@ export async function POST(request: NextRequest) {
     }
 
     if (
-      !tmdb_id ||
-      season_number === undefined ||
-      episode_number === undefined ||
+      !isPositiveInteger(tmdb_id) ||
+      !isNonNegativeInteger(season_number) ||
+      !isPositiveInteger(episode_number) ||
       typeof watched !== "boolean"
     ) {
       return NextResponse.json(

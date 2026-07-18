@@ -14,6 +14,27 @@ import { fetchTMDBServer } from "@/lib/tmdb-server";
 const viewingHistoryData = new Map<string, ViewingHistoryItem[]>();
 const episodeProgressData = new Map<string, EpisodeProgress[]>();
 
+const WATCH_STATUSES: WatchStatus[] = [
+  "watching",
+  "completed",
+  "plan_to_watch",
+];
+const MEDIA_TYPES = ["movie", "tv"] as const;
+
+function isWatchStatus(value: unknown): value is WatchStatus {
+  return WATCH_STATUSES.includes(value as WatchStatus);
+}
+
+function isMediaType(value: unknown): value is "movie" | "tv" {
+  return MEDIA_TYPES.includes(value as "movie" | "tv");
+}
+
+function parsePositiveInteger(value: string | null): number | null {
+  if (!value || !/^\d+$/.test(value)) return null;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
+}
+
 // Helper function to get TV show details from TMDB
 async function getTVShowDetails(tmdbId: number) {
   return fetchTMDBServer<{ seasons: { season_number: number; episode_count: number }[] }>(
@@ -128,11 +149,33 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get("status");
-    const mediaType = searchParams.get("media_type");
-    const tmdbId = searchParams.get("tmdb_id");
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "20");
+    const statusParam = searchParams.get("status");
+    const mediaTypeParam = searchParams.get("media_type");
+    const tmdbIdParam = searchParams.get("tmdb_id");
+    const pageParam = searchParams.get("page") || "1";
+    const limitParam = searchParams.get("limit") || "20";
+    const page = /^\d+$/.test(pageParam) ? Number(pageParam) : NaN;
+    const limit = /^\d+$/.test(limitParam) ? Number(limitParam) : NaN;
+    const tmdbId = tmdbIdParam ? parsePositiveInteger(tmdbIdParam) : null;
+
+    if (
+      (statusParam !== null && !isWatchStatus(statusParam)) ||
+      (mediaTypeParam !== null && !isMediaType(mediaTypeParam)) ||
+      (tmdbIdParam !== null && tmdbId === null) ||
+      !Number.isSafeInteger(page) ||
+      page < 1 ||
+      !Number.isSafeInteger(limit) ||
+      limit < 1 ||
+      limit > 100
+    ) {
+      return NextResponse.json(
+        { error: "Invalid query parameters" },
+        { status: 400 },
+      );
+    }
+
+    const status = statusParam as WatchStatus | null;
+    const mediaType = mediaTypeParam as "movie" | "tv" | null;
     const offset = (page - 1) * limit;
 
     // Persistent storage: D1
@@ -153,9 +196,9 @@ export async function GET(request: NextRequest) {
         params.push(mediaType);
       }
 
-      if (tmdbId) {
+      if (tmdbId !== null) {
         query += ` AND tmdb_id = $${params.length + 1}`;
-        params.push(parseInt(tmdbId));
+        params.push(tmdbId);
       }
 
       query += ` ORDER BY last_watched_at DESC, created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
@@ -194,9 +237,9 @@ export async function GET(request: NextRequest) {
         countParams.push(mediaType);
       }
 
-      if (tmdbId) {
+      if (tmdbId !== null) {
         countQuery += ` AND tmdb_id = $${countParams.length + 1}`;
-        countParams.push(parseInt(tmdbId));
+        countParams.push(tmdbId);
       }
 
       const { rows: countRows } = await sql.query(countQuery, countParams);
@@ -221,9 +264,9 @@ export async function GET(request: NextRequest) {
       userHistory = userHistory.filter((item) => item.media_type === mediaType);
     }
 
-    if (tmdbId) {
+    if (tmdbId !== null) {
       userHistory = userHistory.filter(
-        (item) => item.tmdb_id === parseInt(tmdbId),
+        (item) => item.tmdb_id === tmdbId,
       );
     }
 
@@ -287,15 +330,39 @@ export async function POST(request: NextRequest) {
       notes,
     } = body;
 
-    if (!tmdb_id || !media_type || !title || !status) {
+    if (
+      !Number.isSafeInteger(tmdb_id) ||
+      tmdb_id <= 0 ||
+      !isMediaType(media_type) ||
+      typeof title !== "string" ||
+      title.trim().length === 0 ||
+      title.length > 500 ||
+      !isWatchStatus(status)
+    ) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Invalid required fields" },
         { status: 400 },
       );
     }
 
-    if (!["watching", "completed", "plan_to_watch"].includes(status)) {
-      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    if (
+      (rating !== undefined &&
+        rating !== null &&
+        (!Number.isInteger(rating) || rating < 1 || rating > 10)) ||
+      (notes !== undefined &&
+        notes !== null &&
+        (typeof notes !== "string" || notes.length > 5000)) ||
+      (poster_path !== undefined &&
+        poster_path !== null &&
+        typeof poster_path !== "string") ||
+      (overview !== undefined && typeof overview !== "string") ||
+      (release_date !== undefined && typeof release_date !== "string") ||
+      (vote_average !== undefined && typeof vote_average !== "number")
+    ) {
+      return NextResponse.json(
+        { error: "Invalid optional fields" },
+        { status: 400 },
+      );
     }
 
     const now = new Date().toISOString();
@@ -334,8 +401,8 @@ export async function POST(request: NextRequest) {
               started_at = ${startedAt},
               completed_at = ${completedAt},
               last_watched_at = ${lastWatchedAt},
-              rating = ${rating || existing.rating},
-              notes = ${notes || existing.notes},
+              rating = ${rating !== undefined ? rating : existing.rating},
+              notes = ${notes !== undefined ? notes : existing.notes},
               updated_at = ${now}
             WHERE user_id = ${session.user.id} 
             AND tmdb_id = ${tmdb_id} 
@@ -364,7 +431,7 @@ export async function POST(request: NextRequest) {
           user_id: session.user.id,
           tmdb_id,
           media_type,
-          title,
+          title: title.trim(),
           poster_path: poster_path || null,
           overview: overview || "",
           release_date: release_date || "",
@@ -374,8 +441,8 @@ export async function POST(request: NextRequest) {
           started_at: startedAt,
           completed_at: completedAt,
           last_watched_at: lastWatchedAt,
-          rating: rating || null,
-          notes: notes || null,
+          rating: rating ?? null,
+          notes: notes ?? null,
           created_at: now,
           updated_at: now,
         };
@@ -431,8 +498,8 @@ export async function POST(request: NextRequest) {
         started_at: startedAt,
         completed_at: completedAt,
         last_watched_at: lastWatchedAt,
-        rating: rating || existing.rating,
-        notes: notes || existing.notes,
+        rating: rating !== undefined ? rating : existing.rating,
+        notes: notes !== undefined ? notes : existing.notes,
         updated_at: now,
       };
 
@@ -452,7 +519,7 @@ export async function POST(request: NextRequest) {
       user_id: session.user.id,
       tmdb_id,
       media_type,
-      title,
+      title: title.trim(),
       poster_path: poster_path || null,
       overview: overview || "",
       release_date: release_date || "",
@@ -462,8 +529,8 @@ export async function POST(request: NextRequest) {
       started_at: startedAt,
       completed_at: completedAt,
       last_watched_at: lastWatchedAt,
-      rating: rating || null,
-      notes: notes || null,
+      rating: rating ?? null,
+      notes: notes ?? null,
       created_at: now,
       updated_at: now,
     };
@@ -490,12 +557,13 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const tmdb_id = searchParams.get("tmdb_id");
+    const tmdbIdParam = searchParams.get("tmdb_id");
     const media_type = searchParams.get("media_type");
+    const tmdbId = parsePositiveInteger(tmdbIdParam);
 
-    if (!tmdb_id || !media_type) {
+    if (tmdbId === null || !isMediaType(media_type)) {
       return NextResponse.json(
-        { error: "Missing tmdb_id or media_type" },
+        { error: "Invalid tmdb_id or media_type" },
         { status: 400 },
       );
     }
@@ -505,7 +573,7 @@ export async function DELETE(request: NextRequest) {
       await sql`
         DELETE FROM viewing_history 
         WHERE user_id = ${session.user.id} 
-        AND tmdb_id = ${parseInt(tmdb_id)} 
+        AND tmdb_id = ${tmdbId}
         AND media_type = ${media_type}
       `;
 
@@ -516,7 +584,7 @@ export async function DELETE(request: NextRequest) {
     const userHistory = viewingHistoryData.get(session.user.id) || [];
     const filteredHistory = userHistory.filter(
       (item) =>
-        !(item.tmdb_id === parseInt(tmdb_id) && item.media_type === media_type),
+        !(item.tmdb_id === tmdbId && item.media_type === media_type),
     );
 
     viewingHistoryData.set(session.user.id, filteredHistory);
