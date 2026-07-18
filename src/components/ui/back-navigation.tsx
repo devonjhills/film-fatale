@@ -31,13 +31,13 @@ export function BackNavigation({
   };
 
   return (
-    <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-full shadow-sm">
+    <div className="rounded-md border border-border/70 bg-background/85">
       <Button
         variant={variant}
         size={size}
         onClick={handleBack}
         className={cn(
-          "gap-2 font-serif border-0 bg-transparent hover:bg-background/60 hover:text-primary transition-all duration-300 rounded-full",
+          "gap-2 rounded-sm border-0 bg-transparent font-serif transition-colors duration-150 hover:bg-accent hover:text-primary",
           className,
         )}
       >

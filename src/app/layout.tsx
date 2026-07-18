@@ -1,36 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, Crimson_Pro, JetBrains_Mono } from "next/font/google";
+import { Inter, Crimson_Pro } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
-import { BackgroundProvider } from "@/components/providers/background-provider";
-import { PageTransition } from "@/components/providers/page-transition";
 import { Navigation } from "@/components/layout/navigation";
 import { Footer } from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-// Enhanced Inter for superior readability and modern aesthetics
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap", // Performance optimization
+  variable: "--font-ui",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
-// Crimson Pro - Elegant serif with better readability, perfect for film noir aesthetic
 const crimsonPro = Crimson_Pro({
   subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700"],
   display: "swap",
   style: ["normal", "italic"],
-});
-
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -95,32 +83,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
         <link rel="preconnect" href="https://image.tmdb.org" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
       </head>
       <body
-        className={`${inter.variable} ${crimsonPro.variable} ${jetbrains.variable} font-sans antialiased min-h-screen flex flex-col`}
+        className={`${inter.variable} ${crimsonPro.variable} min-h-screen flex flex-col`}
       >
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
         <AuthProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TooltipProvider>
-              <BackgroundProvider />
-              <Navigation />
-              <main id="main-content" className="flex-1 pt-16 flex flex-col">
-                <PageTransition>
-                  {children}
-                </PageTransition>
-              </main>
-              <Footer />
-            </TooltipProvider>
-          </ThemeProvider>
+          <TooltipProvider>
+            <Navigation />
+            <main id="main-content" className="flex flex-1 flex-col pt-16">
+              {children}
+            </main>
+            <Footer />
+          </TooltipProvider>
         </AuthProvider>
       </body>
     </html>
