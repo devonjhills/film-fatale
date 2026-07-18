@@ -12,6 +12,7 @@ export type AccessSession = {
 };
 
 const ACCESS_ASSERTION_HEADER = "cf-access-jwt-assertion";
+const ACCESS_AUTHORIZATION_COOKIE = "CF_Authorization";
 const jwksByTeamDomain = new Map<
   string,
   ReturnType<typeof createRemoteJWKSet>
@@ -19,6 +20,7 @@ const jwksByTeamDomain = new Map<
 
 function developmentSession(): AccessSession | null {
   if (process.env.NODE_ENV === "production") return null;
+  if (process.env.DEV_AUTH_DISABLED === "true") return null;
 
   const email = process.env.DEV_AUTH_EMAIL || "dev@localhost";
   const id = process.env.APP_OWNER_ID || "owner";
@@ -30,6 +32,29 @@ function developmentSession(): AccessSession | null {
       name: process.env.DEV_AUTH_NAME || email.split("@")[0],
     },
   };
+}
+
+function getAccessCookie(cookieHeader: string | null): string | null {
+  if (!cookieHeader) return null;
+
+  for (const cookie of cookieHeader.split(";")) {
+    const separator = cookie.indexOf("=");
+    if (separator === -1) continue;
+
+    const name = cookie.slice(0, separator).trim();
+    if (name !== ACCESS_AUTHORIZATION_COOKIE) continue;
+
+    const value = cookie.slice(separator + 1).trim();
+    if (!value) return null;
+
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return value;
+    }
+  }
+
+  return null;
 }
 
 function getTeamDomain(): string | null {
@@ -68,7 +93,9 @@ export async function getSession(): Promise<AccessSession | null> {
   if (localSession) return localSession;
 
   const requestHeaders = await headers();
-  const token = requestHeaders.get(ACCESS_ASSERTION_HEADER);
+  const token =
+    requestHeaders.get(ACCESS_ASSERTION_HEADER) ??
+    getAccessCookie(requestHeaders.get("cookie"));
   const teamDomain = getTeamDomain();
   const audience = process.env.CLOUDFLARE_ACCESS_AUD;
 

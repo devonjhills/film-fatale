@@ -43,7 +43,7 @@ export default function MyLibraryPage() {
 
   // Redirect if not authenticated
   if (!isLoading && !user) {
-    redirect("/signin");
+    redirect("/admin");
   }
 
   const fetchViewingHistory = useCallback(async () => {

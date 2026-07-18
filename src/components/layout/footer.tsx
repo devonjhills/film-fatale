@@ -5,6 +5,7 @@ const links = [
   { href: "/about", label: "About" },
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
+  { href: "/admin", label: "Owner", nofollow: true },
 ];
 
 export function Footer() {
@@ -34,6 +35,7 @@ export function Footer() {
               <Link
                 key={link.href}
                 href={link.href}
+                rel={link.nofollow ? "nofollow" : undefined}
                 className="transition-colors hover:text-foreground"
               >
                 {link.label}

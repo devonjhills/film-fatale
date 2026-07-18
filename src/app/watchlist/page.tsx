@@ -15,7 +15,7 @@ export default function WatchlistPage() {
       if (user) {
         router.replace("/library?status=plan_to_watch");
       } else {
-        router.replace("/signin?redirect=/library?status=plan_to_watch");
+        router.replace("/admin");
       }
     }
   }, [user, loading, router]);

@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     fetch("/api/me", { cache: "no-store", signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) return null;
-        const data = (await response.json()) as { user: AccessUser };
+        const data = (await response.json()) as { user: AccessUser | null };
         return data.user;
       })
       .then((accessUser) => setUser(accessUser))

@@ -12,7 +12,6 @@ import { TVGrid } from "@/components/tv/tv-grid";
 import { notFound } from "next/navigation";
 import { EpisodeTracker } from "@/components/tv/episode-tracker";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { formatDate, formatVoteAverage } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -461,47 +460,8 @@ export function TVDetailsPage({ tvId }: TVDetailsPageProps) {
           )}
 
           {/* Episode Tracker - Only for authenticated users */}
-          {tvShow.seasons && tvShow.seasons.length > 0 && (
-            <>
-              {user ? (
-                <EpisodeTracker tmdb_id={tvShow.id} seasons={tvShow.seasons} />
-              ) : (
-                <Card>
-                  <CardContent className="p-8">
-                    <div className="text-center space-y-6">
-                      <div className="mx-auto w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-                        <Icons.Clock className="h-8 w-8" />
-                      </div>
-
-                      <div className="space-y-2">
-                        <h3 className="text-3xl font-serif font-bold text-foreground">
-                          Track Your Progress
-                        </h3>
-                        <p className="text-muted-foreground max-w-md mx-auto">
-                          Sign in to track which episodes you&apos;ve watched
-                          and pick up where you left off.
-                        </p>
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                        <Button asChild size="lg">
-                          <Link href="/signin">
-                            <Icons.User className="h-4 w-4 mr-2" />
-                            Sign In to Track Episodes
-                          </Link>
-                        </Button>
-                        <Button variant="outline" size="lg" asChild>
-                          <Link href="/library">
-                            <Icons.Bookmark className="h-4 w-4 mr-2" />
-                            View My Library
-                          </Link>
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </>
+          {user && tvShow.seasons && tvShow.seasons.length > 0 && (
+            <EpisodeTracker tmdb_id={tvShow.id} seasons={tvShow.seasons} />
           )}
 
           {/* Cast - Full Width */}

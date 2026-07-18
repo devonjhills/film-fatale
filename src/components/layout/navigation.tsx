@@ -123,54 +123,43 @@ export function Navigation() {
             </Link>
           </Button>
 
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label={user ? "Open account menu" : "Open sign-in menu"}
-              >
-                {user ? (
+          {user && (
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Open account menu"
+                >
                   <span className="flex size-8 items-center justify-center rounded-full border border-primary/50 bg-primary/15 text-sm font-semibold text-foreground">
                     {(user.name || user.email || "U").charAt(0).toUpperCase()}
                   </span>
-                ) : (
-                  <Icons.User aria-hidden="true" />
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="surface-float w-64 p-2">
-              {user ? (
-                <>
-                  <DropdownMenuLabel className="px-2 py-3">
-                    <span className="block text-sm font-medium">
-                      {user.name || "Film Fatale"}
-                    </span>
-                    <span className="mt-0.5 block truncate text-xs font-normal text-muted-foreground">
-                      {user.email}
-                    </span>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onSelect={() => router.push("/library")}>
-                    <Icons.Bookmark aria-hidden="true" />
-                    Library
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={signOut}
-                    className="text-destructive focus:text-destructive"
-                  >
-                    <Icons.LogOut aria-hidden="true" />
-                    Sign out
-                  </DropdownMenuItem>
-                </>
-              ) : (
-                <DropdownMenuItem onSelect={() => router.push("/signin")}>
-                  <Icons.User aria-hidden="true" />
-                  Sign in
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="surface-float w-64 p-2">
+                <DropdownMenuLabel className="px-2 py-3">
+                  <span className="block text-sm font-medium">
+                    {user.name || "Film Fatale"}
+                  </span>
+                  <span className="mt-0.5 block truncate text-xs font-normal text-muted-foreground">
+                    {user.email}
+                  </span>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={() => router.push("/library")}>
+                  <Icons.Bookmark aria-hidden="true" />
+                  Library
                 </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuItem
+                  onSelect={signOut}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Icons.LogOut aria-hidden="true" />
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
           <Button
             variant="ghost"

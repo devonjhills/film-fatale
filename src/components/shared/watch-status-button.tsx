@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
+import { useAuth } from "@/components/providers/auth-provider";
 
 interface WatchStatusButtonProps {
   tmdb_id: number;
@@ -53,10 +54,13 @@ export function WatchStatusButton({
   vote_average = 0,
   size = "default",
 }: WatchStatusButtonProps) {
+  const { user, loading: authLoading } = useAuth();
   const [currentStatus, setCurrentStatus] = useState<WatchStatus | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!user) return;
+
     // Check if item is already in viewing history
     const checkStatus = async () => {
       try {
@@ -75,7 +79,7 @@ export function WatchStatusButton({
     };
 
     checkStatus();
-  }, [tmdb_id, media_type]);
+  }, [user, tmdb_id, media_type]);
 
   const handleStatusChange = async (status: WatchStatus) => {
     if (loading) return;
@@ -135,6 +139,8 @@ export function WatchStatusButton({
     (option) => option.value === currentStatus,
   );
   const CurrentIcon = currentOption?.icon || Icons.Clock;
+
+  if (authLoading || !user) return null;
 
   return (
     <DropdownMenu>
