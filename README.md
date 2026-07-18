@@ -1,22 +1,20 @@
 # Film Fatale
 
-Film Fatale is a public movie and TV discovery app with a private, single-owner
-library for watch, rating, and episode history. It runs as a full-stack Next.js
-application on Cloudflare Workers.
+Film Fatale is a private movie and TV discovery app with personal watch,
+rating, and episode history. It runs as a full-stack Next.js application on
+Cloudflare Workers.
 
 ## Architecture
 
-- Next.js 16 and React 19
+- Next.js 15 and React 19
 - Cloudflare Workers via the OpenNext adapter
 - Cloudflare Access for single-owner authentication
 - Cloudflare D1 for viewing and episode history
 - Server-side TMDB proxy so the API key never reaches the browser
 
-Only `/admin` is protected by Cloudflare Access. It acts as the owner login
-gateway and redirects a verified owner to `/library`. The rest of the catalog
-is public. Owner controls and private API routes validate the Access JWT again
-and only accept the exact email configured in
-`CLOUDFLARE_ACCESS_ALLOWED_EMAIL`.
+The entire production hostname should be protected by Cloudflare Access. The
+application validates the Access JWT again and only accepts the email configured
+in `CLOUDFLARE_ACCESS_ALLOWED_EMAIL`.
 
 ## Local development
 
@@ -31,7 +29,6 @@ npm run dev
 
 Add `TMDB_API_KEY` and your development email to `.env.local`. Local development
 uses the stable `APP_OWNER_ID` identity without requiring a Cloudflare login.
-Set `DEV_AUTH_DISABLED=true` to preview the public, signed-out experience.
 
 ## Commands
 
@@ -53,7 +50,6 @@ npm run cf-typegen          # Regenerate Cloudflare binding types
 | `CLOUDFLARE_ACCESS_AUD` | Audience tag for the Access application |
 | `CLOUDFLARE_ACCESS_ALLOWED_EMAIL` | The only email the app accepts |
 | `APP_OWNER_ID` | Stable database owner key; keep it unchanged |
-| `DEV_AUTH_DISABLED` | Optional local-only switch for the signed-out experience |
 
 The D1 binding is named `DB` in `wrangler.jsonc`. Do not commit secrets; use
 Wrangler secrets for production values.
@@ -66,7 +62,7 @@ database setup, Access configuration, and deployment verification.
 The production Worker is connected to the GitHub `main` branch through
 Cloudflare Workers Builds. A successful build from `main` automatically updates
 the live deployment. The default `workers.dev` hostname and branch preview URLs
-are disabled; only the custom domains serve the app.
+are disabled; only the Access-protected custom domains serve the app.
 
 ## Self-hosting
 
