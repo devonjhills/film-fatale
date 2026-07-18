@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 interface PaginationData {
   currentPage: number;
-  setCurrentPage: (page: number) => void;
   handlePageChange: (page: number) => void;
 }
 
@@ -17,17 +15,9 @@ export function usePaginatedData(): PaginationData {
   const router = useRouter();
   const pageParam = searchParams.get("page");
 
-  const [currentPage, setCurrentPage] = useState(
-    pageParam ? parseInt(pageParam, 10) : 1,
-  );
-
-  // Update page when URL changes
-  useEffect(() => {
-    const page = pageParam ? parseInt(pageParam, 10) : 1;
-    if (page !== currentPage && page > 0) {
-      setCurrentPage(page);
-    }
-  }, [pageParam, currentPage]);
+  const parsedPage = pageParam ? Number.parseInt(pageParam, 10) : 1;
+  const currentPage =
+    Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
   // Update URL when page changes
   const handlePageChange = (page: number) => {
@@ -41,15 +31,11 @@ export function usePaginatedData(): PaginationData {
     const search = params.toString();
     const newUrl = search ? `?${search}` : "";
     router.push(newUrl, { scroll: false });
-    setCurrentPage(page);
-
-    // Scroll to top of content area
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return {
     currentPage,
-    setCurrentPage,
     handlePageChange,
   };
 }

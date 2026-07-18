@@ -1,13 +1,14 @@
 export default function PrivacyPage() {
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="space-y-8">
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-display font-bold">Privacy Policy</h1>
+    <div className="site-container max-w-4xl py-12 md:py-20">
+      <article className="space-y-10">
+        <header className="space-y-4 border-b border-border/70 pb-8">
+          <p className="eyebrow">The fine print</p>
+          <h1 className="font-serif text-5xl font-semibold tracking-[-0.035em] md:text-6xl">Privacy Policy</h1>
           <p className="text-muted-foreground">
             Last updated: {new Date().toLocaleDateString()}
           </p>
-        </div>
+        </header>
 
         <div className="space-y-6 text-sm leading-relaxed">
           <section>
@@ -174,7 +175,7 @@ export default function PrivacyPage() {
             </p>
           </section>
         </div>
-      </div>
+      </article>
     </div>
   );
 }

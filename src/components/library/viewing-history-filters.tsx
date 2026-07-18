@@ -19,6 +19,7 @@ interface ViewingHistoryFiltersProps {
     status: WatchStatus | "all";
     mediaType: "movie" | "tv" | "all";
   }) => void;
+  hideStatus?: boolean;
 }
 
 const statusOptions = [
@@ -37,16 +38,17 @@ const mediaTypeOptions = [
 export function ViewingHistoryFilters({
   filters,
   onFiltersChange,
+  hideStatus = false,
 }: ViewingHistoryFiltersProps) {
   const handleClearFilters = () => {
     onFiltersChange({
-      status: "all",
+      status: hideStatus ? filters.status : "all",
       mediaType: "all",
     });
   };
 
   const hasActiveFilters =
-    filters.status !== "all" || filters.mediaType !== "all";
+    (!hideStatus && filters.status !== "all") || filters.mediaType !== "all";
 
   return (
     <div className="space-y-4">
@@ -65,31 +67,33 @@ export function ViewingHistoryFilters({
       </div>
 
       <div className="flex flex-wrap items-center gap-4">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-muted-foreground">
-            Status:
-          </span>
-          <Select
-            value={filters.status}
-            onValueChange={(value) =>
-              onFiltersChange({
-                ...filters,
-                status: value as WatchStatus | "all",
-              })
-            }
-          >
-            <SelectTrigger className="w-44 h-9">
-              <SelectValue placeholder="All Statuses" />
-            </SelectTrigger>
-            <SelectContent>
-              {statusOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {!hideStatus && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-muted-foreground">
+              Status:
+            </span>
+            <Select
+              value={filters.status}
+              onValueChange={(value) =>
+                onFiltersChange({
+                  ...filters,
+                  status: value as WatchStatus | "all",
+                })
+              }
+            >
+              <SelectTrigger className="h-9 w-44">
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                {statusOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-muted-foreground">

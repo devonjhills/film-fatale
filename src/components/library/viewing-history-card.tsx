@@ -62,7 +62,7 @@ export function ViewingHistoryCard({
 
   return (
     <>
-      <Card className="group glass overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.01]">
+      <Card className="group overflow-hidden transition-colors duration-200 hover:border-primary/40">
         <div className="flex gap-4 p-4">
           {/* Poster Section */}
           <div className="relative flex-shrink-0">

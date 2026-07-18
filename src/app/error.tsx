@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Error({
   error,
@@ -17,12 +18,12 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center space-y-6 max-w-md mx-auto px-4">
+    <div className="flex min-h-[70vh] items-center justify-center py-16">
+      <div className="surface-panel mx-4 max-w-lg space-y-7 px-7 py-12 text-center">
         <div className="space-y-4">
-          <Icons.AlertTriangle className="h-24 w-24 text-destructive mx-auto" />
-          <h1 className="text-2xl font-bold text-destructive">
-            Something went wrong!
+          <Icons.AlertTriangle className="mx-auto size-12 text-destructive" />
+          <h1 className="font-serif text-4xl font-semibold">
+            The picture went dark
           </h1>
         </div>
 
@@ -43,21 +44,17 @@ export default function Error({
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={reset}
-            className="inline-flex items-center justify-center space-x-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-          >
+        <div className="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button onClick={reset}>
             <Icons.RotateCcw className="h-4 w-4" />
             <span>Try again</span>
-          </button>
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center space-x-2 px-6 py-3 border border-input rounded-lg hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors"
-          >
-            <Icons.Home className="h-4 w-4" />
-            <span>Go home</span>
-          </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/">
+              <Icons.Home className="h-4 w-4" />
+              <span>Go home</span>
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

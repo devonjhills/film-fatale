@@ -1,124 +1,93 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Icons } from "@/components/ui/icons";
+
+const features = [
+  {
+    title: "Find the next one",
+    copy: "Browse what is playing, what critics love, and the titles hiding in plain sight.",
+    icon: Icons.Search,
+  },
+  {
+    title: "Keep your dossier",
+    copy: "Save a watchlist, record what you finished, and track episodic progress.",
+    icon: Icons.Bookmark,
+  },
+  {
+    title: "Know the whole story",
+    copy: "Cast, trailers, providers, ratings, seasons, and the details that make a title click.",
+    icon: Icons.Clapperboard,
+  },
+];
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="space-y-8">
-        <div className="text-center space-y-4">
-          <div className="flex items-center justify-center space-x-3">
-            <div className="relative h-10 w-10">
-              <Image
-                src="/logo.png"
-                alt="FilmFatale Logo"
-                fill
-                sizes="40px"
-                className="object-contain"
-              />
-            </div>
-            <h1 className="text-4xl font-bold">FilmFatale</h1>
-          </div>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Your ultimate destination for movie and TV show discovery
+    <div className="site-container py-12 md:py-20">
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)] lg:items-start">
+        <article>
+          <p className="eyebrow mb-5">About the archive</p>
+          <h1 className="display-title max-w-4xl">
+            Every great night starts with the right film.
+          </h1>
+          <p className="mt-8 max-w-3xl text-lg leading-8 text-muted-foreground md:text-xl">
+            Film Fatale is a private cinema companion built for discovery,
+            memory, and the pleasure of choosing well. It keeps movies and
+            television in one sharply edited place without turning the
+            experience into a noisy streaming storefront.
           </p>
-        </div>
 
-        <div className="space-y-6">
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">What is FilmFatale?</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              FilmFatale is a comprehensive movie and TV show discovery platform
-              designed to help you find your next favorite watch. Whether
-              you&apos;re looking for the latest blockbusters, hidden gems, or
-              classic films, our platform provides detailed information,
-              ratings, and reviews to guide your entertainment choices.
-            </p>
-          </section>
+          <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border/70 bg-border/70 md:grid-cols-3">
+            {features.map(({ title, copy, icon: Icon }) => (
+              <section key={title} className="bg-card p-6">
+                <Icon className="size-5 text-primary" aria-hidden="true" />
+                <h2 className="mt-5 font-serif text-2xl font-semibold">{title}</h2>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  {copy}
+                </p>
+              </section>
+            ))}
+          </div>
 
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">Features</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <h3 className="font-semibold">Discover Content</h3>
-                <p className="text-sm text-muted-foreground">
-                  Browse popular, trending, and top-rated movies and TV shows
-                </p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-semibold">Personal Watchlist</h3>
-                <p className="text-sm text-muted-foreground">
-                  Save movies and shows to watch later with our personal
-                  watchlist feature
-                </p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-semibold">Detailed Information</h3>
-                <p className="text-sm text-muted-foreground">
-                  Get comprehensive details including cast, crew, ratings, and
-                  plot summaries
-                </p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-semibold">Search & Filter</h3>
-                <p className="text-sm text-muted-foreground">
-                  Find exactly what you&apos;re looking for with our powerful
-                  search and filtering tools
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              We believe that everyone deserves to find great entertainment that
-              resonates with them. FilmFatale aims to make movie and TV show
-              discovery effortless and enjoyable, helping you spend less time
-              searching and more time watching what you love.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">Powered by TMDB</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              All our movie and TV show data is sourced from{" "}
-              <Link
-                href="https://www.themoviedb.org/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-400 transition-colors underline"
-              >
-                The Movie Database (TMDB)
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Button asChild size="lg">
+              <Link href="/">
+                Start discovering
+                <Icons.ArrowRight aria-hidden="true" />
               </Link>
-              , ensuring you have access to the most comprehensive and
-              up-to-date entertainment information available.
-            </p>
-          </section>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/library">Open the library</Link>
+            </Button>
+          </div>
+        </article>
 
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">Get Started</h2>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              Ready to discover your next favorite movie or TV show? Start
-              exploring our vast collection of entertainment content, create
-              your personal watchlist, and never run out of great things to
-              watch.
+        <aside className="surface-panel relative overflow-hidden p-7">
+          <div className="absolute -right-12 -top-12 size-48 rounded-full bg-primary/10 blur-3xl" />
+          <Image
+            src="/logo.png"
+            alt="Film Fatale emblem"
+            width={180}
+            height={180}
+            className="relative mx-auto size-40 rounded-full border border-border bg-foreground sm:size-44"
+          />
+          <div className="relative mt-7 border-t border-border/70 pt-6">
+            <p className="eyebrow">The source</p>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              Film and television data is supplied by The Movie Database.
+              Film Fatale is not endorsed or certified by TMDB.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/"
-                className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                Browse Movies
-              </Link>
-              <Link
-                href="/tv"
-                className="inline-flex items-center px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
-              >
-                Browse TV Shows
-              </Link>
-            </div>
-          </section>
-        </div>
+            <Link
+              href="https://www.themoviedb.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground hover:text-primary"
+            >
+              Visit TMDB
+              <Icons.ExternalLink aria-hidden="true" />
+            </Link>
+          </div>
+        </aside>
       </div>
     </div>
   );

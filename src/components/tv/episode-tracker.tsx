@@ -57,12 +57,17 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
   );
 
   useEffect(() => {
-    fetchProgress();
-    fetchEpisodes();
-  }, [fetchProgress, fetchEpisodes]);
+    const timer = window.setTimeout(() => {
+      void fetchProgress();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [fetchProgress]);
 
   useEffect(() => {
-    fetchEpisodes(selectedSeason);
+    const timer = window.setTimeout(() => {
+      void fetchEpisodes(selectedSeason);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [selectedSeason, fetchEpisodes]);
 
   const toggleEpisode = async (

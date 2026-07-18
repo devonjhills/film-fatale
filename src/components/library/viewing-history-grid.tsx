@@ -31,7 +31,7 @@ export function ViewingHistoryGrid({
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="animate-pulse">
-            <div className="flex gap-4 p-4 glass rounded-lg">
+            <div className="surface-panel flex gap-4 p-4">
               <div className="bg-muted rounded-md w-20 aspect-[2/3] flex-shrink-0"></div>
               <div className="flex-1 space-y-3">
                 <div className="space-y-2">

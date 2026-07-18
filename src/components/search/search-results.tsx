@@ -7,7 +7,6 @@ import type { MultiSearchResult } from "@/lib/types";
 
 interface SearchResultsProps {
   results: MultiSearchResult | null;
-  sortBy?: string;
 }
 
 export function SearchResults({ results }: SearchResultsProps) {
@@ -18,16 +17,12 @@ export function SearchResults({ results }: SearchResultsProps) {
   const totalTV = tvResults?.length || 0;
   const totalPeople = peopleResults?.length || 0;
 
-  // Apply sorting logic here if needed based on sortBy parameter
-  // For now, we'll use the results as-is since TMDB API handles most sorting
-
   return (
-    <div className="space-y-8">
-      {/* Movies Section */}
+    <div className="space-y-16">
       {totalMovies > 0 && (
-        <section className="space-y-4">
-          <div className="flex items-center gap-3">
-            <h3 className="text-xl font-semibold">Movies</h3>
+        <section className="space-y-6">
+          <div className="flex items-baseline gap-3">
+            <h3 className="section-title">Films</h3>
             <span className="text-sm text-muted-foreground">
               ({totalMovies} result{totalMovies !== 1 ? "s" : ""})
             </span>
@@ -42,11 +37,10 @@ export function SearchResults({ results }: SearchResultsProps) {
         </section>
       )}
 
-      {/* TV Shows Section */}
       {totalTV > 0 && (
-        <section className="space-y-4">
-          <div className="flex items-center gap-3">
-            <h3 className="text-xl font-semibold">TV Shows</h3>
+        <section className="space-y-6">
+          <div className="flex items-baseline gap-3">
+            <h3 className="section-title">Television</h3>
             <span className="text-sm text-muted-foreground">
               ({totalTV} result{totalTV !== 1 ? "s" : ""})
             </span>
@@ -61,11 +55,10 @@ export function SearchResults({ results }: SearchResultsProps) {
         </section>
       )}
 
-      {/* People Section */}
       {totalPeople > 0 && (
-        <section className="space-y-4">
-          <div className="flex items-center gap-3">
-            <h3 className="text-xl font-semibold">People</h3>
+        <section className="space-y-6">
+          <div className="flex items-baseline gap-3">
+            <h3 className="section-title">People</h3>
             <span className="text-sm text-muted-foreground">
               ({totalPeople} result{totalPeople !== 1 ? "s" : ""})
             </span>

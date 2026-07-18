@@ -10,58 +10,36 @@ import { useAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
 import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";
 import { BackNavigation } from "@/components/ui/back-navigation";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function MyLibraryPage() {
   const { user, loading: isLoading } = useAuth();
   const searchParams = useSearchParams();
+  const requestedTab = searchParams.get("tab") || searchParams.get("status");
+  const initialTab =
+    requestedTab &&
+    ["watching", "plan_to_watch", "completed", "all"].includes(requestedTab)
+      ? requestedTab
+      : "watching";
+  const requestedMediaType = searchParams.get("media_type");
+  const initialMediaType =
+    requestedMediaType === "movie" || requestedMediaType === "tv"
+      ? requestedMediaType
+      : "all";
   const [viewingHistory, setViewingHistory] = useState<ViewingHistoryItem[]>(
     [],
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
-    status: "watching" as WatchStatus | "all",
-    mediaType: "all" as "movie" | "tv" | "all",
+    status: initialTab as WatchStatus | "all",
+    mediaType: initialMediaType as "movie" | "tv" | "all",
   });
-  const [activeTab, setActiveTab] = useState("watching");
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  // Initialize filters and tab from URL params
-  useEffect(() => {
-    const statusParam = searchParams?.get("status");
-    const mediaTypeParam = searchParams?.get("media_type");
-    const tabParam = searchParams?.get("tab");
-
-    // Set initial tab based on URL param
-    if (tabParam && ["watching", "all"].includes(tabParam)) {
-      setActiveTab(tabParam);
-      if (tabParam === "watching") {
-        setFilters({ status: "watching", mediaType: "all" });
-      } else {
-        setFilters({ status: "plan_to_watch", mediaType: "all" });
-      }
-    } else {
-      // Set filters based on URL params if no tab specified
-      if (
-        statusParam &&
-        ["watching", "completed", "plan_to_watch"].includes(statusParam)
-      ) {
-        setFilters((prev) => ({ ...prev, status: statusParam as WatchStatus }));
-        setActiveTab(statusParam === "watching" ? "watching" : "all");
-      }
-
-      if (mediaTypeParam && ["movie", "tv"].includes(mediaTypeParam)) {
-        setFilters((prev) => ({
-          ...prev,
-          mediaType: mediaTypeParam as "movie" | "tv",
-        }));
-      }
-    }
-  }, [searchParams]);
 
   // Redirect if not authenticated
   if (!isLoading && !user) {
@@ -95,10 +73,12 @@ export default function MyLibraryPage() {
   }, [filters.status, filters.mediaType, page]);
 
   useEffect(() => {
-    if (user) {
-      fetchViewingHistory();
-    }
-  }, [user, filters, page, fetchViewingHistory]);
+    if (!user) return;
+    const timer = window.setTimeout(() => {
+      void fetchViewingHistory();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [user, fetchViewingHistory]);
 
   const handleFiltersChange = (newFilters: typeof filters) => {
     setFilters(newFilters);
@@ -107,18 +87,17 @@ export default function MyLibraryPage() {
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-    if (value === "watching") {
-      setFilters({ status: "watching", mediaType: "all" });
-    } else {
-      setFilters({ status: "plan_to_watch", mediaType: "all" });
-    }
+    setFilters({
+      status: value as WatchStatus | "all",
+      mediaType: "all",
+    });
     setPage(1);
   };
 
   if (isLoading) {
     return (
       <div className="min-h-screen">
-        <div className="container mx-auto px-4 py-8">
+        <div className="site-container py-8">
           <div className="text-center">Loading...</div>
         </div>
       </div>
@@ -127,41 +106,49 @@ export default function MyLibraryPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Header Section */}
-      <div className="border-b">
-        <div className="container mx-auto px-4 pt-6 pb-8">
-          <div className="flex items-center justify-between gap-4 mb-6">
+      <header className="noir-page-header">
+        <div className="site-container py-10 md:py-14">
+          <div className="mb-8 flex items-center justify-between gap-4">
             <BreadcrumbNavigation
               items={[{ label: "My Library", current: true }]}
             />
             <BackNavigation fallbackHref="/" />
           </div>
 
-          <div className="text-center space-y-3">
-            <h1 className="text-3xl md:text-4xl font-bold">My Library</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Track your viewing progress, rate movies and shows, and manage
-              your personal collection
+          <div>
+            <p className="eyebrow mb-4">Private collection</p>
+            <h1 className="font-serif text-4xl font-semibold tracking-[-0.035em] sm:text-5xl md:text-6xl">
+              My Library
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+              Pick up where you left off, keep a watchlist, and remember every
+              story worth keeping.
             </p>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <div className="site-container py-10 md:py-14">
+        <div className="space-y-8">
           <Tabs value={activeTab} onValueChange={handleTabChange}>
-            <div className="flex justify-center">
-              <TabsList className="grid grid-cols-2 w-full max-w-md">
-                <TabsTrigger value="watching" className="text-sm font-medium">
-                  Currently Watching
+            <div className="overflow-x-auto pb-1">
+              <TabsList className="grid min-w-[32rem] grid-cols-4 sm:min-w-0 sm:max-w-2xl">
+                <TabsTrigger value="watching">
+                  Watching
                 </TabsTrigger>
-                <TabsTrigger value="all" className="text-sm font-medium">
-                  All Library
+                <TabsTrigger value="plan_to_watch">
+                  Want to watch
+                </TabsTrigger>
+                <TabsTrigger value="completed">
+                  Watched
+                </TabsTrigger>
+                <TabsTrigger value="all">
+                  All
                 </TabsTrigger>
               </TabsList>
             </div>
 
-            <TabsContent value="watching" className="mt-8">
+            <div className="mt-8">
               {error ? (
                 <Card className="border-destructive">
                   <CardContent className="p-8 text-center">
@@ -177,52 +164,35 @@ export default function MyLibraryPage() {
                     </div>
                   </CardContent>
                 </Card>
-              ) : (
+              ) : activeTab === "watching" ? (
                 <CurrentlyWatchingSection
                   items={viewingHistory}
                   loading={loading}
                   onRefresh={fetchViewingHistory}
                 />
-              )}
-            </TabsContent>
-
-            <TabsContent value="all" className="mt-8 space-y-6">
-              <Card>
-                <CardContent className="p-6">
-                  <ViewingHistoryFilters
-                    filters={filters}
-                    onFiltersChange={handleFiltersChange}
-                  />
-                </CardContent>
-              </Card>
-
-              {error ? (
-                <Card className="border-destructive">
-                  <CardContent className="p-8 text-center">
-                    <div className="space-y-3">
-                      <p className="text-destructive font-medium">{error}</p>
-                      <Button
-                        onClick={fetchViewingHistory}
-                        variant="outline"
-                        size="sm"
-                      >
-                        Try again
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
               ) : (
-                <ViewingHistoryGrid
-                  items={viewingHistory}
-                  loading={loading}
-                  onRefresh={fetchViewingHistory}
-                  page={page}
-                  totalPages={totalPages}
-                  onPageChange={setPage}
-                  mediaTypeFilter={filters.mediaType}
-                />
+                <div className="space-y-6">
+                  <Card>
+                    <CardContent className="p-5">
+                      <ViewingHistoryFilters
+                        filters={filters}
+                        onFiltersChange={handleFiltersChange}
+                        hideStatus
+                      />
+                    </CardContent>
+                  </Card>
+                  <ViewingHistoryGrid
+                    items={viewingHistory}
+                    loading={loading}
+                    onRefresh={fetchViewingHistory}
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                    mediaTypeFilter={filters.mediaType}
+                  />
+                </div>
               )}
-            </TabsContent>
+            </div>
           </Tabs>
         </div>
       </div>

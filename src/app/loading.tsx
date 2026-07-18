@@ -5,15 +5,13 @@ import {
 
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero — no extra wrapper, matches RotatingHeroSection */}
+    <div className="min-h-screen">
       <HeroSectionSkeleton />
 
-      {/* Content sections — matches page.tsx container exactly */}
-      <div className="container mx-auto px-4 space-y-20 pb-24">
+      <div className="site-container space-y-20 py-16 md:space-y-24 md:py-24">
         <MediaSectionSkeleton cardCount={12} />
 
-        <div className="h-px bg-border w-full opacity-20" />
+        <div className="editorial-rule opacity-70" />
 
         <MediaSectionSkeleton cardCount={12} />
       </div>
