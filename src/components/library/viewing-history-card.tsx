@@ -6,7 +6,13 @@ import { getImageUrl } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Icons } from "@/components/ui/icons";
+import {
+  Edit,
+  RotateCcw,
+  Star,
+  StickyNote,
+  Trash,
+} from "@/components/ui/icons";
 import {
   Tooltip,
   TooltipContent,
@@ -118,7 +124,7 @@ export function ViewingHistoryCard({
                         className="h-7 w-7 p-0"
                         onClick={() => setShowStatusDialog(true)}
                       >
-                        <Icons.Edit3 className="h-3 w-3" />
+                        <Edit className="h-3 w-3" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">
@@ -133,7 +139,7 @@ export function ViewingHistoryCard({
                         className="h-7 w-7 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                         onClick={handleRemove}
                       >
-                        <Icons.Trash2 className="h-3 w-3" />
+                        <Trash className="h-3 w-3" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">
@@ -161,7 +167,7 @@ export function ViewingHistoryCard({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center gap-1 cursor-default">
-                        <Icons.Star className="h-4 w-4 fill-accent text-accent" />
+                        <Star className="h-4 w-4 text-accent" weight="fill" />
                         <span className="text-sm font-semibold">
                           {item.rating}/10
                         </span>
@@ -189,7 +195,7 @@ export function ViewingHistoryCard({
                 )}
                 {item.watch_count > 1 && (
                   <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Icons.RotateCcw className="h-4 w-4" />
+                    <RotateCcw className="h-4 w-4" />
                     <span className="font-medium text-sm">
                       {item.watch_count}x
                     </span>
@@ -213,7 +219,7 @@ export function ViewingHistoryCard({
               {item.notes && (
                 <div className="border-t pt-2">
                   <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <Icons.StickyNote className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                    <StickyNote className="mt-0.5 h-4 w-4 flex-shrink-0" />
                     <span className="line-clamp-2 text-sm">{item.notes}</span>
                   </div>
                 </div>

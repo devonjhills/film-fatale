@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Icons } from "@/components/ui/icons";
+import { Check } from "@/components/ui/icons";
 import { useState, useEffect } from "react";
 
 interface EpisodeProgressProps {
@@ -86,7 +86,7 @@ export function EpisodeProgress({
           </div>
           <div className="relative h-3 bg-muted/80 rounded-full overflow-hidden shadow-inner border border-border/40">
             <div
-              className="h-full bg-primary rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
+              className="relative h-full overflow-hidden rounded-full bg-primary transition-[width] duration-500 ease-out"
               style={{ width: `${animatedWidth}%` }}
             >
               {/* Animated shine effect */}
@@ -114,7 +114,7 @@ export function EpisodeProgress({
                   {isUpdating ? (
                     <div className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   ) : (
-                    <Icons.Check className="h-4 w-4 text-primary" />
+                    <Check className="h-4 w-4 text-primary" weight="bold" />
                   )}
                 </Button>
               </TooltipTrigger>
@@ -126,7 +126,7 @@ export function EpisodeProgress({
           </div>
         ) : (
           <Badge variant="default" className="text-xs font-medium">
-            <Icons.Check className="h-3 w-3 mr-1" />
+            <Check className="mr-1 h-3 w-3" weight="bold" />
             Complete
           </Badge>
         )}

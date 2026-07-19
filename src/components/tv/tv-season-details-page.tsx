@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Icons } from "@/components/ui/icons";
+import { ArrowLeft, Calendar, Clock, Film, Play, Star } from "@/components/ui/icons";
 import { useTVSeasonDetails, useTVDetails } from "@/lib/hooks/api-hooks";
 import { getImageUrl } from "@/lib/api";
 import { PersonCard } from "@/components/person/person-card";
@@ -150,7 +150,7 @@ export function TVSeasonDetailsPage({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
-          <Icons.Film className="h-16 w-16 text-muted-foreground mx-auto" />
+          <Film className="mx-auto h-16 w-16 text-muted-foreground" weight="duotone" />
           <h1 className="text-2xl font-bold">Season Not Found</h1>
           <p className="text-muted-foreground">
             The season you&apos;re looking for doesn&apos;t exist or has been
@@ -160,7 +160,7 @@ export function TVSeasonDetailsPage({
             href={`/tv/${tvId}`}
             className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
           >
-            <Icons.ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Back to TV Show
           </Link>
         </div>
@@ -216,7 +216,7 @@ export function TVSeasonDetailsPage({
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center bg-muted rounded-lg">
-                    <Icons.Film className="h-8 w-8 text-muted-foreground" />
+                    <Film className="h-8 w-8 text-muted-foreground" weight="duotone" />
                   </div>
                 )}
               </div>
@@ -230,13 +230,13 @@ export function TVSeasonDetailsPage({
                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-muted-foreground">
                     {season.vote_average > 0 && (
                       <div className="flex items-center gap-1">
-                        <Icons.Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4" weight="fill" />
                         <span>{rating}</span>
                       </div>
                     )}
                     {airDate && (
                       <div className="flex items-center gap-1">
-                        <Icons.Calendar className="h-4 w-4" />
+                        <Calendar className="h-4 w-4" />
                         <span>{airDate}</span>
                       </div>
                     )}
@@ -287,7 +287,7 @@ export function TVSeasonDetailsPage({
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <Icons.Play className="h-6 w-6 text-muted-foreground" />
+                          <Play className="h-6 w-6 text-muted-foreground" weight="duotone" />
                         </div>
                       )}
                     </div>
@@ -306,7 +306,7 @@ export function TVSeasonDetailsPage({
                         <div className="flex items-center gap-3 text-sm text-muted-foreground">
                           {episode.vote_average > 0 && (
                             <div className="flex items-center gap-1">
-                              <Icons.Star className="h-3 w-3 fill-current" />
+                              <Star className="h-3 w-3" weight="fill" />
                               <span>
                                 {formatVoteAverage(episode.vote_average)}
                               </span>
@@ -314,7 +314,7 @@ export function TVSeasonDetailsPage({
                           )}
                           {episode.runtime > 0 && (
                             <div className="flex items-center gap-1">
-                              <Icons.Clock className="h-3 w-3" />
+                              <Clock className="h-3 w-3" />
                               <span>{formatRuntime(episode.runtime)}</span>
                             </div>
                           )}

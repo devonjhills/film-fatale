@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Icons } from "@/components/ui/icons";
+import { Play } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -47,7 +47,7 @@ export function TrailerModal({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button size={size} variant={variant} className={className}>
-          <Icons.Play className="h-5 w-5" />
+          <Play className="h-5 w-5" weight="fill" />
           Watch Trailer
         </Button>
       </DialogTrigger>

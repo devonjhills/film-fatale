@@ -2,7 +2,19 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Icons } from "@/components/ui/icons";
+import {
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  ExternalLink,
+  FileText,
+  Film,
+  Globe,
+  Info,
+  LinkIcon,
+  Tv,
+  User,
+} from "@/components/ui/icons";
 import { usePersonDetails } from "@/lib/hooks/api-hooks";
 import { getImageUrl } from "@/lib/api";
 import { formatDate, calculateAge } from "@/lib/utils";
@@ -89,7 +101,7 @@ function PersonDetailsSkeleton() {
                   {Array.from({ length: 12 }).map((_, i) => (
                     <div
                       key={i}
-                      className="overflow-hidden bg-card border border-border/50 rounded-lg h-full flex flex-col transition-all duration-200 w-48"
+                      className="flex h-full w-48 flex-col overflow-hidden rounded-lg border border-border/50 bg-card"
                     >
                       <div className="p-3 space-y-3 flex-1 flex flex-col">
                         <div className="relative overflow-hidden rounded-lg aspect-[2/3]">
@@ -120,7 +132,7 @@ function PersonDetailsSkeleton() {
                   {Array.from({ length: 12 }).map((_, i) => (
                     <div
                       key={i}
-                      className="overflow-hidden bg-card border border-border/50 rounded-lg h-full flex flex-col transition-all duration-200 w-48"
+                      className="flex h-full w-48 flex-col overflow-hidden rounded-lg border border-border/50 bg-card"
                     >
                       <div className="p-3 space-y-3 flex-1 flex flex-col">
                         <div className="relative overflow-hidden rounded-lg aspect-[2/3]">
@@ -291,7 +303,7 @@ export function PersonDetailsPage({
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center bg-muted rounded-lg">
-                  <Icons.User className="h-24 w-24 text-muted-foreground" />
+                  <User className="h-24 w-24 text-muted-foreground" weight="duotone" />
                 </div>
               )}
             </div>
@@ -300,7 +312,7 @@ export function PersonDetailsPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl font-serif font-bold text-foreground">
-                  <Icons.Info className="h-5 w-5 text-primary" />
+                  <Info className="h-5 w-5 text-primary" />
                   Personal Info
                 </CardTitle>
               </CardHeader>
@@ -331,7 +343,7 @@ export function PersonDetailsPage({
                     </h4>
                     <div className="text-base font-medium space-y-1">
                       <div className="flex items-center space-x-1">
-                        <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
                         <span>{birthDate}</span>
                         {age !== null && !person.deathday && (
                           <span className="text-muted-foreground">
@@ -341,7 +353,7 @@ export function PersonDetailsPage({
                       </div>
                       {person.place_of_birth && (
                         <div className="flex items-center space-x-1">
-                          <Icons.Globe className="h-4 w-4 text-muted-foreground" />
+                          <Globe className="h-4 w-4 text-muted-foreground" />
                           <span>{person.place_of_birth}</span>
                         </div>
                       )}
@@ -356,7 +368,7 @@ export function PersonDetailsPage({
                     </h4>
                     <div className="text-base font-medium">
                       <div className="flex items-center space-x-1">
-                        <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
                         <span>{deathDate}</span>
                         {age !== null && (
                           <span className="text-muted-foreground">
@@ -388,7 +400,7 @@ export function PersonDetailsPage({
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-xl font-serif font-bold text-foreground">
-                    <Icons.LinkIcon className="h-5 w-5 text-primary" />
+                    <LinkIcon className="h-5 w-5 text-primary" />
                     External Links
                   </CardTitle>
                 </CardHeader>
@@ -400,7 +412,7 @@ export function PersonDetailsPage({
                       rel="noopener noreferrer"
                       className="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors"
                     >
-                      <Icons.ExternalLink className="h-4 w-4" />
+                      <ExternalLink className="h-4 w-4" />
                       <span>IMDB</span>
                     </a>
                   )}
@@ -411,7 +423,7 @@ export function PersonDetailsPage({
                       rel="noopener noreferrer"
                       className="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors"
                     >
-                      <Icons.ExternalLink className="h-4 w-4" />
+                      <ExternalLink className="h-4 w-4" />
                       <span>Instagram</span>
                     </a>
                   )}
@@ -422,7 +434,7 @@ export function PersonDetailsPage({
                       rel="noopener noreferrer"
                       className="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors"
                     >
-                      <Icons.ExternalLink className="h-4 w-4" />
+                      <ExternalLink className="h-4 w-4" />
                       <span>Twitter</span>
                     </a>
                   )}
@@ -445,13 +457,13 @@ export function PersonDetailsPage({
               <div className="lg:hidden flex flex-wrap gap-4 text-sm">
                 {person.birthday && (
                   <div className="flex items-center gap-1">
-                    <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span>{formatDate(person.birthday)}</span>
                   </div>
                 )}
                 {person.place_of_birth && (
                   <div className="flex items-center gap-1">
-                    <Icons.Globe className="h-4 w-4 text-muted-foreground" />
+                    <Globe className="h-4 w-4 text-muted-foreground" />
                     <span>{person.place_of_birth}</span>
                   </div>
                 )}
@@ -463,7 +475,7 @@ export function PersonDetailsPage({
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                    <Icons.FileText className="h-6 w-6 text-primary" />
+                    <FileText className="h-6 w-6 text-primary" weight="duotone" />
                     Biography
                   </CardTitle>
                 </CardHeader>
@@ -485,7 +497,7 @@ export function PersonDetailsPage({
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                      <Icons.Film className="h-6 w-6 text-primary" />
+                      <Film className="h-6 w-6 text-primary" weight="duotone" />
                       <span>Movie Credits</span>
                       <span className="text-base font-medium text-muted-foreground ml-2 font-sans">
                         ({movieCredits.length} total)
@@ -506,12 +518,12 @@ export function PersonDetailsPage({
                         {movieCreditsExpanded ? (
                           <>
                             Show Less
-                            <Icons.ChevronUp className="h-4 w-4" />
+                            <ChevronUp className="h-4 w-4" />
                           </>
                         ) : (
                           <>
                             Show All
-                            <Icons.ChevronDown className="h-4 w-4" />
+                            <ChevronDown className="h-4 w-4" />
                           </>
                         )}
                       </Button>
@@ -559,7 +571,7 @@ export function PersonDetailsPage({
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                      <Icons.Tv className="h-6 w-6 text-primary" />
+                      <Tv className="h-6 w-6 text-primary" weight="duotone" />
                       <span>TV Credits</span>
                       <span className="text-base font-medium text-muted-foreground ml-2 font-sans">
                         ({tvCredits.length} total)
@@ -580,12 +592,12 @@ export function PersonDetailsPage({
                         {tvCreditsExpanded ? (
                           <>
                             Show Less
-                            <Icons.ChevronUp className="h-4 w-4" />
+                            <ChevronUp className="h-4 w-4" />
                           </>
                         ) : (
                           <>
                             Show All
-                            <Icons.ChevronDown className="h-4 w-4" />
+                            <ChevronDown className="h-4 w-4" />
                           </>
                         )}
                       </Button>

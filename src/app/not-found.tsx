@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Icons } from "@/components/ui/icons";
+import { Film } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
@@ -7,7 +7,7 @@ export default function NotFound() {
     <div className="flex min-h-[70vh] items-center justify-center py-16">
       <div className="surface-panel mx-4 max-w-lg space-y-7 px-7 py-12 text-center">
         <div className="space-y-4">
-          <Icons.Film className="mx-auto size-14 text-primary" />
+          <Film className="mx-auto size-14 text-primary" weight="duotone" />
           <p className="eyebrow">Case number 404</p>
         </div>
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Icons } from "@/components/ui/icons";
+import { ArrowRight } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +25,7 @@ export function ViewAllButton({
     >
       <Link href={href}>
         <span>View All</span>
-        <Icons.ArrowRight className="h-4 w-4" />
+        <ArrowRight className="h-4 w-4" />
       </Link>
     </Button>
   );

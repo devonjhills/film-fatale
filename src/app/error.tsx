@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Icons } from "@/components/ui/icons";
+import { AlertTriangle, Home, RotateCcw } from "@/components/ui/icons";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -21,7 +21,7 @@ export default function Error({
     <div className="flex min-h-[70vh] items-center justify-center py-16">
       <div className="surface-panel mx-4 max-w-lg space-y-7 px-7 py-12 text-center">
         <div className="space-y-4">
-          <Icons.AlertTriangle className="mx-auto size-12 text-destructive" />
+          <AlertTriangle className="mx-auto size-12 text-destructive" weight="duotone" />
           <h1 className="font-serif text-4xl font-semibold">
             The picture went dark
           </h1>
@@ -46,12 +46,12 @@ export default function Error({
 
         <div className="flex flex-col justify-center gap-3 sm:flex-row">
           <Button onClick={reset}>
-            <Icons.RotateCcw className="h-4 w-4" />
+            <RotateCcw className="h-4 w-4" />
             <span>Try again</span>
           </Button>
           <Button asChild variant="outline">
             <Link href="/">
-              <Icons.Home className="h-4 w-4" />
+              <Home className="h-4 w-4" />
               <span>Go home</span>
             </Link>
           </Button>

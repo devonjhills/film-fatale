@@ -1,6 +1,6 @@
 "use client";
 
-import { Icons } from "@/components/ui/icons";
+import { Film, Globe, Popcorn } from "@/components/ui/icons";
 import { getRottenTomatoesSearchUrl, formatYear } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -31,17 +31,17 @@ export function ExternalLinks({
       url: externalIds?.imdb_id
         ? `https://www.imdb.com/title/${externalIds.imdb_id}`
         : null,
-      icon: Icons.Film,
+      icon: Film,
     },
     {
       name: "Official Site",
       url: homepage,
-      icon: Icons.Globe,
+      icon: Globe,
     },
     {
       name: "Rotten Tomatoes",
       url: rottenTomatoesUrl,
-      icon: Icons.Popcorn,
+      icon: Popcorn,
     },
   ].filter((link) => link.url);
 
@@ -54,7 +54,7 @@ export function ExternalLinks({
         return (
           <Button key={link.name} asChild variant="outline" size="sm">
             <a href={link.url!} target="_blank" rel="noopener noreferrer">
-              <IconComponent className="h-4 w-4 mr-2" />
+              <IconComponent className="mr-2 h-4 w-4" weight="duotone" />
               {link.name}
             </a>
           </Button>

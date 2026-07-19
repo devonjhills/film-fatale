@@ -1,7 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Icons } from "@/components/ui/icons";
+import {
+  Building,
+  Calendar,
+  Clapperboard,
+  Clock,
+  DollarSign,
+  Film,
+  Info,
+  Star,
+  Tag,
+  Users,
+} from "@/components/ui/icons";
 import { useMovieDetails, useMovieWatchProviders } from "@/lib/hooks/api-hooks";
 import { DetailsHero } from "@/components/ui/details-hero";
 import { CastGrid } from "@/components/person/cast-grid";
@@ -217,7 +228,7 @@ export function MovieDetailsPage({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                <Icons.Film className="h-6 w-6 text-primary" />
+                <Film className="h-6 w-6 text-primary" weight="duotone" />
                 Movie Details
               </CardTitle>
             </CardHeader>
@@ -226,7 +237,7 @@ export function MovieDetailsPage({
                 {director && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Clapperboard className="h-4 w-4" />
+                      <Clapperboard className="h-4 w-4" />
                       Director
                     </h4>
                     <Link
@@ -241,7 +252,7 @@ export function MovieDetailsPage({
                 {movie.release_date && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Calendar className="h-4 w-4" />
+                      <Calendar className="h-4 w-4" />
                       Release Date
                     </h4>
                     <p className="text-base">{releaseDate}</p>
@@ -251,7 +262,7 @@ export function MovieDetailsPage({
                 {runtime && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Clock className="h-4 w-4" />
+                      <Clock className="h-4 w-4" />
                       Runtime
                     </h4>
                     <p className="text-base">{runtime}</p>
@@ -261,7 +272,7 @@ export function MovieDetailsPage({
                 {usCertification && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Info className="h-4 w-4" />
+                      <Info className="h-4 w-4" />
                       Rating
                     </h4>
                     <Badge variant="outline">{usCertification}</Badge>
@@ -271,7 +282,7 @@ export function MovieDetailsPage({
                 {movie.vote_average > 0 && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Star className="h-4 w-4 fill-current" />
+                      <Star className="h-4 w-4" weight="fill" />
                       Rating
                     </h4>
                     <div className="flex items-center gap-2">
@@ -288,7 +299,7 @@ export function MovieDetailsPage({
                 {movie.budget > 0 && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.DollarSign className="h-4 w-4" />
+                      <DollarSign className="h-4 w-4" />
                       Budget
                     </h4>
                     <p className="text-base">{budget}</p>
@@ -298,7 +309,7 @@ export function MovieDetailsPage({
                 {movie.revenue > 0 && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.DollarSign className="h-4 w-4" />
+                      <DollarSign className="h-4 w-4" />
                       Revenue
                     </h4>
                     <p className="text-base text-green-600">{revenue}</p>
@@ -308,7 +319,7 @@ export function MovieDetailsPage({
                 {movie.production_companies.length > 0 && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Building2 className="h-4 w-4" />
+                      <Building className="h-4 w-4" />
                       Production
                     </h4>
                     <div className="space-y-1">
@@ -326,7 +337,7 @@ export function MovieDetailsPage({
               {keywords.length > 0 && (
                 <div className="space-y-3 pt-6 border-t mt-6">
                   <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                    <Icons.Tag className="h-4 w-4" />
+                    <Tag className="h-4 w-4" />
                     Keywords
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -346,7 +357,7 @@ export function MovieDetailsPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                  <Icons.Users className="h-6 w-6 text-primary" />
+                  <Users className="h-6 w-6 text-primary" weight="duotone" />
                   Cast
                 </CardTitle>
               </CardHeader>
@@ -365,7 +376,7 @@ export function MovieDetailsPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                  <Icons.Users className="h-6 w-6 text-primary" />
+                  <Users className="h-6 w-6 text-primary" weight="duotone" />
                   Key Crew
                 </CardTitle>
               </CardHeader>
@@ -388,7 +399,7 @@ export function MovieDetailsPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                  <Icons.Film className="h-6 w-6 text-primary" />
+                  <Film className="h-6 w-6 text-primary" weight="duotone" />
                   You might also like
                 </CardTitle>
               </CardHeader>

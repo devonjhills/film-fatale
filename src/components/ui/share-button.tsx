@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Icons } from "@/components/ui/icons";
+import { Check, Share } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 interface ShareButtonProps {
@@ -72,9 +72,9 @@ export function ShareButton({
       title={copied ? "URL Copied!" : "Share this page"}
     >
       {copied ? (
-        <Icons.Check className="h-4 w-4" />
+        <Check className="h-4 w-4" weight="bold" />
       ) : (
-        <Icons.Share className="h-4 w-4" />
+        <Share className="h-4 w-4" />
       )}
       {copied ? "Copied!" : "Share"}
     </Button>

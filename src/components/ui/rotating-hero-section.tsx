@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/ui/icons";
+import { ArrowRight, Star } from "@/components/ui/icons";
 import { cn, formatVoteAverage } from "@/lib/utils";
 import { getImageUrl } from "@/lib/api";
 import type { Movie, FormattedMovie, TVShow } from "@/lib/types";
@@ -67,8 +67,9 @@ export function RotatingHeroSection({
                 variant="overlay"
                 className="gap-1.5 border-white/25 bg-black/70"
               >
-                <Icons.Star
-                  className="size-3.5 fill-brass text-brass"
+                <Star
+                  className="size-3.5 text-brass"
+                  weight="fill"
                   aria-hidden="true"
                 />
                 {formatVoteAverage(item.vote_average)}
@@ -91,7 +92,7 @@ export function RotatingHeroSection({
             <Button asChild size="lg">
               <Link href={`/${mediaType}/${item.id}`}>
                 View details
-                <Icons.ArrowRight aria-hidden="true" />
+                <ArrowRight aria-hidden="true" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-white/28 bg-black/45 text-white hover:bg-white/12">

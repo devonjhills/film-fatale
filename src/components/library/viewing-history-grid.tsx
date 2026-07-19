@@ -5,7 +5,7 @@ import { ViewingHistoryCard } from "./viewing-history-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Icons } from "@/components/ui/icons";
+import { Archive, ChevronLeft, ChevronRight } from "@/components/ui/icons";
 
 interface ViewingHistoryGridProps {
   items: ViewingHistoryItem[];
@@ -56,19 +56,7 @@ export function ViewingHistoryGrid({
       <Card className="p-12 text-center">
         <div className="max-w-lg mx-auto space-y-6">
           <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-            <svg
-              className="h-10 w-10 text-primary"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-              />
-            </svg>
+            <Archive className="h-10 w-10 text-primary" weight="duotone" />
           </div>
           <div className="space-y-3">
             <h3 className="text-xl font-semibold">Your Library Awaits</h3>
@@ -143,7 +131,7 @@ export function ViewingHistoryGrid({
               disabled={page === 1}
               className="gap-2"
             >
-              <Icons.ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" />
               Previous
             </Button>
 
@@ -182,7 +170,7 @@ export function ViewingHistoryGrid({
               className="gap-2"
             >
               Next
-              <Icons.ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </Card>

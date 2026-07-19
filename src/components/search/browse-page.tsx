@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Icons } from "@/components/ui/icons";
+import {
+  AlertTriangle,
+  Clapperboard,
+  Search,
+  X,
+  type Icon,
+} from "@/components/ui/icons";
 import { useMultiSearch } from "@/lib/hooks/api-hooks";
 import { SearchResults } from "./search-results";
 import { Button } from "@/components/ui/button";
@@ -87,7 +93,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
           </p>
 
           <div className="relative mt-8 max-w-4xl">
-            <Icons.Search
+            <Search
               className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
             />
@@ -107,7 +113,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
                 className="absolute right-2 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
                 aria-label="Clear search"
               >
-                <Icons.X aria-hidden="true" />
+                <X aria-hidden="true" />
               </button>
             )}
           </div>
@@ -152,13 +158,13 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
               </div>
             ) : isError ? (
               <SearchState
-                icon={Icons.AlertTriangle}
+                icon={AlertTriangle}
                 title="The search went cold"
                 description="Something interrupted the search. Try again in a moment."
               />
             ) : resultCount === 0 ? (
               <SearchState
-                icon={Icons.Search}
+                icon={Search}
                 title="No trace found"
                 description="Try another title, a broader name, or a different result type."
               />
@@ -168,7 +174,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
           </>
         ) : (
           <SearchState
-            icon={Icons.Clapperboard}
+            icon={Clapperboard}
             title="The archive is waiting"
             description="Start with a title, performer, or filmmaker."
           />
@@ -183,7 +189,7 @@ function SearchState({
   title,
   description,
 }: {
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  icon: Icon;
   title: string;
   description: string;
 }) {

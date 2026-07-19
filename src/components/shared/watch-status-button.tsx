@@ -9,7 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Icons } from "@/components/ui/icons";
+import {
+  Check,
+  ChevronDown,
+  Clock,
+  Play,
+  X,
+} from "@/components/ui/icons";
 import { useAuth } from "@/components/providers/auth-provider";
 
 interface WatchStatusButtonProps {
@@ -27,19 +33,19 @@ const statusOptions = [
   {
     value: "plan_to_watch",
     label: "Plan to Watch",
-    icon: Icons.Clock,
+    icon: Clock,
     color: "text-muted-foreground",
   },
   {
     value: "watching",
     label: "Watching",
-    icon: Icons.Play,
+    icon: Play,
     color: "text-primary",
   },
   {
     value: "completed",
     label: "Completed",
-    icon: Icons.Check,
+    icon: Check,
     color: "text-green-600",
   },
 ] as const;
@@ -138,7 +144,7 @@ export function WatchStatusButton({
   const currentOption = statusOptions.find(
     (option) => option.value === currentStatus,
   );
-  const CurrentIcon = currentOption?.icon || Icons.Clock;
+  const CurrentIcon = currentOption?.icon || Clock;
 
   if (authLoading || !user) return null;
 
@@ -151,9 +157,12 @@ export function WatchStatusButton({
           disabled={loading}
           className="gap-2"
         >
-          <CurrentIcon className="h-4 w-4" />
+          <CurrentIcon
+            className="h-4 w-4"
+            weight={currentStatus === "completed" ? "bold" : "duotone"}
+          />
           {loading ? "Updating..." : currentOption?.label || "Add to List"}
-          <Icons.ChevronDown className="h-3 w-3" />
+          <ChevronDown className="h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -165,7 +174,10 @@ export function WatchStatusButton({
               onClick={() => handleStatusChange(option.value as WatchStatus)}
               className="gap-2"
             >
-              <OptionIcon className={`h-4 w-4 ${option.color}`} />
+              <OptionIcon
+                className={`h-4 w-4 ${option.color}`}
+                weight={option.value === "completed" ? "bold" : "duotone"}
+              />
               {option.label}
               {currentStatus === option.value && (
                 <span className="ml-auto text-xs text-primary">✓</span>
@@ -181,7 +193,7 @@ export function WatchStatusButton({
               onClick={handleRemove}
               className="text-destructive gap-2"
             >
-              <Icons.X className="h-4 w-4" />
+              <X className="h-4 w-4" />
               Remove from History
             </DropdownMenuItem>
           </>

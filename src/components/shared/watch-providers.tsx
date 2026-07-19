@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Icons } from "@/components/ui/icons";
+import { MoreHorizontal } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { getImageUrl } from "@/lib/api";
 import {
@@ -250,7 +250,7 @@ export function WatchProvidersCompact({
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="sm" className="h-10 w-10 p-0">
-              <Icons.MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal className="h-4 w-4" weight="bold" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-fit p-2">

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { MediaGrid } from "./media-grid";
-import { Icons } from "@/components/ui/icons";
+import { ArrowRight } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 interface MediaItem {
@@ -65,7 +65,7 @@ export function MediaSection({
             className="flex min-h-11 items-center gap-2 rounded-sm text-sm font-semibold text-muted-foreground transition-colors duration-100 hover:text-foreground"
           >
             View all
-            <Icons.ArrowRight className="size-4" aria-hidden="true" />
+            <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
         )}
       </div>

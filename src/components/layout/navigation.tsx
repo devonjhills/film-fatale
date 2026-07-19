@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/ui/icons";
+import { Bookmark, LogOut, Menu, Search, X } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/providers/auth-provider";
 import { cn } from "@/lib/utils";
@@ -103,7 +103,7 @@ export function Navigation() {
             role="search"
             className="relative hidden w-[clamp(12rem,22vw,20rem)] lg:block"
           >
-            <Icons.Search
+            <Search
               className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
             />
@@ -119,7 +119,7 @@ export function Navigation() {
 
           <Button variant="ghost" size="icon" asChild className="lg:hidden">
             <Link href="/search" aria-label="Search">
-              <Icons.Search aria-hidden="true" />
+              <Search aria-hidden="true" />
             </Link>
           </Button>
 
@@ -147,14 +147,14 @@ export function Navigation() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onSelect={() => router.push("/library")}>
-                  <Icons.Bookmark aria-hidden="true" />
+                  <Bookmark aria-hidden="true" />
                   Library
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onSelect={signOut}
                   className="text-destructive focus:text-destructive"
                 >
-                  <Icons.LogOut aria-hidden="true" />
+                  <LogOut aria-hidden="true" />
                   Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -171,9 +171,9 @@ export function Navigation() {
             aria-controls="mobile-navigation"
           >
             {mobileMenuOpen ? (
-              <Icons.X aria-hidden="true" />
+              <X aria-hidden="true" />
             ) : (
-              <Icons.Menu aria-hidden="true" />
+              <Menu aria-hidden="true" />
             )}
           </Button>
         </div>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Icons } from "@/components/ui/icons";
+import { Film } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getImageUrl } from "@/lib/api";
@@ -47,7 +47,7 @@ export function MediaCardHorizontal({
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted rounded-md">
-            <Icons.Film className="h-6 w-6 text-muted-foreground" />
+            <Film className="h-6 w-6 text-muted-foreground" weight="duotone" />
           </div>
         )}
       </div>

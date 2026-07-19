@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Icons } from "@/components/ui/icons";
+import { Film } from "@/components/ui/icons";
 import { RatingBadge } from "@/components/ui/rating-badge";
 import { cn, formatVoteAverage } from "@/lib/utils";
 import { getImageUrl } from "@/lib/api";
@@ -60,7 +60,8 @@ export function MediaCard({
             />
           ) : (
             <div className="flex size-full items-center justify-center bg-muted">
-              <Icons.Film
+              <Film
+                weight="duotone"
                 className="size-8 text-muted-foreground/50"
                 aria-hidden="true"
               />

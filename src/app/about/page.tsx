@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/ui/icons";
+import {
+  ArrowRight,
+  Bookmark,
+  Clapperboard,
+  ExternalLink,
+  Search,
+} from "@/components/ui/icons";
 
 export const metadata: Metadata = {
   title: "About",
@@ -17,17 +23,17 @@ const features = [
   {
     title: "Find the next one",
     copy: "Browse what is playing, what critics love, and the titles hiding in plain sight.",
-    icon: Icons.Search,
+    icon: Search,
   },
   {
     title: "Keep your dossier",
     copy: "Save a watchlist, record what you finished, and track episodic progress.",
-    icon: Icons.Bookmark,
+    icon: Bookmark,
   },
   {
     title: "Know the whole story",
     copy: "Cast, trailers, providers, ratings, seasons, and the details that make a title click.",
-    icon: Icons.Clapperboard,
+    icon: Clapperboard,
   },
 ];
 
@@ -50,7 +56,11 @@ export default function AboutPage() {
           <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border/70 bg-border/70 md:grid-cols-3">
             {features.map(({ title, copy, icon: Icon }) => (
               <section key={title} className="bg-card p-6">
-                <Icon className="size-5 text-primary" aria-hidden="true" />
+                <Icon
+                  className="size-5 text-primary"
+                  weight="duotone"
+                  aria-hidden="true"
+                />
                 <h2 className="mt-5 font-serif text-2xl font-semibold">{title}</h2>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
                   {copy}
@@ -63,7 +73,7 @@ export default function AboutPage() {
             <Button asChild size="lg">
               <Link href="/">
                 Start discovering
-                <Icons.ArrowRight aria-hidden="true" />
+                <ArrowRight aria-hidden="true" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
@@ -94,7 +104,7 @@ export default function AboutPage() {
               className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground hover:text-primary"
             >
               Visit TMDB
-              <Icons.ExternalLink aria-hidden="true" />
+              <ExternalLink aria-hidden="true" />
             </Link>
           </div>
         </aside>

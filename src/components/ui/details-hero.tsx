@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Icons } from "@/components/ui/icons";
+import { Film, MonitorPlay, Star } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { getImageUrl } from "@/lib/api";
 import { WatchStatusButton } from "@/components/shared/watch-status-button";
@@ -92,9 +92,9 @@ export function DetailsHero({
               ) : (
                 <div className="flex size-full items-center justify-center bg-muted">
                   {mediaType === "movie" ? (
-                    <Icons.Film className="size-20 text-muted-foreground/50" />
+                    <Film className="size-20 text-muted-foreground/50" weight="duotone" />
                   ) : (
-                    <Icons.MonitorPlay className="size-20 text-muted-foreground/50" />
+                    <MonitorPlay className="size-20 text-muted-foreground/50" weight="duotone" />
                   )}
                 </div>
               )}
@@ -127,7 +127,7 @@ export function DetailsHero({
             <div className="mt-6 flex flex-wrap items-center gap-2">
               {item.vote_average > 0 && (
                 <Badge variant="secondary" className="gap-1.5">
-                  <Icons.Star className="size-3.5 fill-brass text-brass" />
+                  <Star className="size-3.5 text-brass" weight="fill" />
                   {formatVoteAverage(item.vote_average)}
                 </Badge>
               )}

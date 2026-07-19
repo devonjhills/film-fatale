@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Icons } from "@/components/ui/icons";
+import { Bookmark, Check, Circle, Clock, Play } from "@/components/ui/icons";
 import Link from "next/link";
 
 interface EpisodeTrackerProps {
@@ -163,11 +163,11 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <Icons.Clock className="h-5 w-5" />
+            <Clock className="h-5 w-5" />
             Episode Tracker
             {progress?.next_episode && (
               <Badge variant="secondary">
-                <Icons.Play className="h-3 w-3 mr-1" />
+                <Play className="mr-1 h-3 w-3" weight="fill" />
                 Next: S{progress.next_episode.season_number}E
                 {progress.next_episode.episode_number}
               </Badge>
@@ -175,7 +175,7 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
           </CardTitle>
           <Button variant="ghost" size="sm" asChild>
             <Link href="/library?tab=watching">
-              <Icons.Bookmark className="h-4 w-4 mr-1" />
+              <Bookmark className="mr-1 h-4 w-4" />
               My Library
             </Link>
           </Button>
@@ -269,7 +269,7 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
                         markSeasonWatched(season.season_number, true)
                       }
                     >
-                      <Icons.Check className="h-4 w-4 mr-1" />
+                      <Check className="mr-1 h-4 w-4" weight="bold" />
                       Mark All Watched
                     </Button>
                     <Button
@@ -279,7 +279,7 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
                         markSeasonWatched(season.season_number, false)
                       }
                     >
-                      <Icons.Circle className="h-4 w-4 mr-1" />
+                      <Circle className="mr-1 h-4 w-4" />
                       Mark All Unwatched
                     </Button>
                   </div>
@@ -341,9 +341,9 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
                         >
                           <div className="flex flex-col items-center justify-center gap-1">
                             {isWatched ? (
-                              <Icons.Check className="h-4 w-4" />
+                              <Check className="h-4 w-4" weight="bold" />
                             ) : (
-                              <Icons.Circle className="h-3 w-3 opacity-60" />
+                              <Circle className="h-3 w-3 opacity-60" />
                             )}
                             <span className="text-xs font-medium">
                               {episode_number}

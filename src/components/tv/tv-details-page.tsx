@@ -2,7 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Icons } from "@/components/ui/icons";
+import {
+  Calendar,
+  Clapperboard,
+  Film,
+  Play,
+  Star,
+  Tag,
+  Tv,
+  Users,
+  Wifi,
+} from "@/components/ui/icons";
 import { useTVDetails, useTVWatchProviders } from "@/lib/hooks/api-hooks";
 import { getImageUrl } from "@/lib/api";
 import { DetailsHero } from "@/components/ui/details-hero";
@@ -136,7 +146,7 @@ function TVDetailsSkeleton() {
                 {Array.from({ length: 12 }).map((_, i) => (
                   <div
                     key={i}
-                    className="overflow-hidden bg-card border border-border/50 rounded-lg h-full flex flex-col transition-all duration-200 w-48"
+                    className="flex h-full w-48 flex-col overflow-hidden rounded-lg border border-border/50 bg-card"
                   >
                     <div className="p-3 space-y-3 flex-1 flex flex-col">
                       <div className="relative overflow-hidden rounded-lg aspect-[2/3]">
@@ -278,7 +288,7 @@ export function TVDetailsPage({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                <Icons.Tv className="h-6 w-6 text-primary" />
+                <Tv className="h-6 w-6 text-primary" weight="duotone" />
                 TV Show Details
               </CardTitle>
             </CardHeader>
@@ -287,7 +297,7 @@ export function TVDetailsPage({
                 {creators.length > 0 && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Clapperboard className="h-4 w-4" />
+                      <Clapperboard className="h-4 w-4" />
                       Creator{creators.length > 1 ? "s" : ""}
                     </h4>
                     <div className="space-y-1">
@@ -307,7 +317,7 @@ export function TVDetailsPage({
                 {tvShow.first_air_date && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Calendar className="h-4 w-4" />
+                      <Calendar className="h-4 w-4" />
                       First Aired
                     </h4>
                     <p className="text-base">{firstAirDate}</p>
@@ -317,7 +327,7 @@ export function TVDetailsPage({
                 {tvShow.last_air_date && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Calendar className="h-4 w-4" />
+                      <Calendar className="h-4 w-4" />
                       Last Aired
                     </h4>
                     <p className="text-base">{lastAirDate}</p>
@@ -327,7 +337,7 @@ export function TVDetailsPage({
                 {tvShow.vote_average > 0 && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Star className="h-4 w-4 fill-current" />
+                      <Star className="h-4 w-4" weight="fill" />
                       Rating
                     </h4>
                     <div className="flex items-center gap-2">
@@ -343,7 +353,7 @@ export function TVDetailsPage({
 
                 <div className="space-y-2">
                   <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                    <Icons.Play className="h-4 w-4" />
+                    <Play className="h-4 w-4" />
                     Status
                   </h4>
                   <p className="text-base">{tvShow.status}</p>
@@ -352,7 +362,7 @@ export function TVDetailsPage({
                 {tvShow.number_of_seasons && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Tv className="h-4 w-4" />
+                      <Tv className="h-4 w-4" />
                       Seasons
                     </h4>
                     <p className="text-base">{tvShow.number_of_seasons}</p>
@@ -362,7 +372,7 @@ export function TVDetailsPage({
                 {tvShow.number_of_episodes && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Play className="h-4 w-4" />
+                      <Play className="h-4 w-4" />
                       Episodes
                     </h4>
                     <p className="text-base">{tvShow.number_of_episodes}</p>
@@ -372,7 +382,7 @@ export function TVDetailsPage({
                 {tvShow.networks && tvShow.networks.length > 0 && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Icons.Wifi className="h-4 w-4" />
+                      <Wifi className="h-4 w-4" />
                       Network
                     </h4>
                     <div className="space-y-1">
@@ -390,7 +400,7 @@ export function TVDetailsPage({
               {keywords.length > 0 && (
                 <div className="space-y-3 pt-6 border-t mt-6">
                   <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                    <Icons.Tag className="h-4 w-4" />
+                    <Tag className="h-4 w-4" />
                     Keywords
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -410,7 +420,7 @@ export function TVDetailsPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                  <Icons.Tv className="h-6 w-6 text-primary" />
+                  <Tv className="h-6 w-6 text-primary" weight="duotone" />
                   Seasons
                 </CardTitle>
               </CardHeader>
@@ -437,7 +447,7 @@ export function TVDetailsPage({
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center">
-                            <Icons.Film className="h-6 w-6 text-muted-foreground" />
+                            <Film className="h-6 w-6 text-muted-foreground" weight="duotone" />
                           </div>
                         )}
                       </div>
@@ -474,7 +484,7 @@ export function TVDetailsPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                  <Icons.Users className="h-6 w-6 text-primary" />
+                  <Users className="h-6 w-6 text-primary" weight="duotone" />
                   Cast
                 </CardTitle>
               </CardHeader>
@@ -492,7 +502,7 @@ export function TVDetailsPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                  <Icons.Users className="h-6 w-6 text-primary" />
+                  <Users className="h-6 w-6 text-primary" weight="duotone" />
                   Key Crew
                 </CardTitle>
               </CardHeader>
@@ -515,7 +525,7 @@ export function TVDetailsPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                  <Icons.Tv className="h-6 w-6 text-primary" />
+                  <Tv className="h-6 w-6 text-primary" weight="duotone" />
                   You might also like
                 </CardTitle>
               </CardHeader>

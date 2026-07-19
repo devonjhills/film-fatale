@@ -1,4 +1,4 @@
-import { Icons } from "@/components/ui/icons";
+import { Star } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 interface RatingBadgeProps {
@@ -41,7 +41,7 @@ export function RatingBadge({
         className,
       )}
     >
-      <Icons.Star className={cn(iconSizes[size], "fill-current")} />
+      <Star className={cn(iconSizes[size])} weight="fill" />
       <span className="font-semibold">{rating}</span>
     </div>
   );
