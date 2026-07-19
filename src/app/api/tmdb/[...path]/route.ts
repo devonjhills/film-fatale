@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/access-auth";
 
 const TMDB_ORIGIN = "https://api.themoviedb.org/3";
 const ALLOWED_QUERY_PARAMS = new Set([
@@ -38,11 +37,6 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const apiKey = process.env.TMDB_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
@@ -72,7 +66,7 @@ export async function GET(
     status: response.status,
     headers: {
       "Content-Type": response.headers.get("Content-Type") || "application/json",
-      "Cache-Control": "private, max-age=60",
+      "Cache-Control": "public, max-age=60",
       "Cloudflare-CDN-Cache-Control": cachePolicy(path),
     },
   });
