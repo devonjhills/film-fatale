@@ -36,7 +36,7 @@ export function Footer() {
                 key={link.href}
                 href={link.href}
                 rel={link.nofollow ? "nofollow" : undefined}
-                className="transition-colors hover:text-foreground"
+                className="transition-colors duration-100 hover:text-foreground"
               >
                 {link.label}
               </Link>
@@ -49,7 +49,7 @@ export function Footer() {
             href="https://www.themoviedb.org/"
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors hover:text-foreground"
+            className="transition-colors duration-100 hover:text-foreground"
           >
             Data by TMDB
           </Link>

@@ -108,7 +108,7 @@ function OptimizedImageState({
     blurDataURL: blurDataURL || defaultBlurDataURL,
     sizes: sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     className: cn(
-      "transition-opacity duration-200",
+      "transition-opacity duration-100",
       isLoading ? "opacity-0" : "opacity-100",
       className,
     ),

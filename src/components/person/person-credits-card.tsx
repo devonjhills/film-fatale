@@ -37,7 +37,7 @@ export function PersonCreditsCard({
 
   return (
     <Link href={`/${credit.media_type}/${credit.id}`} className={className}>
-      <Card className="group h-full overflow-hidden transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/45">
+      <Card className="group h-full overflow-hidden transition-colors duration-100 hover:border-primary/55">
         <div className="flex gap-3 p-3">
           {/* Poster */}
           <div className="relative w-16 h-24 flex-shrink-0">
@@ -46,7 +46,7 @@ export function PersonCreditsCard({
                 src={imageUrl}
                 alt={title}
                 fill
-                className="object-cover rounded-md transition-transform duration-300 group-hover:scale-105"
+                className="rounded-md object-cover"
                 sizes="64px"
               />
             ) : (
@@ -59,7 +59,7 @@ export function PersonCreditsCard({
           {/* Content */}
           <div className="flex-1 min-w-0 space-y-2">
             {/* Title */}
-            <h4 className="font-serif font-semibold text-base leading-tight line-clamp-2 transition-colors duration-300 group-hover:text-primary">
+            <h4 className="font-serif font-semibold text-base leading-tight line-clamp-2 transition-colors duration-100 group-hover:text-primary">
               {title}
             </h4>
 

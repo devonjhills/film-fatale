@@ -85,6 +85,7 @@ export function CategoryPage({
             cardSize="md"
             showYear={true}
             showRating={true}
+            priorityCount={6}
           />
 
           {!isLoading && !error && totalPages > 1 && (

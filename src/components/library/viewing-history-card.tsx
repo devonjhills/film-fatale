@@ -62,7 +62,7 @@ export function ViewingHistoryCard({
 
   return (
     <>
-      <Card className="group overflow-hidden transition-colors duration-200 hover:border-primary/40">
+      <Card className="group overflow-hidden transition-colors duration-100 hover:border-primary/55">
         <div className="flex gap-4 p-4">
           {/* Poster Section */}
           <div className="relative flex-shrink-0">
@@ -78,7 +78,7 @@ export function ViewingHistoryCard({
                       src={validImageUrl}
                       alt={item.title}
                       fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="object-cover"
                       sizes="80px"
                     />
                   ) : (
@@ -101,7 +101,7 @@ export function ViewingHistoryCard({
               <div className="flex items-start justify-between gap-3">
                 <Link
                   href={`/${item.media_type}/${item.tmdb_id}`}
-                  className="block hover:text-primary transition-colors flex-1 min-w-0"
+                  className="block min-w-0 flex-1 transition-colors duration-100 hover:text-primary"
                 >
                   <h3 className="font-semibold text-lg line-clamp-2 leading-tight">
                     {item.title}
@@ -109,7 +109,7 @@ export function ViewingHistoryCard({
                 </Link>
 
                 {/* Action Buttons */}
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                <div className="flex flex-shrink-0 gap-1 opacity-100 transition-opacity duration-100 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button

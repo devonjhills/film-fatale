@@ -35,7 +35,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
       if (nextQuery) url.searchParams.set("q", nextQuery);
       else url.searchParams.delete("q");
       window.history.replaceState({}, "", url);
-    }, 350);
+    }, 200);
 
     return () => window.clearTimeout(timer);
   }, [query]);

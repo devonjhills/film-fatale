@@ -47,7 +47,7 @@ function PersonCard({ person, className }: PersonCardProps) {
   return (
     <Card
       className={cn(
-        "overflow-hidden hover:shadow-lg transition-shadow",
+        "overflow-hidden transition-colors duration-100 hover:border-primary/55 hover:bg-card",
         className,
       )}
     >

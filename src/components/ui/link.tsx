@@ -46,7 +46,7 @@ const Link = forwardRef<HTMLAnchorElement, LinkProps>(
 
     const baseClasses = cn(
       // Base styles
-      "transition-all duration-200 cursor-pointer",
+      "cursor-pointer transition-[color,background-color,border-color,opacity] duration-100",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       "disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
       // Ensure minimum touch target for button-like links

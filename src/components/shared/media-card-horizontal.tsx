@@ -42,7 +42,7 @@ export function MediaCardHorizontal({
             src={imageUrl}
             alt={title}
             fill
-            className="object-cover rounded-md transition-transform duration-300 group-hover:scale-105"
+            className="rounded-md object-cover"
             sizes="80px"
           />
         ) : (
@@ -59,7 +59,7 @@ export function MediaCardHorizontal({
             className={cn(
               "font-serif font-semibold text-base leading-tight line-clamp-2 tracking-wide",
               showCard ? "hover:text-primary" : "group-hover:text-primary",
-              "transition-colors duration-300",
+              "transition-colors duration-100",
             )}
           >
             {title}
@@ -86,7 +86,7 @@ export function MediaCardHorizontal({
       <Link href={`/${mediaType}/${item.id}`} className={className}>
         <Card
           className={cn(
-            "group flex space-x-4 overflow-hidden border border-border/60 bg-card/70 p-4 transition-colors duration-200 hover:border-primary/40 hover:bg-card",
+            "group flex space-x-4 overflow-hidden border border-border/60 bg-card/70 p-4 transition-colors duration-100 hover:border-primary/55 hover:bg-card",
             "min-h-[120px] w-full",
           )}
         >
@@ -100,7 +100,7 @@ export function MediaCardHorizontal({
     <Link
       href={`/${mediaType}/${item.id}`}
       className={cn(
-        "group flex space-x-4 rounded-md border border-border/60 bg-card/70 p-4 transition-colors duration-200 hover:border-primary/40 hover:bg-card",
+        "group flex space-x-4 rounded-md border border-border/60 bg-card/70 p-4 transition-colors duration-100 hover:border-primary/55 hover:bg-card",
         "min-h-[120px] items-center w-full",
         className,
       )}

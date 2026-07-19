@@ -420,7 +420,7 @@ export function TVDetailsPage({
                     <Link
                       key={season.id}
                       href={`/tv/${tvId}/season/${season.season_number}`}
-                      className="group flex space-x-4 p-4 rounded-lg border hover:shadow-lg transition-shadow"
+                      className="group flex space-x-4 rounded-lg border p-4 transition-colors duration-100 hover:border-primary/55 hover:bg-card"
                     >
                       <div className="relative w-16 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
                         {season.poster_path ? (

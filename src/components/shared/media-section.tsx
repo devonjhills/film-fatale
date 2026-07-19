@@ -62,13 +62,10 @@ export function MediaSection({
         {href && showViewAll && (
           <Link
             href={href}
-            className="group flex min-h-11 items-center gap-2 rounded-sm text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
+            className="flex min-h-11 items-center gap-2 rounded-sm text-sm font-semibold text-muted-foreground transition-colors duration-100 hover:text-foreground"
           >
             View all
-            <Icons.ArrowRight
-              className="size-4 transition-transform group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
+            <Icons.ArrowRight className="size-4" aria-hidden="true" />
           </Link>
         )}
       </div>

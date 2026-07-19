@@ -90,7 +90,6 @@ export function EpisodeProgress({
               style={{ width: `${animatedWidth}%` }}
             >
               {/* Animated shine effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-out" />
             </div>
           </div>
         </div>

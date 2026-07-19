@@ -269,7 +269,7 @@ export function TVSeasonDetailsPage({
                 {season.episodes.map((episode) => (
                   <div
                     key={episode.id}
-                    className="flex gap-4 p-4 border rounded-lg hover:shadow-lg transition-shadow"
+                    className="flex gap-4 rounded-lg border p-4 transition-colors duration-100 hover:border-primary/55 hover:bg-card"
                   >
                     {/* Episode Still */}
                     <div className="relative w-24 h-16 flex-shrink-0 rounded overflow-hidden bg-muted">

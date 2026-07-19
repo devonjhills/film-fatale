@@ -40,7 +40,7 @@ export function PersonCard({
     return (
       <Link href={linkPath} className={className}>
         <div className="group cursor-pointer w-[140px]">
-          <Card className="relative flex h-[240px] flex-col overflow-hidden border-border/60 bg-card transition-colors duration-200 hover:border-primary/40">
+          <Card className="relative flex h-[240px] flex-col overflow-hidden border-border/60 bg-card transition-colors duration-100 hover:border-primary/55">
             {/* Person Photo */}
             <div className="relative flex-1 rounded-lg overflow-hidden shadow-lg">
               <Avatar className="w-full h-full rounded-lg">
@@ -51,7 +51,7 @@ export function PersonCard({
                       : undefined
                   }
                   alt={person.name}
-                  className="size-full rounded-md object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+                  className="size-full rounded-md object-cover"
                 />
                 <AvatarFallback className="text-lg font-serif font-semibold w-full h-full rounded-lg bg-muted flex items-center justify-center">
                   {fallbackInitials}
@@ -59,7 +59,7 @@ export function PersonCard({
               </Avatar>
 
               {/* Noir gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80 transition-opacity duration-100 group-hover:opacity-90" />
 
               {/* Episode count badge for TV */}
               {mediaType === "tv" && person.episode_count && (
@@ -85,7 +85,7 @@ export function PersonCard({
               </div>
 
               {/* Subtle border glow */}
-              <div className="absolute inset-0 rounded-lg border border-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 rounded-lg border border-primary/30 opacity-0 transition-opacity duration-100 group-hover:opacity-100" />
             </div>
           </Card>
         </div>
@@ -95,10 +95,10 @@ export function PersonCard({
 
   return (
     <Link href={linkPath} className={className}>
-      <div className="group flex cursor-pointer items-center space-x-4 rounded-md border border-border/60 bg-card/70 p-3 transition-colors duration-200 hover:border-primary/40 hover:bg-card">
+      <div className="group flex cursor-pointer items-center space-x-4 rounded-md border border-border/60 bg-card/70 p-3 transition-colors duration-100 hover:border-primary/55 hover:bg-card">
         {/* Person Avatar with noir styling */}
         <div className="relative">
-          <Avatar className="size-16 flex-shrink-0 ring-1 ring-border/70 transition-colors duration-200 group-hover:ring-primary/50">
+          <Avatar className="size-16 flex-shrink-0 ring-1 ring-border/70 transition-colors duration-100 group-hover:ring-primary/60">
             <AvatarImage
               src={
                 person.profile_path
@@ -106,20 +106,18 @@ export function PersonCard({
                   : undefined
               }
               alt={person.name}
-              className="object-cover object-center transition-transform duration-200 group-hover:scale-[1.02]"
+              className="object-cover object-center"
             />
             <AvatarFallback className="text-sm font-serif font-semibold bg-muted">
               {fallbackInitials}
             </AvatarFallback>
           </Avatar>
 
-          {/* Subtle glow effect */}
-          <div className="absolute inset-0 rounded-full bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
         </div>
 
         {/* Person Info with enhanced typography */}
         <div className="min-w-0 flex-1 space-y-1">
-          <h4 className="font-serif font-semibold text-lg leading-tight line-clamp-1 transition-colors duration-300 group-hover:text-primary tracking-wide">
+          <h4 className="font-serif font-semibold text-lg leading-tight line-clamp-1 transition-colors duration-100 group-hover:text-primary tracking-wide">
             {person.name}
           </h4>
 

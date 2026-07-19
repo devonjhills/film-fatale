@@ -35,9 +35,8 @@ const ProviderLogo = ({
       <div
         className={cn(
           "relative w-16 h-16 rounded-2xl overflow-hidden",
-          "bg-background shadow-md",
-          "hover:scale-105 hover:shadow-lg",
-          "transition-all duration-300 ease-out",
+          "border border-border/70 bg-background shadow-md",
+          "transition-colors duration-100 hover:border-primary/60",
           onClick && "cursor-pointer",
         )}
         onClick={onClick}
@@ -151,7 +150,7 @@ export function WatchProviders({ providers, className }: WatchProvidersProps) {
             href={link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
+            className="text-sm font-medium text-muted-foreground transition-colors duration-100 hover:text-foreground"
           >
             View on TMDB →
           </Link>
@@ -199,7 +198,7 @@ export function WatchProviders({ providers, className }: WatchProvidersProps) {
             href="https://www.justwatch.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors font-medium underline-offset-2 hover:underline"
+            className="font-medium underline-offset-2 transition-colors duration-100 hover:text-foreground hover:underline"
           >
             JustWatch
           </Link>
@@ -228,7 +227,7 @@ export function WatchProvidersCompact({
       {visibleProviders.map((provider) => (
         <Tooltip key={provider.provider_id}>
           <TooltipTrigger asChild>
-            <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-background shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
+            <div className="relative h-10 w-10 cursor-pointer overflow-hidden rounded-lg border border-border/70 bg-background shadow-sm transition-colors duration-100 hover:border-primary/60">
               <div className="absolute inset-0 p-1">
                 <Image
                   src={getImageUrl(provider.logo_path, "logo", "w154")}
@@ -259,7 +258,7 @@ export function WatchProvidersCompact({
               {hiddenProviders.map((provider) => (
                 <Tooltip key={provider.provider_id}>
                   <TooltipTrigger asChild>
-                    <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-background shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
+                    <div className="relative h-10 w-10 cursor-pointer overflow-hidden rounded-lg border border-border/70 bg-background shadow-sm transition-colors duration-100 hover:border-primary/60">
                       <div className="absolute inset-0 p-1">
                         <Image
                           src={getImageUrl(provider.logo_path, "logo", "w154")}

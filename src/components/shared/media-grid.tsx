@@ -11,6 +11,7 @@ interface MediaGridProps {
   cardSize?: "sm" | "md" | "lg";
   showYear?: boolean;
   showRating?: boolean;
+  priorityCount?: number;
 }
 
 export function MediaGrid({
@@ -22,6 +23,7 @@ export function MediaGrid({
   cardSize = "md",
   showYear = true,
   showRating = true,
+  priorityCount = 0,
 }: MediaGridProps) {
   if (isLoading) {
     return (
@@ -78,8 +80,7 @@ export function MediaGrid({
           size={cardSize}
           showYear={showYear}
           showRating={showRating}
-          priority={false}
-          index={index}
+          priority={index < priorityCount}
         />
       ))}
     </div>

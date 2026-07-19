@@ -44,7 +44,7 @@ export function Navigation() {
     exact ? pathname === href : pathname.startsWith(href);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/94 supports-[backdrop-filter]:bg-background/88 supports-[backdrop-filter]:backdrop-blur-lg">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/96">
       <div className="site-container flex h-16 items-center gap-5">
         <Link
           href="/"
@@ -74,7 +74,7 @@ export function Navigation() {
               href={link.href}
               aria-current={isActive(link.href, link.exact) ? "page" : undefined}
               className={cn(
-                "relative flex min-h-11 items-center rounded-sm px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
+                "relative flex min-h-11 items-center rounded-sm px-3 text-sm font-medium text-muted-foreground transition-colors duration-100 hover:text-foreground",
                 isActive(link.href, link.exact) &&
                   "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-0.5 after:bg-primary",
               )}
@@ -87,7 +87,7 @@ export function Navigation() {
               href="/library"
               aria-current={pathname.startsWith("/library") ? "page" : undefined}
               className={cn(
-                "relative flex min-h-11 items-center rounded-sm px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
+                "relative flex min-h-11 items-center rounded-sm px-3 text-sm font-medium text-muted-foreground transition-colors duration-100 hover:text-foreground",
                 pathname.startsWith("/library") &&
                   "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-0.5 after:bg-primary",
               )}

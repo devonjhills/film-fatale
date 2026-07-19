@@ -49,7 +49,7 @@ export function BreadcrumbNavigation({
                     <BreadcrumbLink asChild>
                       <Link
                         href={item.href}
-                        className="font-serif hover:text-primary transition-colors"
+                        className="font-serif transition-colors duration-100 hover:text-primary"
                       >
                         {item.label}
                       </Link>

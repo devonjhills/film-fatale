@@ -24,7 +24,6 @@ interface MediaCardProps {
   showYear?: boolean;
   showRating?: boolean;
   priority?: boolean;
-  index?: number;
 }
 
 export function MediaCard({
@@ -48,7 +47,7 @@ export function MediaCard({
         className="block rounded-md focus-visible:outline-none"
         aria-label={`${title}${releaseDate ? `, ${new Date(releaseDate).getFullYear()}` : ""}`}
       >
-        <div className="poster-frame relative aspect-[2/3] overflow-hidden transition-[border-color,transform,box-shadow] duration-200 group-hover:-translate-y-1 group-hover:border-primary/55 group-hover:shadow-[0_24px_60px_oklch(0_0_0/0.5)] group-focus-visible:-translate-y-1 group-focus-visible:border-ring">
+        <div className="poster-frame relative aspect-[2/3] overflow-hidden transition-colors duration-100 group-hover:border-primary/65 group-focus-within:border-ring">
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -57,7 +56,7 @@ export function MediaCard({
               loading={priority ? "eager" : "lazy"}
               fetchPriority={priority ? "high" : "auto"}
               sizes="(max-width: 479px) 45vw, (max-width: 767px) 30vw, (max-width: 1279px) 22vw, 180px"
-              className="object-cover transition-transform duration-300 group-hover:scale-[1.025]"
+              className="object-cover"
             />
           ) : (
             <div className="flex size-full items-center justify-center bg-muted">
@@ -68,7 +67,7 @@ export function MediaCard({
             </div>
           )}
 
-          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/35 to-transparent opacity-0 transition-opacity duration-100 group-hover:opacity-100" />
           {showRating && item.vote_average > 0 && (
             <div className="absolute right-2 top-2">
               <RatingBadge
@@ -81,7 +80,7 @@ export function MediaCard({
         </div>
 
         <div className="pt-3">
-          <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
+          <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground transition-colors duration-100 group-hover:text-primary">
             {title}
           </h3>
           {showYear && releaseDate && (
