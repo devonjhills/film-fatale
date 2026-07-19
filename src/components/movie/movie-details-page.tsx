@@ -19,9 +19,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";
 import { BackNavigation } from "@/components/ui/back-navigation";
 import { PersonCard } from "../person/person-card";
+import type { MovieDetails } from "@/lib/types";
 
 interface MovieDetailsPageProps {
   movieId: number;
+  initialMovie?: MovieDetails;
 }
 
 function MovieDetailsSkeleton() {
@@ -108,8 +110,11 @@ function MovieDetailsSkeleton() {
 
 import { notFound } from "next/navigation";
 
-export function MovieDetailsPage({ movieId }: MovieDetailsPageProps) {
-  const { movie, isLoading, isError } = useMovieDetails(movieId);
+export function MovieDetailsPage({
+  movieId,
+  initialMovie,
+}: MovieDetailsPageProps) {
+  const { movie, isLoading, isError } = useMovieDetails(movieId, initialMovie);
   const { watchProviders } = useMovieWatchProviders(movieId);
 
   if (isLoading) {

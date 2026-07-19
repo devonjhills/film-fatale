@@ -28,6 +28,17 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.filmfatale.app" }],
+        destination: "https://filmfatale.app/:path*",
+        permanent: true,
+      },
+    ];
+  },
+
   // Headers for better caching
   async headers() {
     return [

@@ -7,7 +7,7 @@ import { usePersonDetails } from "@/lib/hooks/api-hooks";
 import { getImageUrl } from "@/lib/api";
 import { formatDate, calculateAge } from "@/lib/utils";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { Movie, TVShow } from "@/lib/types";
+import type { Movie, PersonDetails, TVShow } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,6 +20,7 @@ import { notFound } from "next/navigation";
 
 interface PersonDetailsPageProps {
   personId: number;
+  initialPerson?: PersonDetails;
 }
 
 function PersonDetailsSkeleton() {
@@ -145,8 +146,14 @@ function PersonDetailsSkeleton() {
   );
 }
 
-export function PersonDetailsPage({ personId }: PersonDetailsPageProps) {
-  const { person, isLoading, isError } = usePersonDetails(personId);
+export function PersonDetailsPage({
+  personId,
+  initialPerson,
+}: PersonDetailsPageProps) {
+  const { person, isLoading, isError } = usePersonDetails(
+    personId,
+    initialPerson,
+  );
   const [movieCreditsExpanded, setMovieCreditsExpanded] = useState(false);
   const [tvCreditsExpanded, setTvCreditsExpanded] = useState(false);
   const [movieCreditsPage, setMovieCreditsPage] = useState(1);

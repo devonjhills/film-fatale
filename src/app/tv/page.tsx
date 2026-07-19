@@ -1,6 +1,22 @@
+import type { Metadata } from "next";
 import { RotatingHeroSection } from "@/components/ui/rotating-hero-section";
 import { MediaSection } from "@/components/shared/media-section";
 import { fetchFeaturedTVShows } from "@/lib/data-fetching";
+
+export const metadata: Metadata = {
+  title: "TV Shows",
+  description:
+    "Discover TV series airing now, explore top-rated shows, browse cast and seasons, and find your next watch.",
+  alternates: {
+    canonical: "/tv",
+  },
+  openGraph: {
+    title: "TV Shows",
+    description:
+      "Discover TV series airing now, explore top-rated shows, browse cast and seasons, and find your next watch.",
+    url: "/tv",
+  },
+};
 
 export default async function TVPage() {
   const { onTheAir, topRated } = await fetchFeaturedTVShows();

@@ -11,10 +11,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";
 import { BackNavigation } from "@/components/ui/back-navigation";
+import type { TVSeasonDetails, TVShowDetails } from "@/lib/types";
 
 interface TVSeasonDetailsPageProps {
   tvId: number;
   seasonNumber: number;
+  initialSeason?: TVSeasonDetails;
+  initialTVShow?: TVShowDetails;
 }
 
 function SeasonDetailsSkeleton() {
@@ -129,9 +132,15 @@ function SeasonDetailsSkeleton() {
 export function TVSeasonDetailsPage({
   tvId,
   seasonNumber,
+  initialSeason,
+  initialTVShow,
 }: TVSeasonDetailsPageProps) {
-  const { season, isLoading, isError } = useTVSeasonDetails(tvId, seasonNumber);
-  const { tvShow } = useTVDetails(tvId);
+  const { season, isLoading, isError } = useTVSeasonDetails(
+    tvId,
+    seasonNumber,
+    initialSeason,
+  );
+  const { tvShow } = useTVDetails(tvId, initialTVShow);
 
   if (isLoading) {
     return <SeasonDetailsSkeleton />;

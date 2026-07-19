@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Film Fatale is a sharply edited movie and television discovery companion powered by data from TMDB.",
+  alternates: {
+    canonical: "/about",
+  },
+};
 
 const features = [
   {

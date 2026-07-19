@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "Terms governing the use of Film Fatale.",
+  alternates: {
+    canonical: "/terms",
+  },
+};
+
 export default function TermsPage() {
   return (
     <div className="site-container max-w-4xl py-12 md:py-20">

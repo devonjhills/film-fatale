@@ -18,9 +18,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";
 import { BackNavigation } from "@/components/ui/back-navigation";
 import { useAuth } from "@/components/providers/auth-provider";
+import type { TVShowDetails } from "@/lib/types";
 
 interface TVDetailsPageProps {
   tvId: number;
+  initialTVShow?: TVShowDetails;
 }
 
 function TVDetailsSkeleton() {
@@ -159,8 +161,11 @@ function TVDetailsSkeleton() {
   );
 }
 
-export function TVDetailsPage({ tvId }: TVDetailsPageProps) {
-  const { tvShow, isLoading, isError } = useTVDetails(tvId);
+export function TVDetailsPage({
+  tvId,
+  initialTVShow,
+}: TVDetailsPageProps) {
+  const { tvShow, isLoading, isError } = useTVDetails(tvId, initialTVShow);
   const { watchProviders } = useTVWatchProviders(tvId);
   const { user } = useAuth();
 

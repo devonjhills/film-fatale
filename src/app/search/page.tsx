@@ -2,11 +2,16 @@ import type { Metadata } from "next";
 import { SearchPageClient } from "@/components/search/search-page-client";
 
 export const metadata: Metadata = {
-  title: "Search - FilmFatale",
+  title: "Search Movies, TV Shows & People",
   description:
-    "Search for movies, TV shows, and people. Discover your next favorite entertainment with FilmFatale's comprehensive search powered by TMDB.",
-  keywords:
-    "search movies, search TV shows, find films, discover entertainment, movie search, TV search, film database",
+    "Search movies, TV shows, actors, directors, and creators across the Film Fatale catalog.",
+  alternates: {
+    canonical: "/search",
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function Search() {

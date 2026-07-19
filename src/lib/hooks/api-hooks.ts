@@ -49,7 +49,10 @@ const buildQueryParams = (params: Record<string, unknown>): string => {
 };
 
 // Movie API Hooks
-export const useMovieDetails = (movieId: number) => {
+export const useMovieDetails = (
+  movieId: number,
+  initialData?: MovieDetails,
+) => {
   const queryParams = buildQueryParams({
     language: API_CONFIG.language,
     append_to_response: API_CONFIG.append_to_response.movie,
@@ -58,7 +61,7 @@ export const useMovieDetails = (movieId: number) => {
   const { data, error, isLoading } = useSWR<MovieDetails>(
     movieId ? `${ENDPOINTS.movieDetails(movieId)}?${queryParams}` : null,
     fetcher<MovieDetails>,
-    SWR_CONFIG,
+    { ...SWR_CONFIG, fallbackData: initialData },
   );
 
   return {
@@ -138,7 +141,7 @@ export const useNowPlayingMovies = (page: number = 1) => {
 };
 
 // TV Show API Hooks
-export const useTVDetails = (tvId: number) => {
+export const useTVDetails = (tvId: number, initialData?: TVShowDetails) => {
   const queryParams = buildQueryParams({
     language: API_CONFIG.language,
     append_to_response: API_CONFIG.append_to_response.tv,
@@ -147,7 +150,7 @@ export const useTVDetails = (tvId: number) => {
   const { data, error, isLoading } = useSWR<TVShowDetails>(
     tvId ? `${ENDPOINTS.tvDetails(tvId)}?${queryParams}` : null,
     fetcher<TVShowDetails>,
-    SWR_CONFIG,
+    { ...SWR_CONFIG, fallbackData: initialData },
   );
 
   return {
@@ -224,7 +227,10 @@ export const useOnTheAirTVShows = (page: number = 1) => {
 };
 
 // Person API Hooks
-export const usePersonDetails = (personId: number) => {
+export const usePersonDetails = (
+  personId: number,
+  initialData?: PersonDetails,
+) => {
   const queryParams = buildQueryParams({
     language: API_CONFIG.language,
     append_to_response: API_CONFIG.append_to_response.person,
@@ -233,7 +239,7 @@ export const usePersonDetails = (personId: number) => {
   const { data, error, isLoading } = useSWR<PersonDetails>(
     personId ? `${ENDPOINTS.personDetails(personId)}?${queryParams}` : null,
     fetcher<PersonDetails>,
-    SWR_CONFIG,
+    { ...SWR_CONFIG, fallbackData: initialData },
   );
 
   return {
@@ -374,7 +380,11 @@ export const useTVWatchProviders = (tvId: number) => {
   };
 };
 
-export const useTVSeasonDetails = (tvId: number, seasonNumber: number) => {
+export const useTVSeasonDetails = (
+  tvId: number,
+  seasonNumber: number,
+  initialData?: TVSeasonDetails,
+) => {
   const queryParams = buildQueryParams({
     language: API_CONFIG.language,
     append_to_response: API_CONFIG.append_to_response.tvSeason,
@@ -384,7 +394,7 @@ export const useTVSeasonDetails = (tvId: number, seasonNumber: number) => {
       ? `${ENDPOINTS.tvSeasonDetails(tvId, seasonNumber)}?${queryParams}`
       : null,
     fetcher<TVSeasonDetails>,
-    SWR_CONFIG,
+    { ...SWR_CONFIG, fallbackData: initialData },
   );
   return {
     season: data,

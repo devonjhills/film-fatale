@@ -5,6 +5,7 @@ import { AuthProvider } from "@/components/providers/auth-provider";
 import { Navigation } from "@/components/layout/navigation";
 import { Footer } from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,44 +23,40 @@ const crimsonPro = Crimson_Pro({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://www.filmfatale.app"),
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
   title: {
-    default: "FilmFatale - Discover Movies and TV Shows",
-    template: "%s | FilmFatale",
+    default: "Film Fatale | Discover Movies & TV Shows",
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Discover your next favorite movie or TV show with FilmFatale. Create your personal library, track your watching progress, and explore our comprehensive database powered by TMDB.",
-  keywords: [
-    "movies",
-    "tv shows",
-    "entertainment",
-    "watch",
-    "discover",
-    "film",
-    "television",
-    "movie database",
-    "watchlist",
-    "tracking",
-    "streaming",
-    "cinema",
-  ],
-  authors: [{ name: "FilmFatale" }],
-  creator: "FilmFatale",
-  publisher: "FilmFatale",
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
   openGraph: {
-    title: "FilmFatale - Discover Movies and TV Shows",
-    description:
-      "Discover your next favorite movie or TV show with FilmFatale. Create your personal library and track your watching progress.",
+    title: "Film Fatale | Discover Movies & TV Shows",
+    description: SITE_DESCRIPTION,
     type: "website",
     locale: "en_US",
     url: "/",
-    siteName: "FilmFatale",
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+        alt: "Film Fatale",
+      },
+    ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "FilmFatale - Discover Movies and TV Shows",
-    description:
-      "Discover your next favorite movie or TV show with FilmFatale. Create your personal library and track your watching progress.",
+    card: "summary",
+    title: "Film Fatale | Discover Movies & TV Shows",
+    description: SITE_DESCRIPTION,
+    images: ["/logo.png"],
   },
   robots: {
     index: true,
@@ -83,7 +80,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en-US">
       <head>
         <link rel="preconnect" href="https://image.tmdb.org" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
