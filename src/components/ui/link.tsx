@@ -46,30 +46,30 @@ const Link = forwardRef<HTMLAnchorElement, LinkProps>(
 
     const baseClasses = cn(
       // Base styles
-      "cursor-pointer transition-[color,background-color,border-color,opacity] duration-100",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "cursor-pointer transition-[color,background-color,border-color,opacity] duration-150",
       "disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
       // Ensure minimum touch target for button-like links
       variant === "button" && "min-h-[44px]",
       // Variant styles
       {
         // Default link
-        "text-primary hover:text-primary/80 underline-offset-4 hover:underline":
+        "font-medium text-primary underline-offset-4 hover:text-foreground hover:underline":
           variant === "default",
 
         // Navigation link with underline animation
-        "nav-link": variant === "nav",
+        "text-xs font-bold uppercase tracking-[0.09em] text-muted-foreground hover:text-primary":
+          variant === "nav",
 
         // Button-like link
-        "inline-flex items-center justify-center rounded-lg font-medium btn-primary":
+        "inline-flex items-center justify-center rounded-sm border border-primary bg-primary font-bold text-primary-foreground hover:border-foreground hover:bg-foreground":
           variant === "button",
 
         // Ghost button link
-        "inline-flex items-center justify-center rounded-lg font-medium btn-ghost":
+        "inline-flex items-center justify-center rounded-sm border border-transparent font-bold text-muted-foreground hover:border-border hover:bg-accent hover:text-foreground":
           variant === "ghost",
 
         // Accent colored link
-        "text-accent hover:text-accent/80 underline-offset-4 hover:underline font-medium":
+        "font-semibold text-primary underline-offset-4 hover:text-foreground hover:underline":
           variant === "accent",
       },
       // Size variants for button-like links

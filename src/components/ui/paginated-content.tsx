@@ -102,6 +102,8 @@ export function PaginatedContent({
               className={cn(
                 currentPage <= 1 && "pointer-events-none opacity-50",
               )}
+              aria-disabled={currentPage <= 1}
+              tabIndex={currentPage <= 1 ? -1 : undefined}
             />
           </PaginationItem>
 
@@ -117,6 +119,7 @@ export function PaginatedContent({
                     handlePageClick(page as number);
                   }}
                   isActive={page === currentPage}
+                  aria-label={`Go to page ${page}`}
                 >
                   {page}
                 </PaginationLink>
@@ -134,6 +137,8 @@ export function PaginatedContent({
               className={cn(
                 currentPage >= totalPages && "pointer-events-none opacity-50",
               )}
+              aria-disabled={currentPage >= totalPages}
+              tabIndex={currentPage >= totalPages ? -1 : undefined}
             />
           </PaginationItem>
         </PaginationContent>

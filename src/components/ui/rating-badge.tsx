@@ -27,21 +27,21 @@ export function RatingBadge({
   };
 
   const variantClasses = {
-    overlay: "bg-black/75 text-white shadow-lg",
-    inline: "bg-muted/80 text-foreground border border-border/50",
-    subtle: "bg-transparent text-foreground/80",
+    overlay: "border border-white/20 bg-black/82 text-white shadow-lg backdrop-blur-sm",
+    inline: "border border-primary/25 bg-primary/10 text-primary",
+    subtle: "bg-transparent text-primary",
   };
 
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-md font-medium transition-colors",
+        "inline-flex items-center gap-1.5 rounded-sm font-medium transition-colors",
         sizeClasses[size],
         variantClasses[variant],
         className,
       )}
     >
-      <Star className={cn(iconSizes[size])} weight="fill" />
+      <Star className={cn(iconSizes[size], "text-brass")} weight="fill" />
       <span className="font-semibold">{rating}</span>
     </div>
   );

@@ -94,7 +94,7 @@ export default function RootLayout({
         <AuthProvider>
           <TooltipProvider>
             <Navigation />
-            <main id="main-content" className="flex flex-1 flex-col pt-16">
+            <main id="main-content" className="flex flex-1 flex-col pt-[4.5rem]">
               {children}
             </main>
             <Footer />

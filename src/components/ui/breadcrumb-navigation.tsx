@@ -31,7 +31,7 @@ export function BreadcrumbNavigation({
   }
 
   return (
-    <div className="rounded-md border border-border/70 bg-background/85 px-4 py-2">
+    <div className="rounded-sm border border-border/75 bg-background/76 px-4 py-2 shadow-[0_1px_0_oklch(1_0_0/0.025)_inset] backdrop-blur-sm">
       <Breadcrumb className={className}>
         <BreadcrumbList>
           {items.map((item, index) => {
@@ -42,20 +42,20 @@ export function BreadcrumbNavigation({
               <React.Fragment key={index}>
                 <BreadcrumbItem>
                   {isCurrent ? (
-                    <BreadcrumbPage className="font-serif font-semibold">
+                    <BreadcrumbPage className="text-xs font-bold uppercase tracking-[0.07em]">
                       {item.label}
                     </BreadcrumbPage>
                   ) : item.href ? (
                     <BreadcrumbLink asChild>
                       <Link
                         href={item.href}
-                        className="font-serif transition-colors duration-100 hover:text-primary"
+                        className="text-xs font-bold uppercase tracking-[0.07em] transition-colors duration-150 hover:text-primary"
                       >
                         {item.label}
                       </Link>
                     </BreadcrumbLink>
                   ) : (
-                    <span className="font-serif">{item.label}</span>
+                    <span className="text-xs font-bold uppercase tracking-[0.07em]">{item.label}</span>
                   )}
                 </BreadcrumbItem>
                 {!isLast && <BreadcrumbSeparator />}
