@@ -44,7 +44,7 @@ const statusOptions = [
   },
   {
     value: "completed",
-    label: "Completed",
+    label: "Watched",
     icon: Check,
     color: "text-brass",
   },

@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   Edit,
-  RotateCcw,
   Star,
   StickyNote,
   Trash,
@@ -194,14 +193,6 @@ export function ViewingHistoryCard({
                       <p>TMDB score</p>
                     </TooltipContent>
                   </Tooltip>
-                )}
-                {item.watch_count > 1 && (
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <RotateCcw className="h-4 w-4" />
-                    <span className="font-medium text-sm">
-                      {item.watch_count}x
-                    </span>
-                  </div>
                 )}
               </div>
             </div>

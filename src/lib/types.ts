@@ -529,7 +529,6 @@ export interface ViewingHistoryItem {
   release_date: string;
   vote_average: number;
   status: WatchStatus;
-  watch_count: number;
   started_at: string | null;
   completed_at: string | null;
   last_watched_at: string | null;
@@ -624,7 +623,6 @@ export interface ViewingStats {
   average_rating: number;
   most_watched_genre: string;
   completion_rate: number;
-  rewatch_rate: number;
   monthly_activity: {
     month: string;
     count: number;

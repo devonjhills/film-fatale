@@ -381,10 +381,6 @@ export async function POST(request: NextRequest) {
 
         if (existingRows.length > 0) {
           const existing = existingRows[0];
-          const watchCount =
-            status === "completed" && existing.status !== "completed"
-              ? existing.watch_count + 1
-              : existing.watch_count;
 
           const startedAt =
             existing.started_at || (status === "watching" ? now : null);
@@ -397,7 +393,6 @@ export async function POST(request: NextRequest) {
           await sql`
             UPDATE viewing_history SET
               status = ${status},
-              watch_count = ${watchCount},
               started_at = ${startedAt},
               completed_at = ${completedAt},
               last_watched_at = ${lastWatchedAt},
@@ -437,7 +432,6 @@ export async function POST(request: NextRequest) {
           release_date: release_date || "",
           vote_average: vote_average || 0,
           status: status as WatchStatus,
-          watch_count: 1,
           started_at: startedAt,
           completed_at: completedAt,
           last_watched_at: lastWatchedAt,
@@ -450,14 +444,14 @@ export async function POST(request: NextRequest) {
         await sql`
           INSERT INTO viewing_history (
             id, user_id, tmdb_id, media_type, title, poster_path, 
-            overview, release_date, vote_average, status, watch_count,
+            overview, release_date, vote_average, status,
             started_at, completed_at, last_watched_at, rating, notes,
             created_at, updated_at
           ) VALUES (
             ${viewingHistoryItem.id}, ${viewingHistoryItem.user_id}, ${viewingHistoryItem.tmdb_id}, 
             ${viewingHistoryItem.media_type}, ${viewingHistoryItem.title}, ${viewingHistoryItem.poster_path},
             ${viewingHistoryItem.overview}, ${viewingHistoryItem.release_date}, ${viewingHistoryItem.vote_average},
-            ${viewingHistoryItem.status}, ${viewingHistoryItem.watch_count}, ${viewingHistoryItem.started_at},
+            ${viewingHistoryItem.status}, ${viewingHistoryItem.started_at},
             ${viewingHistoryItem.completed_at}, ${viewingHistoryItem.last_watched_at}, ${viewingHistoryItem.rating},
             ${viewingHistoryItem.notes}, ${viewingHistoryItem.created_at}, ${viewingHistoryItem.updated_at}
           )
@@ -479,10 +473,6 @@ export async function POST(request: NextRequest) {
 
     if (existingIndex >= 0) {
       const existing = userHistory[existingIndex];
-      const watchCount =
-        status === "completed" && existing.status !== "completed"
-          ? existing.watch_count + 1
-          : existing.watch_count;
 
       const startedAt =
         existing.started_at || (status === "watching" ? now : null);
@@ -494,7 +484,6 @@ export async function POST(request: NextRequest) {
       userHistory[existingIndex] = {
         ...existing,
         status: status as WatchStatus,
-        watch_count: watchCount,
         started_at: startedAt,
         completed_at: completedAt,
         last_watched_at: lastWatchedAt,
@@ -525,7 +514,6 @@ export async function POST(request: NextRequest) {
       release_date: release_date || "",
       vote_average: vote_average || 0,
       status: status as WatchStatus,
-      watch_count: 1,
       started_at: startedAt,
       completed_at: completedAt,
       last_watched_at: lastWatchedAt,
