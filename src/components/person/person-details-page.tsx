@@ -275,7 +275,7 @@ export function PersonDetailsPage({
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <div className="site-container pb-4 pt-8">
+      <div className="site-container pb-6 pt-10">
         <div className="flex items-center justify-between gap-4">
           <BreadcrumbNavigation
             items={[
@@ -287,22 +287,22 @@ export function PersonDetailsPage({
         </div>
       </div>
 
-      <div className="site-container pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="site-container pb-16">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(15rem,19rem)_minmax(0,1fr)] lg:gap-12">
           {/* Profile Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="space-y-6">
             {/* Profile Image */}
-            <div className="relative aspect-[2/3] w-full max-w-sm mx-auto lg:max-w-full">
+            <div className="poster-frame relative mx-auto aspect-[2/3] w-full max-w-sm overflow-hidden lg:max-w-full">
               {profileUrl ? (
                 <Image
                   src={profileUrl}
                   alt={person.name}
                   fill
-                  className="object-cover rounded-lg shadow-lg"
+                  className="object-cover saturate-[0.72] contrast-[1.08]"
                   sizes="(max-width: 1024px) 100vw, 300px"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-muted rounded-lg">
+                <div className="flex h-full w-full items-center justify-center bg-muted">
                   <User className="h-24 w-24 text-muted-foreground" weight="duotone" />
                 </div>
               )}
@@ -410,7 +410,7 @@ export function PersonDetailsPage({
                       href={`https://www.imdb.com/name/${person.external_ids.imdb_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors"
+                      className="flex min-h-10 items-center space-x-2 border-b border-border/50 text-sm font-semibold text-primary transition-colors hover:text-foreground"
                     >
                       <ExternalLink className="h-4 w-4" />
                       <span>IMDB</span>
@@ -421,7 +421,7 @@ export function PersonDetailsPage({
                       href={`https://www.instagram.com/${person.external_ids.instagram_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors"
+                      className="flex min-h-10 items-center space-x-2 border-b border-border/50 text-sm font-semibold text-primary transition-colors hover:text-foreground"
                     >
                       <ExternalLink className="h-4 w-4" />
                       <span>Instagram</span>
@@ -432,7 +432,7 @@ export function PersonDetailsPage({
                       href={`https://www.twitter.com/${person.external_ids.twitter_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors"
+                      className="flex min-h-10 items-center space-x-2 border-b border-border/50 text-sm font-semibold text-primary transition-colors hover:text-foreground"
                     >
                       <ExternalLink className="h-4 w-4" />
                       <span>Twitter</span>
@@ -444,11 +444,12 @@ export function PersonDetailsPage({
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3 space-y-8">
+          <div className="min-w-0 space-y-8">
             {/* Name and Basic Info */}
-            <div className="space-y-4">
+            <div className="border-b border-border/75 pb-8">
+              <p className="dossier-label mb-5">Talent dossier</p>
               <div className="space-y-2">
-                <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+                <h1 className="page-title max-w-4xl">
                   {person.name}
                 </h1>
               </div>
@@ -480,7 +481,7 @@ export function PersonDetailsPage({
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="prose prose-sm max-w-none text-foreground/90">
+                  <div className="max-w-none text-base leading-8 text-foreground/88">
                     {person.biography.split("\n\n").map((paragraph, index) => (
                       <p key={index} className="mb-4 last:mb-0">
                         {paragraph}

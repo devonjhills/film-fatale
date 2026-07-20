@@ -82,7 +82,7 @@ export function PersonCreditsCard({
 
               {rating && rating > 0 && (
                 <div className="flex items-center gap-1">
-                  <Star className="h-3 w-3 text-accent" weight="fill" />
+                  <Star className="h-3 w-3 text-brass" weight="fill" />
                   <span className="font-medium">{rating}</span>
                 </div>
               )}

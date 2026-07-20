@@ -40,10 +40,10 @@ export function PersonCard({
     return (
       <Link href={linkPath} className={className}>
         <div className="group cursor-pointer w-[140px]">
-          <Card className="relative flex h-[240px] flex-col overflow-hidden border-border/60 bg-card transition-colors duration-100 hover:border-primary/55">
+          <Card className="relative flex h-[240px] flex-col overflow-hidden border-border/70 bg-card transition-[border-color,transform] duration-300 hover:-translate-y-1 hover:border-primary/55">
             {/* Person Photo */}
-            <div className="relative flex-1 rounded-lg overflow-hidden shadow-lg">
-              <Avatar className="w-full h-full rounded-lg">
+            <div className="relative flex-1 overflow-hidden shadow-lg">
+              <Avatar className="h-full w-full rounded-none">
                 <AvatarImage
                   src={
                     person.profile_path
@@ -53,7 +53,7 @@ export function PersonCard({
                   alt={person.name}
                   className="size-full rounded-md object-cover"
                 />
-                <AvatarFallback className="text-lg font-serif font-semibold w-full h-full rounded-lg bg-muted flex items-center justify-center">
+                <AvatarFallback className="flex h-full w-full items-center justify-center rounded-none bg-muted font-serif text-lg font-semibold">
                   {fallbackInitials}
                 </AvatarFallback>
               </Avatar>
@@ -85,7 +85,7 @@ export function PersonCard({
               </div>
 
               {/* Subtle border glow */}
-              <div className="absolute inset-0 rounded-lg border border-primary/30 opacity-0 transition-opacity duration-100 group-hover:opacity-100" />
+              <div className="absolute inset-0 border border-primary/30 opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
             </div>
           </Card>
         </div>
@@ -95,7 +95,7 @@ export function PersonCard({
 
   return (
     <Link href={linkPath} className={className}>
-      <div className="group flex cursor-pointer items-center space-x-4 rounded-md border border-border/60 bg-card/70 p-3 transition-colors duration-100 hover:border-primary/55 hover:bg-card">
+      <div className="group flex min-h-24 cursor-pointer items-center space-x-4 rounded-sm border border-border/70 bg-card/70 p-3.5 transition-[border-color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/55 hover:bg-card">
         {/* Person Avatar with noir styling */}
         <div className="relative">
           <Avatar className="size-16 flex-shrink-0 ring-1 ring-border/70 transition-colors duration-100 group-hover:ring-primary/60">
@@ -117,7 +117,7 @@ export function PersonCard({
 
         {/* Person Info with enhanced typography */}
         <div className="min-w-0 flex-1 space-y-1">
-          <h4 className="font-serif font-semibold text-lg leading-tight line-clamp-1 transition-colors duration-100 group-hover:text-primary tracking-wide">
+          <h4 className="line-clamp-1 font-serif text-lg font-semibold leading-tight tracking-[-0.015em] transition-colors duration-150 group-hover:text-primary">
             {person.name}
           </h4>
 

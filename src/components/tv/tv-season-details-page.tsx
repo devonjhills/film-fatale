@@ -191,7 +191,7 @@ export function TVSeasonDetailsPage({
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <div className="site-container pb-4 pt-8">
+      <div className="site-container pb-6 pt-10">
         <div className="flex items-center justify-between gap-4">
           <BreadcrumbNavigation items={breadcrumbItems} />
           <BackNavigation fallbackHref={`/tv/${tvId}`} />
@@ -199,35 +199,38 @@ export function TVSeasonDetailsPage({
       </div>
 
       {/* Main Content */}
-      <div className="site-container space-y-8 pb-12">
+      <div className="site-container space-y-8 pb-16">
         {/* Season Header */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-6">
+        <Card className="overflow-hidden bg-[linear-gradient(120deg,oklch(0.25_0.072_25/0.22),transparent_42%),var(--card)]">
+          <CardContent className="p-7 md:p-9">
+            <div className="flex flex-col gap-8 md:flex-row md:items-end">
               {/* Season Poster */}
-              <div className="relative aspect-[2/3] w-32 md:w-40 mx-auto md:mx-0 flex-shrink-0">
+              <div className="poster-frame relative mx-auto aspect-[2/3] w-36 flex-shrink-0 overflow-hidden md:mx-0 md:w-44">
                 {season.poster_path ? (
                   <Image
                     src={getImageUrl(season.poster_path, "poster", "w185")}
                     alt={season.name}
                     fill
-                    className="object-cover rounded-lg"
+                    className="object-cover"
                     sizes="160px"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-muted rounded-lg">
+                  <div className="flex h-full w-full items-center justify-center bg-muted">
                     <Film className="h-8 w-8 text-muted-foreground" weight="duotone" />
                   </div>
                 )}
               </div>
 
               {/* Season Info */}
-              <div className="flex-1 space-y-4 text-center md:text-left">
+              <div className="flex-1 space-y-5 text-center md:text-left">
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold mb-3">
+                  <p className="dossier-label mb-4 justify-center md:justify-start">
+                    Season dossier
+                  </p>
+                  <h1 className="font-serif text-4xl font-medium tracking-[-0.04em] md:text-6xl">
                     {season.name}
                   </h1>
-                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-muted-foreground">
+                  <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-muted-foreground md:justify-start">
                     {season.vote_average > 0 && (
                       <div className="flex items-center gap-1">
                         <Star className="h-4 w-4" weight="fill" />
@@ -250,7 +253,7 @@ export function TVSeasonDetailsPage({
                 </div>
 
                 {season.overview && (
-                  <p className="text-base text-muted-foreground">
+                  <p className="max-w-3xl text-base leading-7 text-muted-foreground">
                     {season.overview}
                   </p>
                 )}
@@ -269,10 +272,10 @@ export function TVSeasonDetailsPage({
                 {season.episodes.map((episode) => (
                   <div
                     key={episode.id}
-                    className="flex gap-4 rounded-lg border p-4 transition-colors duration-100 hover:border-primary/55 hover:bg-card"
+                    className="flex flex-col gap-4 rounded-sm border border-border/70 bg-background/30 p-4 transition-colors duration-150 hover:border-primary/55 hover:bg-accent/25 sm:flex-row"
                   >
                     {/* Episode Still */}
-                    <div className="relative w-24 h-16 flex-shrink-0 rounded overflow-hidden bg-muted">
+                    <div className="relative aspect-video w-full flex-shrink-0 overflow-hidden rounded-sm bg-muted sm:w-32">
                       {episode.still_path ? (
                         <Image
                           src={getImageUrl(
@@ -294,7 +297,7 @@ export function TVSeasonDetailsPage({
 
                     {/* Episode Info */}
                     <div className="flex-1 space-y-2">
-                      <div className="flex items-start justify-between gap-4">
+                      <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:gap-4">
                         <div className="flex-1">
                           <h3 className="font-semibold text-base">
                             {episode.episode_number}. {episode.name}
@@ -303,7 +306,7 @@ export function TVSeasonDetailsPage({
                             {episode.air_date && formatDate(episode.air_date)}
                           </p>
                         </div>
-                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                           {episode.vote_average > 0 && (
                             <div className="flex items-center gap-1">
                               <Star className="h-3 w-3" weight="fill" />
