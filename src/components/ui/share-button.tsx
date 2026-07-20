@@ -1,62 +1,71 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, Share } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 interface ShareButtonProps {
   url?: string;
-  title?: string;
-  text?: string;
   className?: string;
 }
 
-export function ShareButton({
-  url,
-  title = "Check this out!",
-  text = "Check this out!",
-  className,
-}: ShareButtonProps) {
+export function ShareButton({ url, className }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
+  const copiedTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const shareUrl =
-    url || (typeof window !== "undefined" ? window.location.href : "");
-
-  const handleShare = async () => {
-    // Try native sharing first
-    if (navigator.share && typeof navigator.share === "function") {
-      try {
-        await navigator.share({
-          title,
-          text,
-          url: shareUrl,
-        });
-        return;
-      } catch {
-        // Fall through to copy to clipboard
+  useEffect(() => {
+    return () => {
+      if (copiedTimeout.current) {
+        clearTimeout(copiedTimeout.current);
       }
+    };
+  }, []);
+
+  const showCopiedConfirmation = () => {
+    setCopied(true);
+
+    if (copiedTimeout.current) {
+      clearTimeout(copiedTimeout.current);
     }
 
-    // Fallback to copying to clipboard
+    copiedTimeout.current = setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+
+  const copyWithLegacyFallback = (shareUrl: string) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = shareUrl;
+    textArea.setAttribute("readonly", "");
+    textArea.style.position = "fixed";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.select();
+    textArea.setSelectionRange(0, textArea.value.length);
+
     try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+      if (!document.execCommand("copy")) {
+        throw new Error("Copy command was unsuccessful");
+      }
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  };
+
+  const handleCopy = async () => {
+    const shareUrl = url ?? window.location.href;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+      } else {
+        copyWithLegacyFallback(shareUrl);
+      }
+      showCopiedConfirmation();
     } catch {
-      // Fallback for older browsers
       try {
-        const textArea = document.createElement("textarea");
-        textArea.value = shareUrl;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textArea);
-        setCopied(true);
-        setTimeout(() => {
-          setCopied(false);
-        }, 2000);
+        copyWithLegacyFallback(shareUrl);
+        showCopiedConfirmation();
       } catch {
         console.error("Copy failed");
       }
@@ -65,11 +74,13 @@ export function ShareButton({
 
   return (
     <Button
-      onClick={handleShare}
+      onClick={handleCopy}
       variant="outline"
       size="lg"
       className={className}
-      title={copied ? "URL Copied!" : "Share this page"}
+      title={copied ? "Page URL copied" : "Copy page URL"}
+      aria-label={copied ? "Page URL copied" : "Copy page URL"}
+      aria-live="polite"
     >
       {copied ? (
         <Check className="h-4 w-4" weight="bold" />

@@ -174,10 +174,7 @@ export function DetailsHero({
                 vote_average={item.vote_average}
                 size="lg"
               />
-              <ShareButton
-                title={`${title} - ${mediaType === "movie" ? "Movie" : "TV Show"} Details`}
-                text={`Check out "${title}" on Film Fatale.`}
-              />
+              <ShareButton />
             </div>
 
             {hasExternalLinks && (
