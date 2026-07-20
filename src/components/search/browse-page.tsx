@@ -104,7 +104,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
               onChange={(event) => setQuery(event.target.value)}
               placeholder="A title, actor, or director…"
               aria-label="Search films, TV shows, and people"
-              className="min-h-16 w-full rounded-sm border border-input bg-background/82 py-3 pl-12 pr-14 font-serif text-xl text-foreground shadow-[0_20px_55px_oklch(0_0_0/0.32)] backdrop-blur-sm placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-4 focus:ring-primary/10 md:text-2xl"
+              className="custom-search-clear min-h-16 w-full rounded-sm border border-input bg-background/82 py-3 pl-12 pr-14 font-serif text-xl text-foreground shadow-[0_20px_55px_oklch(0_0_0/0.32)] backdrop-blur-sm placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-4 focus:ring-primary/10 md:text-2xl"
             />
             {query && (
               <button

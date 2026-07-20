@@ -88,6 +88,10 @@
     text-rendering: optimizeLegibility;
   }
 
+  html body[data-scroll-locked] {
+    margin-right: 0 !important;
+  }
+
   body::before {
     position: fixed;
     z-index: -1;
@@ -346,6 +350,20 @@
 
   .ticket-edge::after {
     right: -0.4rem;
+  }
+
+  .custom-search-clear::-webkit-search-cancel-button,
+  .custom-search-clear::-webkit-search-decoration {
+    display: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .custom-search-clear::-ms-clear,
+  .custom-search-clear::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
   }
 
   .legal-copy {
