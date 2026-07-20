@@ -57,8 +57,8 @@ export function DetailsHero({
     Boolean(item.external_ids?.imdb_id) || Boolean(item.homepage);
 
   return (
-    <section className="relative isolate overflow-hidden border-b border-border/70">
-      <div className="absolute inset-x-0 top-0 -z-20 h-[34rem] md:h-[42rem]">
+    <section className="relative isolate overflow-hidden border-b border-border/75">
+      <div className="absolute inset-x-0 top-0 -z-20 h-[38rem] md:h-[48rem]">
         {backdropUrl ? (
           <Image
             src={backdropUrl}
@@ -67,17 +67,18 @@ export function DetailsHero({
             priority
             fetchPriority="high"
             sizes="100vw"
-            className="object-cover object-top opacity-65"
+            className="object-cover object-top opacity-70 saturate-[0.58] contrast-[1.1]"
           />
         ) : (
           <div className="size-full bg-muted" />
         )}
       </div>
       <div className="art-scrim absolute inset-0 -z-10" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-background/20 to-background" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-background/15 to-background" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-56 bg-gradient-to-b from-background/48 to-transparent" />
 
-      <div className="site-container pb-14 pt-32 md:pb-20 md:pt-52">
-        <div className="grid items-end gap-8 lg:grid-cols-[minmax(220px,300px)_minmax(0,1fr)] lg:gap-12">
+      <div className="site-container pb-16 pt-36 md:pb-24 md:pt-60">
+        <div className="grid items-end gap-10 lg:grid-cols-[minmax(220px,300px)_minmax(0,1fr)] lg:gap-14">
           <div>
             <div className="poster-frame relative mx-auto aspect-[2/3] w-48 overflow-hidden sm:w-56 lg:mx-0 lg:w-full">
               {posterUrl ? (
@@ -101,7 +102,7 @@ export function DetailsHero({
             </div>
 
             {watchProviders?.flatrate?.length ? (
-              <div className="mx-auto mt-3 flex w-48 items-center justify-between gap-3 rounded-md border border-border/75 bg-card/95 p-3 sm:w-56 lg:w-full">
+              <div className="ticket-edge mx-auto mt-4 flex w-48 items-center justify-between gap-3 rounded-sm border border-border/80 bg-card/95 p-3.5 shadow-lg sm:w-56 lg:w-full">
                 <div>
                   <p className="eyebrow text-[0.58rem]">Streaming</p>
                   <p className="mt-1 text-xs font-semibold">Watch on</p>
@@ -112,19 +113,19 @@ export function DetailsHero({
           </div>
 
           <div className="min-w-0">
-            <p className="eyebrow mb-4">
+            <p className="dossier-label mb-5">
               {mediaType === "movie" ? "Film dossier" : "Series dossier"}
             </p>
             <h1 className="display-title text-shadow-cinematic max-w-5xl">
               {title}
             </h1>
             {tagline && (
-              <p className="mt-5 max-w-3xl font-serif text-xl italic leading-relaxed text-foreground/72 md:text-2xl">
+              <p className="mt-6 max-w-3xl font-serif text-xl italic leading-relaxed text-foreground/76 md:text-2xl">
                 “{tagline}”
               </p>
             )}
 
-            <div className="mt-6 flex flex-wrap items-center gap-2">
+            <div className="mt-7 flex flex-wrap items-center gap-2">
               {item.vote_average > 0 && (
                 <Badge variant="secondary" className="gap-1.5">
                   <Star className="size-3.5 text-brass" weight="fill" />
@@ -147,20 +148,22 @@ export function DetailsHero({
             </div>
 
             {genres.length > 0 && (
-              <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+              <div className="mt-5 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
                 {genres.map((genre: { id: number; name: string }) => (
-                  <span key={genre.id}>{genre.name}</span>
+                  <span key={genre.id} className="border-l border-primary/55 pl-2.5">
+                    {genre.name}
+                  </span>
                 ))}
               </div>
             )}
 
             {item.overview && (
-              <p className="mt-6 max-w-4xl text-base leading-7 text-foreground/82 md:text-lg md:leading-8">
+              <p className="mt-7 max-w-4xl text-base leading-7 text-foreground/86 md:text-lg md:leading-8">
                 {item.overview}
               </p>
             )}
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-9 flex flex-wrap gap-3">
               {trailer && (
                 <TrailerModal trailer={trailer} title={title} size="lg" />
               )}

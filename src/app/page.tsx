@@ -35,7 +35,7 @@ export default async function Home() {
         />
       )}
 
-      <div className="site-container space-y-20 py-16 md:space-y-24 md:py-24">
+      <div className="site-container space-y-24 py-18 md:space-y-28 md:py-28">
         <MediaSection
           title="Now Playing"
           items={nowPlaying}

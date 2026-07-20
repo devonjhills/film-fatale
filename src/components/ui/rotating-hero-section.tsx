@@ -31,7 +31,7 @@ export function RotatingHeroSection({
   return (
     <section
       className={cn(
-        "relative isolate min-h-[34rem] overflow-hidden border-b border-border/70 md:min-h-[42rem]",
+        "relative isolate min-h-[38rem] overflow-hidden border-b border-border/75 md:min-h-[48rem]",
         className,
       )}
       aria-labelledby="featured-title"
@@ -43,25 +43,35 @@ export function RotatingHeroSection({
           fill
           priority
           sizes="100vw"
-          className="absolute inset-0 -z-20 object-cover object-center"
+          className="absolute inset-0 -z-20 object-cover object-center saturate-[0.58] contrast-[1.12]"
         />
       ) : (
         <div className="absolute inset-0 -z-20 bg-muted" />
       )}
       <div className="art-scrim absolute inset-0 -z-10" />
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,transparent_0%,transparent_68%,oklch(0.1_0.01_20/0.46)_100%)]" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,transparent_0%,transparent_68%,oklch(0.06_0.006_70/0.58)_100%)]" />
+      <div
+        className="absolute inset-x-0 bottom-0 z-10 h-3 border-y border-white/10 bg-[repeating-linear-gradient(90deg,transparent_0_1.25rem,oklch(0_0_0/0.9)_1.25rem_1.6rem)] opacity-70"
+        aria-hidden="true"
+      />
 
-      <div className="site-container flex min-h-[34rem] items-end pb-12 pt-24 md:min-h-[42rem] md:pb-18">
-        <div className="max-w-3xl">
-          <p className="eyebrow mb-5">Tonight&apos;s feature</p>
+      <div className="site-container flex min-h-[38rem] items-end pb-16 pt-24 md:min-h-[48rem] md:pb-24">
+        <div className="max-w-4xl">
+          <div className="mb-6 flex items-center gap-4">
+            <p className="eyebrow">Tonight&apos;s feature</p>
+            <span className="h-px w-12 bg-primary/70" aria-hidden="true" />
+            <span className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-white/62">
+              Feature presentation
+            </span>
+          </div>
           <h1
             id="featured-title"
-            className="display-title text-shadow-cinematic text-white"
+            className="display-title text-shadow-cinematic max-w-[13ch] text-white"
           >
             {title}
           </h1>
 
-          <div className="mt-6 flex flex-wrap items-center gap-2.5">
+          <div className="mt-7 flex flex-wrap items-center gap-2.5">
             {item.vote_average > 0 && (
               <Badge
                 variant="overlay"
@@ -83,19 +93,19 @@ export function RotatingHeroSection({
           </div>
 
           {item.overview && (
-            <p className="text-shadow-cinematic mt-5 max-w-2xl text-base leading-7 text-white/82 md:text-lg">
+            <p className="text-shadow-cinematic mt-6 max-w-2xl text-base leading-7 text-white/85 md:text-lg md:leading-8">
               {item.overview}
             </p>
           )}
 
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
               <Link href={`/${mediaType}/${item.id}`}>
                 View details
                 <ArrowRight aria-hidden="true" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/28 bg-black/45 text-white hover:bg-white/12">
+            <Button asChild size="lg" variant="outline" className="border-white/35 bg-black/48 text-white backdrop-blur-sm hover:border-primary hover:bg-black/72 hover:text-primary">
               <Link href={mediaType === "movie" ? "/movies/popular" : "/tv/popular"}>
                 Browse {mediaType === "movie" ? "films" : "shows"}
               </Link>

@@ -53,7 +53,7 @@ export function CategoryPage({
   return (
     <div className="min-h-screen">
       <header className="noir-page-header">
-        <div className="site-container py-10 md:py-14">
+        <div className="site-container relative z-10 py-12 md:py-18">
           <div className="mb-8 flex items-center justify-between gap-4">
             <BreadcrumbNavigation
               items={[
@@ -63,19 +63,19 @@ export function CategoryPage({
             />
             <BackNavigation fallbackHref={breadcrumbParentHref} />
           </div>
-          <p className="eyebrow mb-4">{mediaType === "movie" ? "Film archive" : "Television archive"}</p>
-          <h1 className="font-serif text-4xl font-semibold tracking-[-0.035em] sm:text-5xl md:text-6xl">
+          <p className="dossier-label mb-5">{mediaType === "movie" ? "Film archive" : "Television archive"}</p>
+          <h1 className="page-title">
             {title}
           </h1>
           {description && (
-            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+            <p className="page-lede mt-6">
               {description}
             </p>
           )}
         </div>
       </header>
 
-      <div className="site-container py-10 md:py-14">
+      <div className="site-container py-12 md:py-16">
         <div className="space-y-10">
           <MediaGrid
             items={data}

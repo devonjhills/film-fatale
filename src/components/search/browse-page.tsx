@@ -79,20 +79,20 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
   return (
     <div className="min-h-screen">
       <header className="noir-page-header">
-        <div className="site-container py-10 md:py-14">
+        <div className="site-container relative z-10 py-12 md:py-18">
           <div className="mb-8 flex items-center justify-between gap-4">
             <BreadcrumbNavigation items={[{ label: "Search", current: true }]} />
             <BackNavigation fallbackHref="/" />
           </div>
-          <p className="eyebrow mb-4">Search the archive</p>
-          <h1 className="font-serif text-4xl font-semibold tracking-[-0.035em] sm:text-5xl md:text-6xl">
+          <p className="dossier-label mb-5">Search the archive</p>
+          <h1 className="page-title max-w-4xl">
             Find your next obsession
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+          <p className="page-lede mt-6">
             Search films, television, and the people behind them.
           </p>
 
-          <div className="relative mt-8 max-w-4xl">
+          <div className="relative mt-9 max-w-4xl">
             <Search
               className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
@@ -104,13 +104,13 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
               onChange={(event) => setQuery(event.target.value)}
               placeholder="A title, actor, or director…"
               aria-label="Search films, TV shows, and people"
-              className="min-h-16 w-full rounded-md border border-input bg-card/90 py-3 pl-12 pr-14 text-lg text-foreground shadow-[0_18px_50px_oklch(0_0_0/0.25)] placeholder:text-muted-foreground focus:border-ring focus:outline-none md:text-xl"
+              className="min-h-16 w-full rounded-sm border border-input bg-background/82 py-3 pl-12 pr-14 font-serif text-xl text-foreground shadow-[0_20px_55px_oklch(0_0_0/0.32)] backdrop-blur-sm placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-4 focus:ring-primary/10 md:text-2xl"
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="absolute right-2 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
+                className="absolute right-2 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground hover:bg-accent hover:text-foreground"
                 aria-label="Clear search"
               >
                 <X aria-hidden="true" />
@@ -120,13 +120,13 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
         </div>
       </header>
 
-      <div className="site-container py-10 md:py-14">
+      <div className="site-container py-12 md:py-16">
         {debouncedQuery ? (
           <>
-            <div className="mb-10 flex flex-col gap-5 border-b border-border/70 pb-6 sm:flex-row sm:items-end sm:justify-between">
+            <div className="mb-10 flex flex-col gap-5 border-b border-border/75 pb-7 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Results for</p>
-                <h2 className="mt-1 font-serif text-3xl font-semibold">
+                <h2 className="mt-1 font-serif text-4xl font-medium tracking-[-0.03em]">
                   “{debouncedQuery}”
                 </h2>
                 <p className="sr-only" aria-live="polite">
@@ -194,9 +194,9 @@ function SearchState({
   description: string;
 }) {
   return (
-    <div className="surface-panel mx-auto max-w-xl px-6 py-14 text-center">
+    <div className="surface-panel ticket-edge mx-auto max-w-xl px-7 py-16 text-center">
       <Icon className="mx-auto size-10 text-primary" aria-hidden="true" />
-      <h2 className="mt-5 font-serif text-3xl font-semibold">{title}</h2>
+      <h2 className="mt-5 font-serif text-4xl font-medium tracking-[-0.03em]">{title}</h2>
       <p className="mx-auto mt-3 max-w-md leading-7 text-muted-foreground">
         {description}
       </p>

@@ -312,7 +312,7 @@ export function MovieDetailsPage({
                       <DollarSign className="h-4 w-4" />
                       Revenue
                     </h4>
-                    <p className="text-base text-green-600">{revenue}</p>
+                    <p className="text-base font-medium text-primary">{revenue}</p>
                   </div>
                 )}
 

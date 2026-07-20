@@ -47,38 +47,36 @@ function PersonCard({ person, className }: PersonCardProps) {
   return (
     <Card
       className={cn(
-        "overflow-hidden transition-colors duration-100 hover:border-primary/55 hover:bg-card",
+        "group overflow-hidden transition-[border-color,background-color,transform] duration-300 hover:-translate-y-1 hover:border-primary/55 hover:bg-card",
         className,
       )}
     >
-      <CardContent className="p-2 space-y-2">
-        {/* Profile Image - Clickable */}
-        <Link href={`/person/${person.id}`} className="group">
-          <div className="relative aspect-[3/4] overflow-hidden rounded-md cursor-pointer">
+      <Link href={`/person/${person.id}`} className="block">
+        <CardContent className="space-y-3 p-2.5">
+          <div className="relative aspect-[3/4] overflow-hidden rounded-sm">
             {profileUrl ? (
               <Image
                 src={profileUrl}
-                alt={person.name}
+                alt=""
                 fill
-                className="object-cover"
+                className="object-cover saturate-[0.72] transition-[filter,transform] duration-500 group-hover:scale-[1.035] group-hover:saturate-100"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground border rounded-md">
+              <div className="flex h-full w-full items-center justify-center border bg-muted text-muted-foreground">
                 <User className="h-8 w-8" weight="duotone" />
               </div>
             )}
+            <div className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
           </div>
-        </Link>
 
-        {/* Person Info - Not Clickable */}
-        <div className="space-y-1.5">
-          <h3 className="text-sm font-medium leading-tight line-clamp-2">
+          <div className="space-y-1.5 px-0.5 pb-1">
+          <h3 className="line-clamp-2 font-serif text-base font-semibold leading-tight tracking-[-0.015em] transition-colors group-hover:text-primary">
             {person.name}
           </h3>
 
           {person.known_for_department && (
-            <p className="text-xs text-muted-foreground font-medium">
+            <p className="text-[0.65rem] font-bold uppercase tracking-[0.1em] text-muted-foreground">
               {person.known_for_department}
             </p>
           )}
@@ -89,8 +87,9 @@ function PersonCard({ person, className }: PersonCardProps) {
               {knownForTitle}
             </p>
           )}
-        </div>
-      </CardContent>
+          </div>
+        </CardContent>
+      </Link>
     </Card>
   );
 }

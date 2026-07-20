@@ -49,20 +49,21 @@ export function MediaSection({
 }: MediaSectionProps) {
   return (
     <section className={cn("layout-stable", className)}>
-      <div className="mb-6 flex items-end justify-between gap-4 md:mb-8">
-        <div>
+      <div className="mb-7 flex items-end justify-between gap-4 md:mb-9">
+        <div className="min-w-0 flex-1">
           {(badge || showTrending) && (
             <p className="eyebrow mb-3">
               {showTrending ? "Trending now" : badge}
             </p>
           )}
           <h2 className="section-title">{title}</h2>
+          <div className="editorial-rule mt-4 max-w-sm" aria-hidden="true" />
         </div>
 
         {href && showViewAll && (
           <Link
             href={href}
-            className="flex min-h-11 items-center gap-2 rounded-sm text-sm font-semibold text-muted-foreground transition-colors duration-100 hover:text-foreground"
+            className="flex min-h-11 shrink-0 items-center gap-2 rounded-sm px-2 text-xs font-bold uppercase tracking-[0.09em] text-muted-foreground transition-colors duration-150 hover:text-primary"
           >
             View all
             <ArrowRight className="size-4" aria-hidden="true" />
