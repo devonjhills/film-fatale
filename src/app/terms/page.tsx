@@ -11,16 +11,16 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <div className="site-container max-w-4xl py-12 md:py-20">
-      <article className="space-y-10">
-        <header className="space-y-4 border-b border-border/70 pb-8">
-          <p className="eyebrow">The fine print</p>
-          <h1 className="font-serif text-5xl font-semibold tracking-[-0.035em] md:text-6xl">Terms of Service</h1>
+      <article className="space-y-12">
+        <header className="space-y-5 border-b border-border/75 pb-10">
+          <p className="dossier-label">The fine print</p>
+          <h1 className="page-title">Terms of Service</h1>
           <p className="text-muted-foreground">
             Last updated: {new Date().toLocaleDateString()}
           </p>
         </header>
 
-        <div className="space-y-6 text-sm leading-relaxed">
+        <div className="legal-copy text-sm">
           <section>
             <h2 className="text-xl font-semibold mb-3">
               1. Acceptance of Terms

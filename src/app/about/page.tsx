@@ -39,29 +39,29 @@ const features = [
 
 export default function AboutPage() {
   return (
-    <div className="site-container py-12 md:py-20">
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)] lg:items-start">
+    <div className="site-container py-14 md:py-24">
+      <div className="grid gap-14 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)] lg:items-start">
         <article>
-          <p className="eyebrow mb-5">About the archive</p>
+          <p className="dossier-label mb-6">About the archive</p>
           <h1 className="display-title max-w-4xl">
             Every great night starts with the right film.
           </h1>
-          <p className="mt-8 max-w-3xl text-lg leading-8 text-muted-foreground md:text-xl">
+          <p className="page-lede mt-9 max-w-3xl md:text-xl">
             Film Fatale is a private cinema companion built for discovery,
             memory, and the pleasure of choosing well. It keeps movies and
             television in one sharply edited place without turning the
             experience into a noisy streaming storefront.
           </p>
 
-          <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border/70 bg-border/70 md:grid-cols-3">
+          <div className="mt-14 grid gap-px overflow-hidden rounded-sm border border-border/80 bg-border/80 md:grid-cols-3">
             {features.map(({ title, copy, icon: Icon }) => (
-              <section key={title} className="bg-card p-6">
+              <section key={title} className="group bg-card p-7 transition-colors hover:bg-accent/35">
                 <Icon
                   className="size-5 text-primary"
                   weight="duotone"
                   aria-hidden="true"
                 />
-                <h2 className="mt-5 font-serif text-2xl font-semibold">{title}</h2>
+                <h2 className="mt-6 font-serif text-2xl font-semibold tracking-[-0.025em]">{title}</h2>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
                   {copy}
                 </p>
@@ -82,8 +82,8 @@ export default function AboutPage() {
           </div>
         </article>
 
-        <aside className="surface-panel relative overflow-hidden p-7">
-          <div className="absolute -right-12 -top-12 size-48 rounded-full bg-primary/10 blur-3xl" />
+        <aside className="surface-panel ticket-edge relative overflow-hidden p-8">
+          <div className="absolute -right-12 -top-12 size-48 rounded-full bg-primary/8 blur-3xl" />
           <Image
             src="/logo.png"
             alt="Film Fatale emblem"

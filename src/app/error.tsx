@@ -19,10 +19,10 @@ export default function Error({
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center py-16">
-      <div className="surface-panel mx-4 max-w-lg space-y-7 px-7 py-12 text-center">
+      <div className="surface-panel ticket-edge mx-4 max-w-lg space-y-7 px-8 py-14 text-center">
         <div className="space-y-4">
           <AlertTriangle className="mx-auto size-12 text-destructive" weight="duotone" />
-          <h1 className="font-serif text-4xl font-semibold">
+          <h1 className="font-serif text-5xl font-medium tracking-[-0.035em]">
             The picture went dark
           </h1>
         </div>
