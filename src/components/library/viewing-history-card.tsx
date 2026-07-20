@@ -29,8 +29,8 @@ interface ViewingHistoryCardProps {
 }
 
 const statusColors = {
-  watching: "bg-primary/10 text-primary",
-  completed: "bg-accent/10 text-accent-foreground",
+  watching: "border-primary/35 bg-primary/10 text-primary",
+  completed: "border-cinema-red/50 bg-accent text-accent-foreground",
   plan_to_watch: "bg-muted text-muted-foreground",
 };
 
@@ -123,6 +123,7 @@ export function ViewingHistoryCard({
                         size="sm"
                         className="h-7 w-7 p-0"
                         onClick={() => setShowStatusDialog(true)}
+                        aria-label={`Edit ${item.title}`}
                       >
                         <Edit className="h-3 w-3" />
                       </Button>
@@ -138,6 +139,7 @@ export function ViewingHistoryCard({
                         size="sm"
                         className="h-7 w-7 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                         onClick={handleRemove}
+                        aria-label={`Remove ${item.title} from library`}
                       >
                         <Trash className="h-3 w-3" />
                       </Button>
@@ -167,7 +169,7 @@ export function ViewingHistoryCard({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center gap-1 cursor-default">
-                        <Star className="h-4 w-4 text-accent" weight="fill" />
+                        <Star className="h-4 w-4 text-brass" weight="fill" />
                         <span className="text-sm font-semibold">
                           {item.rating}/10
                         </span>

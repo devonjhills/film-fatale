@@ -46,7 +46,7 @@ const statusOptions = [
     value: "completed",
     label: "Completed",
     icon: Check,
-    color: "text-green-600",
+    color: "text-brass",
   },
 ] as const;
 

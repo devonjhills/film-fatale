@@ -121,14 +121,16 @@ export function StatusUpdateDialog({
                     key={i}
                     type="button"
                     onClick={() => handleRatingClick(starValue)}
-                    className="p-1 hover:bg-muted rounded"
+                    className="flex size-8 items-center justify-center rounded-sm hover:bg-muted"
                     title={`Rate ${starValue} star${starValue !== 1 ? "s" : ""}`}
+                    aria-label={`Rate ${starValue} out of 10`}
+                    aria-pressed={starValue <= rating}
                   >
                     <Star
                       weight={starValue <= rating ? "fill" : "regular"}
                       className={`h-5 w-5 ${
                         starValue <= rating
-                          ? "text-accent"
+                          ? "text-brass"
                           : "text-muted-foreground"
                       }`}
                     />

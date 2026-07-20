@@ -155,6 +155,8 @@ export function ViewingHistoryGrid({
                     size="sm"
                     onClick={() => onPageChange(pageNum)}
                     className="w-10 h-9"
+                    aria-label={`Go to page ${pageNum}`}
+                    aria-current={page === pageNum ? "page" : undefined}
                   >
                     {pageNum}
                   </Button>
