@@ -1,151 +1,78 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { TVShowProgress, EpisodeProgress } from "@/lib/types";
+import { useState } from "react";
+import { mutate as revalidate } from "swr";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Check } from "@/components/ui/icons";
 import { Section } from "@/components/shared/section";
-import { cn } from "@/lib/utils";
+import {
+  setEpisodeWatched,
+  useEpisodeState,
+  type LibraryMeta,
+} from "@/lib/hooks/use-library";
+import { formatDate, cn } from "@/lib/utils";
+import { ProgressBar, progressSummary } from "@/components/library/progress";
 
 interface EpisodeTrackerProps {
-  tmdb_id: number;
+  show: LibraryMeta;
   seasons: {
     season_number: number;
     episode_count: number;
     name: string;
-  }[]; // TMDB season data
+  }[];
 }
 
-export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
-  const [progress, setProgress] = useState<TVShowProgress | null>(null);
-  const [episodes, setEpisodes] = useState<EpisodeProgress[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedSeason, setSelectedSeason] = useState(1);
+export function EpisodeTracker({ show, seasons }: EpisodeTrackerProps) {
+  const { data, isLoading, mutate } = useEpisodeState(show.tmdb_id, true);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  const fetchProgress = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/tv-progress/${tmdb_id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setProgress(data);
-      }
-    } catch (error) {
-      console.error("Error fetching TV progress:", error);
-    }
-  }, [tmdb_id]);
-
-  const fetchEpisodes = useCallback(
-    async (season?: number) => {
-      try {
-        const params = new URLSearchParams({ tmdb_id: tmdb_id.toString() });
-        if (season) params.append("season_number", season.toString());
-
-        const response = await fetch(`/api/episodes?${params}`);
-        if (response.ok) {
-          const data = await response.json();
-          setEpisodes(data.episodes);
-        }
-      } catch (error) {
-        console.error("Error fetching episodes:", error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [tmdb_id],
+  const regularSeasons = seasons.filter((season) => season.season_number > 0);
+  const progress = data?.progress;
+  const watched = new Set(
+    data?.episodes.map((ep) => `${ep.season_number}-${ep.episode_number}`),
   );
 
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      void fetchProgress();
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [fetchProgress]);
+  // Open on the season you're in the middle of.
+  const selectedSeason =
+    selected ??
+    progress?.next_episode?.season_number ??
+    regularSeasons[0]?.season_number ??
+    1;
+  const season = regularSeasons.find((s) => s.season_number === selectedSeason);
+  const seasonProgress = progress?.seasons.find(
+    (s) => s.season_number === selectedSeason,
+  );
+  const aired = seasonProgress?.aired ?? 0;
 
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      void fetchEpisodes(selectedSeason);
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [selectedSeason, fetchEpisodes]);
-
-  const toggleEpisode = async (
-    season_number: number,
-    episode_number: number,
-    watched: boolean,
+  const update = async (
+    target: { season_number: number; episode_number?: number },
+    isWatched: boolean,
   ) => {
+    if (saving) return;
+    setSaving(true);
     try {
-      const response = await fetch("/api/episodes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tmdb_id,
-          season_number,
-          episode_number,
-          watched,
-        }),
-      });
-
-      if (response.ok) {
-        await fetchProgress();
-        await fetchEpisodes(selectedSeason);
-      }
+      await mutate(setEpisodeWatched(show, target, isWatched), { revalidate: false });
+      // Watching an episode can add the show to the library or change its status.
+      void revalidate(`/api/viewing-history?tmdb_id=${show.tmdb_id}&media_type=tv`);
     } catch (error) {
-      console.error("Error toggling episode:", error);
-    }
-  };
-
-  const markSeasonWatched = async (season_number: number, watched: boolean) => {
-    const season = seasons.find((s) => s.season_number === season_number);
-    if (!season) return;
-
-    try {
-      // Create batch of episodes to update
-      const episodesToUpdate = [];
-      for (let ep = 1; ep <= season.episode_count; ep++) {
-        episodesToUpdate.push({
-          season_number,
-          episode_number: ep,
-          watched,
-        });
-      }
-
-      // Send batch update request
-      const response = await fetch("/api/episodes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tmdb_id,
-          episodes: episodesToUpdate,
-        }),
-      });
-
-      if (response.ok) {
-        // Refresh data after batch update
-        await fetchProgress();
-        await fetchEpisodes(selectedSeason);
-      } else {
-        console.error("Batch update failed:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error marking season:", error);
+      console.error("Error updating episodes:", error);
+    } finally {
+      setSaving(false);
     }
   };
 
   const action = (
     <Link
-      href="/library?tab=watching"
+      href="/library"
       className="flex min-h-11 shrink-0 items-center text-sm text-muted-foreground transition-colors hover:text-foreground"
     >
       Open library
     </Link>
   );
 
-  if (loading) {
+  if (isLoading || !progress) {
     return (
       <Section title="Your progress" action={action}>
         <div className="animate-pulse space-y-4" aria-busy="true">
@@ -157,68 +84,48 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
     );
   }
 
-  const regularSeasons = seasons.filter((season) => season.season_number > 0);
-  const season = regularSeasons.find((s) => s.season_number === selectedSeason);
-  const seasonProgress = progress?.seasons.find(
-    (s) => s.season_number === selectedSeason,
-  );
+  const percent =
+    progress.aired_episodes > 0
+      ? (progress.watched_episodes / progress.aired_episodes) * 100
+      : 0;
 
   return (
     <Section title="Your progress" action={action}>
-      {progress && (
-        <div className="mb-8 max-w-2xl">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 text-sm">
-            <p>
-              <span className="font-medium tabular-nums">
-                {progress.watched_episodes} of {progress.total_episodes}
-              </span>{" "}
-              <span className="text-muted-foreground">episodes watched</span>
-            </p>
-            {progress.next_episode && (
-              <p className="text-muted-foreground">
-                Next up{" "}
-                <span className="font-medium tabular-nums text-foreground">
-                  S{progress.next_episode.season_number} E
-                  {progress.next_episode.episode_number}
-                </span>
-              </p>
-            )}
-          </div>
-          <ProgressBar value={progress.completion_percentage} className="mt-3" />
+      <div className="mb-8 max-w-2xl">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 text-sm">
+          <p>
+            <span className="font-medium tabular-nums">
+              {progress.watched_episodes} of {progress.aired_episodes}
+            </span>{" "}
+            <span className="text-muted-foreground">aired episodes watched</span>
+          </p>
+          <p className="text-muted-foreground">{progressSummary(progress)}</p>
         </div>
-      )}
+        <ProgressBar value={percent} className="mt-3" />
+      </div>
 
       <div className="flex flex-wrap gap-2" role="group" aria-label="Season">
         {regularSeasons.map((s) => {
-          const percent = progress?.seasons.find(
-            (p) => p.season_number === s.season_number,
-          )?.completion_percentage;
+          const p = progress.seasons.find((x) => x.season_number === s.season_number);
           const isSelected = selectedSeason === s.season_number;
+          const done = !!p && p.aired > 0 && p.watched >= p.aired;
 
           return (
             <button
               key={s.season_number}
               type="button"
               aria-pressed={isSelected}
-              onClick={() => setSelectedSeason(s.season_number)}
+              onClick={() => setSelected(s.season_number)}
               className={cn(
-                "flex min-h-11 min-w-16 flex-col items-center justify-center rounded-sm border px-3 py-1.5 text-sm font-medium transition-colors",
+                "flex min-h-11 min-w-14 items-center justify-center gap-1 rounded-sm border px-3 text-sm font-medium tabular-nums transition-colors",
                 isSelected
                   ? "border-foreground bg-foreground text-background"
                   : "border-input text-foreground hover:border-foreground/60",
+                !isSelected && p?.aired === 0 && "text-muted-foreground",
               )}
             >
               S{s.season_number}
-              {percent !== undefined && percent > 0 && (
-                <span
-                  className={cn(
-                    "text-[0.6875rem] tabular-nums",
-                    isSelected ? "text-background/70" : "text-muted-foreground",
-                  )}
-                >
-                  {Math.round(percent)}%
-                </span>
-              )}
+              {done && <Check className="size-3.5" weight="bold" aria-label="watched" />}
             </button>
           );
         })}
@@ -229,81 +136,83 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm">
               <span className="font-medium">{season.name}</span>
-              {seasonProgress && (
-                <span className="text-muted-foreground tabular-nums">
-                  {" "}
-                  · {seasonProgress.watched_episodes} of{" "}
-                  {seasonProgress.total_episodes} watched
-                </span>
-              )}
+              <span className="tabular-nums text-muted-foreground">
+                {" "}
+                {aired > 0
+                  ? `${seasonProgress?.watched ?? 0} of ${aired} watched`
+                  : "Not aired yet"}
+              </span>
             </p>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => markSeasonWatched(season.season_number, true)}
-              >
-                <Check className="size-4" weight="bold" aria-hidden="true" />
-                Mark season watched
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => markSeasonWatched(season.season_number, false)}
-              >
-                Clear
-              </Button>
-            </div>
+            {aired > 0 && (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={saving}
+                  onClick={() => update({ season_number: season.season_number }, true)}
+                >
+                  <Check className="size-4" weight="bold" aria-hidden="true" />
+                  Watched through this season
+                </Button>
+                {(seasonProgress?.watched ?? 0) > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={saving}
+                    onClick={() => update({ season_number: season.season_number }, false)}
+                  >
+                    Clear season
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
 
-          <ul className="mt-5 grid grid-cols-[repeat(auto-fill,minmax(2.75rem,1fr))] gap-1.5">
+          <ul
+            className={cn(
+              "mt-5 grid grid-cols-[repeat(auto-fill,minmax(2.75rem,1fr))] gap-1.5",
+              saving && "opacity-60",
+            )}
+          >
             {Array.from({ length: season.episode_count }, (_, i) => {
-              const episode_number = i + 1;
-              const isWatched =
-                episodes.find(
-                  (ep) =>
-                    ep.season_number === season.season_number &&
-                    ep.episode_number === episode_number,
-                )?.watched || false;
+              const episode = i + 1;
+              const isWatched = watched.has(`${season.season_number}-${episode}`);
+              const hasAired = episode <= aired;
 
               return (
-                <li key={episode_number}>
+                <li key={episode}>
                   <button
                     type="button"
                     aria-pressed={isWatched}
-                    aria-label={`Episode ${episode_number}`}
+                    aria-label={`Episode ${episode}${hasAired ? "" : ", not aired yet"}`}
+                    disabled={!hasAired || saving}
                     onClick={() =>
-                      toggleEpisode(season.season_number, episode_number, !isWatched)
+                      update(
+                        { season_number: season.season_number, episode_number: episode },
+                        !isWatched,
+                      )
                     }
                     className={cn(
                       "flex h-11 w-full items-center justify-center rounded-sm border text-sm font-medium tabular-nums transition-colors",
                       isWatched
                         ? "border-foreground bg-foreground text-background"
                         : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",
+                      !hasAired && "border-dashed border-border text-muted-foreground/50 hover:border-border hover:text-muted-foreground/50",
                     )}
                   >
-                    {episode_number}
+                    {episode}
                   </button>
                 </li>
               );
             })}
           </ul>
+          <p className="mt-4 text-sm text-muted-foreground">
+            Marking an episode also marks every episode before it.
+            {progress.next_air_date &&
+              ` Next episode airs ${formatDate(progress.next_air_date)}.`}
+          </p>
         </div>
       )}
     </Section>
-  );
-}
-
-function ProgressBar({ value, className }: { value: number; className?: string }) {
-  return (
-    <div
-      role="progressbar"
-      aria-valuenow={Math.round(value)}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      className={cn("h-1 w-full overflow-hidden rounded-full bg-muted", className)}
-    >
-      <div className="h-full bg-foreground" style={{ width: `${value}%` }} />
-    </div>
   );
 }

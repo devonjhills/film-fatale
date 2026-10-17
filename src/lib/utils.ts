@@ -16,6 +16,9 @@ export function formatDate(dateString: string | null | undefined): string {
       year: "numeric",
       month: "long",
       day: "numeric",
+      // TMDB dates are calendar dates parsed as UTC midnight; reading them in
+      // local time would show the day before in the Americas.
+      ...(/^\d{4}-\d{2}-\d{2}$/.test(dateString) && { timeZone: "UTC" }),
     });
   } catch {
     return "Invalid Date";
@@ -28,7 +31,10 @@ export function formatYear(dateString: string | null | undefined): string {
 
   try {
     const date = new Date(dateString);
-    return date.getFullYear().toString();
+    return (/^\d{4}-\d{2}-\d{2}$/.test(dateString)
+      ? date.getUTCFullYear()
+      : date.getFullYear()
+    ).toString();
   } catch {
     return "";
   }

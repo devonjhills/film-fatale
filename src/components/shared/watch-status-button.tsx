@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import useSWR, { mutate as revalidate } from "swr";
 import { WatchStatus } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -61,31 +62,25 @@ export function WatchStatusButton({
   size = "default",
 }: WatchStatusButtonProps) {
   const { user, loading: authLoading } = useAuth();
-  const [currentStatus, setCurrentStatus] = useState<WatchStatus | null>(null);
   const [loading, setLoading] = useState(false);
+  const statusKey = user
+    ? `/api/viewing-history?tmdb_id=${tmdb_id}&media_type=${media_type}`
+    : null;
+  const { data, mutate } = useSWR<{ items: { status: WatchStatus }[] }>(
+    statusKey,
+    async (url: string) => {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Failed to load status");
+      return response.json();
+    },
+    { revalidateOnFocus: false },
+  );
+  const currentStatus = data?.items[0]?.status ?? null;
 
-  useEffect(() => {
-    if (!user) return;
-
-    // Check if item is already in viewing history
-    const checkStatus = async () => {
-      try {
-        const response = await fetch(
-          `/api/viewing-history?tmdb_id=${tmdb_id}&media_type=${media_type}&limit=1`,
-        );
-        if (response.ok) {
-          const data = await response.json();
-          if (data.items.length > 0) {
-            setCurrentStatus(data.items[0].status);
-          }
-        }
-      } catch (error) {
-        console.error("Error checking viewing status:", error);
-      }
-    };
-
-    checkStatus();
-  }, [user, tmdb_id, media_type]);
+  // The episode tracker reads the same rows; keep it in step.
+  const refreshEpisodes = () => {
+    if (media_type === "tv") void revalidate(`/api/episodes?tmdb_id=${tmdb_id}`);
+  };
 
   const handleStatusChange = async (status: WatchStatus) => {
     if (loading) return;
@@ -112,7 +107,8 @@ export function WatchStatusButton({
 
       if (!response.ok) throw new Error("Failed to update status");
 
-      setCurrentStatus(status);
+      await mutate({ items: [{ status }] }, { revalidate: false });
+      refreshEpisodes();
     } catch (error) {
       console.error("Error updating status:", error);
     } finally {
@@ -133,7 +129,8 @@ export function WatchStatusButton({
 
       if (!response.ok) throw new Error("Failed to remove from history");
 
-      setCurrentStatus(null);
+      await mutate({ items: [] }, { revalidate: false });
+      refreshEpisodes();
     } catch (error) {
       console.error("Error removing from history:", error);
     } finally {
@@ -194,7 +191,7 @@ export function WatchStatusButton({
               className="text-destructive gap-2"
             >
               <X className="h-4 w-4" />
-              Remove from History
+              Remove from library
             </DropdownMenuItem>
           </>
         )}

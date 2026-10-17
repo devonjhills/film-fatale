@@ -1,25 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/access-auth";
-import {
-  ViewingHistoryItem,
-  WatchStatus,
-  TVShowProgress,
-  SeasonProgress,
-  EpisodeProgress,
-} from "@/lib/types";
+import type { ViewingHistoryItem, WatchStatus } from "@/lib/types";
 import { hasDatabase, sql } from "@/lib/db";
-import { fetchTMDBServer } from "@/lib/tmdb-server";
+import {
+  airedSeasons,
+  computeProgress,
+  getShowInfo,
+  listWatched,
+  markWatchedThrough,
+} from "@/lib/library-server";
 
-// In-memory storage for development
-const viewingHistoryData = new Map<string, ViewingHistoryItem[]>();
-const episodeProgressData = new Map<string, EpisodeProgress[]>();
-
-const WATCH_STATUSES: WatchStatus[] = [
-  "watching",
-  "completed",
-  "plan_to_watch",
-];
+const WATCH_STATUSES: WatchStatus[] = ["watching", "completed", "plan_to_watch"];
 const MEDIA_TYPES = ["movie", "tv"] as const;
+// Workers Free allows 50 outbound requests per invocation; leave headroom.
+const MAX_TRACKED_SHOWS = 40;
 
 function isWatchStatus(value: unknown): value is WatchStatus {
   return WATCH_STATUSES.includes(value as WatchStatus);
@@ -35,286 +29,98 @@ function parsePositiveInteger(value: string | null): number | null {
   return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
 }
 
-// Helper function to get TV show details from TMDB
-async function getTVShowDetails(tmdbId: number) {
-  return fetchTMDBServer<{ seasons: { season_number: number; episode_count: number }[] }>(
-    `/tv/${tmdbId}`,
-    { next: { revalidate: 86400 } },
+function noDatabase() {
+  return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
+}
+
+/** Attach aired-episode progress to the shows being followed. */
+async function withProgress(userId: string, items: ViewingHistoryItem[]) {
+  const tracked = items
+    .filter((item) => item.media_type === "tv" && item.status !== "plan_to_watch")
+    .sort((a, b) => Number(b.status === "watching") - Number(a.status === "watching"))
+    .slice(0, MAX_TRACKED_SHOWS);
+  if (tracked.length === 0) return items;
+
+  const [watched, shows] = await Promise.all([
+    listWatched(
+      userId,
+      tracked.map((item) => item.tmdb_id),
+    ),
+    Promise.allSettled(tracked.map((item) => getShowInfo(item.tmdb_id))),
+  ]);
+
+  const progress = new Map(
+    tracked.map((item, index) => {
+      const show = shows[index];
+      return [
+        item.tmdb_id,
+        show.status === "fulfilled"
+          ? computeProgress(
+              show.value,
+              watched.get(item.tmdb_id) || [],
+              item.completed_at,
+            )
+          : null,
+      ];
+    }),
+  );
+
+  return items.map((item) =>
+    item.media_type === "tv" && progress.has(item.tmdb_id)
+      ? { ...item, progress: progress.get(item.tmdb_id) }
+      : item,
   );
 }
 
-// Helper function to calculate TV show progress
-async function calculateTVProgress(
-  userId: string,
-  tmdbId: number,
-): Promise<TVShowProgress | null> {
-  try {
-    // Get TV show details from TMDB
-    const tvShowDetails = await getTVShowDetails(tmdbId);
-
-    // Get user's episode progress
-    let userEpisodes: EpisodeProgress[] = [];
-
-    if (hasDatabase()) {
-      const { rows } = await sql`
-        SELECT * FROM episode_progress 
-        WHERE user_id = ${userId} AND tmdb_id = ${tmdbId}
-        ORDER BY season_number ASC, episode_number ASC
-      `;
-      userEpisodes = rows as unknown as EpisodeProgress[];
-    } else {
-      // Development: Use in-memory storage
-      const allUserEpisodes = episodeProgressData.get(userId) || [];
-      userEpisodes = allUserEpisodes.filter((ep) => ep.tmdb_id === tmdbId);
-    }
-
-    // Calculate progress for each season
-    const seasons: SeasonProgress[] = [];
-    let totalEpisodes = 0;
-    let totalWatchedEpisodes = 0;
-
-    for (const season of tvShowDetails.seasons) {
-      if (season.season_number === 0) continue; // Skip specials
-
-      const seasonEpisodes = userEpisodes.filter(
-        (ep) => ep.season_number === season.season_number,
-      );
-
-      const watchedCount = seasonEpisodes.filter((ep) => ep.watched).length;
-      const episodeCount = season.episode_count;
-
-      seasons.push({
-        season_number: season.season_number,
-        total_episodes: episodeCount,
-        watched_episodes: watchedCount,
-        completion_percentage:
-          episodeCount > 0 ? (watchedCount / episodeCount) * 100 : 0,
-      });
-
-      totalEpisodes += episodeCount;
-      totalWatchedEpisodes += watchedCount;
-    }
-
-    // Find next episode to watch
-    let nextEpisode:
-      | { season_number: number; episode_number: number }
-      | undefined;
-
-    for (const season of seasons) {
-      if (season.completion_percentage < 100) {
-        // Find first unwatched episode in this season
-        const seasonEpisodes = userEpisodes.filter(
-          (ep) => ep.season_number === season.season_number,
-        );
-
-        for (let ep = 1; ep <= season.total_episodes; ep++) {
-          const episodeProgress = seasonEpisodes.find(
-            (progress) => progress.episode_number === ep,
-          );
-
-          if (!episodeProgress || !episodeProgress.watched) {
-            nextEpisode = {
-              season_number: season.season_number,
-              episode_number: ep,
-            };
-            break;
-          }
-        }
-        break;
-      }
-    }
-
-    return {
-      tmdb_id: tmdbId,
-      total_seasons: seasons.length,
-      total_episodes: totalEpisodes,
-      watched_episodes: totalWatchedEpisodes,
-      completion_percentage:
-        totalEpisodes > 0 ? (totalWatchedEpisodes / totalEpisodes) * 100 : 0,
-      seasons,
-      next_episode: nextEpisode,
-    };
-  } catch (error) {
-    console.error(`Error calculating TV progress for ${tmdbId}:`, error);
-    return null;
-  }
-}
-
+/**
+ * The whole library in one query; a personal library is small enough to
+ * filter and sort on the client. `tmdb_id` + `media_type` returns one item.
+ */
 export async function GET(request: NextRequest) {
   try {
     const session = await getSession();
-
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    if (!hasDatabase()) return noDatabase();
 
     const { searchParams } = new URL(request.url);
-    const statusParam = searchParams.get("status");
-    const mediaTypeParam = searchParams.get("media_type");
     const tmdbIdParam = searchParams.get("tmdb_id");
-    const pageParam = searchParams.get("page") || "1";
-    const limitParam = searchParams.get("limit") || "20";
-    const page = /^\d+$/.test(pageParam) ? Number(pageParam) : NaN;
-    const limit = /^\d+$/.test(limitParam) ? Number(limitParam) : NaN;
-    const tmdbId = tmdbIdParam ? parsePositiveInteger(tmdbIdParam) : null;
+    const mediaType = searchParams.get("media_type");
+    const userId = session.user.id;
 
-    if (
-      (statusParam !== null && !isWatchStatus(statusParam)) ||
-      (mediaTypeParam !== null && !isMediaType(mediaTypeParam)) ||
-      (tmdbIdParam !== null && tmdbId === null) ||
-      !Number.isSafeInteger(page) ||
-      page < 1 ||
-      !Number.isSafeInteger(limit) ||
-      limit < 1 ||
-      limit > 100
-    ) {
-      return NextResponse.json(
-        { error: "Invalid query parameters" },
-        { status: 400 },
-      );
-    }
-
-    const status = statusParam as WatchStatus | null;
-    const mediaType = mediaTypeParam as "movie" | "tv" | null;
-    const offset = (page - 1) * limit;
-
-    // Persistent storage: D1
-    if (hasDatabase()) {
-      let query = `
-        SELECT * FROM viewing_history 
-        WHERE user_id = $1
+    if (tmdbIdParam !== null) {
+      const tmdbId = parsePositiveInteger(tmdbIdParam);
+      if (tmdbId === null || !isMediaType(mediaType)) {
+        return NextResponse.json({ error: "Invalid query parameters" }, { status: 400 });
+      }
+      const { rows } = await sql`
+        SELECT * FROM viewing_history
+        WHERE user_id = ${userId} AND tmdb_id = ${tmdbId} AND media_type = ${mediaType}
       `;
-      const params: (string | number)[] = [session.user.id];
-
-      if (status) {
-        query += ` AND status = $${params.length + 1}`;
-        params.push(status);
-      }
-
-      if (mediaType) {
-        query += ` AND media_type = $${params.length + 1}`;
-        params.push(mediaType);
-      }
-
-      if (tmdbId !== null) {
-        query += ` AND tmdb_id = $${params.length + 1}`;
-        params.push(tmdbId);
-      }
-
-      query += ` ORDER BY last_watched_at DESC, created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
-      params.push(limit, offset);
-
-      const { rows } = await sql.query(query, params);
-
-      // Add episode progress for TV shows
-      const enrichedItems = await Promise.all(
-        rows.map(async (item: ViewingHistoryItem) => {
-          if (item.media_type === "tv") {
-            const progress = await calculateTVProgress(
-              session.user.id,
-              item.tmdb_id,
-            );
-            return { ...item, episode_progress: progress };
-          }
-          return item;
-        }),
-      );
-
-      // Get total count
-      let countQuery = `
-        SELECT COUNT(*) FROM viewing_history 
-        WHERE user_id = $1
-      `;
-      const countParams: (string | number)[] = [session.user.id];
-
-      if (status) {
-        countQuery += ` AND status = $${countParams.length + 1}`;
-        countParams.push(status);
-      }
-
-      if (mediaType) {
-        countQuery += ` AND media_type = $${countParams.length + 1}`;
-        countParams.push(mediaType);
-      }
-
-      if (tmdbId !== null) {
-        countQuery += ` AND tmdb_id = $${countParams.length + 1}`;
-        countParams.push(tmdbId);
-      }
-
-      const { rows: countRows } = await sql.query(countQuery, countParams);
-      const total = parseInt(countRows[0].count);
-
-      return NextResponse.json({
-        items: enrichedItems,
-        total,
-        page,
-        totalPages: Math.ceil(total / limit),
-      });
+      return NextResponse.json({ items: rows });
     }
 
-    // Development: Use in-memory storage
-    let userHistory = viewingHistoryData.get(session.user.id) || [];
-
-    if (status) {
-      userHistory = userHistory.filter((item) => item.status === status);
-    }
-
-    if (mediaType) {
-      userHistory = userHistory.filter((item) => item.media_type === mediaType);
-    }
-
-    if (tmdbId !== null) {
-      userHistory = userHistory.filter(
-        (item) => item.tmdb_id === tmdbId,
-      );
-    }
-
-    userHistory.sort((a, b) => {
-      const aDate = new Date(a.last_watched_at || a.created_at).getTime();
-      const bDate = new Date(b.last_watched_at || b.created_at).getTime();
-      return bDate - aDate;
-    });
-
-    const total = userHistory.length;
-    const paginatedItems = userHistory.slice(offset, offset + limit);
-
-    // Add episode progress for TV shows
-    const enrichedItems = await Promise.all(
-      paginatedItems.map(async (item: ViewingHistoryItem) => {
-        if (item.media_type === "tv") {
-          const progress = await calculateTVProgress(
-            session.user.id,
-            item.tmdb_id,
-          );
-          return { ...item, episode_progress: progress };
-        }
-        return item;
-      }),
-    );
-
-    return NextResponse.json({
-      items: enrichedItems,
-      total,
-      page,
-      totalPages: Math.ceil(total / limit),
-    });
+    const { rows } = await sql`
+      SELECT * FROM viewing_history
+      WHERE user_id = ${userId}
+      ORDER BY COALESCE(last_watched_at, created_at) DESC
+    `;
+    const items = await withProgress(userId, rows as ViewingHistoryItem[]);
+    return NextResponse.json({ items });
   } catch (error) {
     console.error("Error fetching viewing history:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
-
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    if (!hasDatabase()) return noDatabase();
 
     const body = await request.json();
     const {
@@ -339,10 +145,7 @@ export async function POST(request: NextRequest) {
       title.length > 500 ||
       !isWatchStatus(status)
     ) {
-      return NextResponse.json(
-        { error: "Invalid required fields" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid required fields" }, { status: 400 });
     }
 
     if (
@@ -359,230 +162,103 @@ export async function POST(request: NextRequest) {
       (release_date !== undefined && typeof release_date !== "string") ||
       (vote_average !== undefined && typeof vote_average !== "number")
     ) {
-      return NextResponse.json(
-        { error: "Invalid optional fields" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid optional fields" }, { status: 400 });
     }
 
+    const userId = session.user.id;
     const now = new Date().toISOString();
-    const id = `${session.user.id}-${tmdb_id}-${media_type}`;
+    const watchedNow = status === "watching" || status === "completed";
 
-    // Persistent storage: D1
-    if (hasDatabase()) {
+    // One upsert. Rating and notes are only replaced when sent; the
+    // completion date is kept unless the status moves to Watched again.
+    await sql`
+      INSERT INTO viewing_history (
+        id, user_id, tmdb_id, media_type, title, poster_path, overview,
+        release_date, vote_average, status, started_at, completed_at,
+        last_watched_at, rating, notes, created_at, updated_at
+      ) VALUES (
+        ${`${userId}-${tmdb_id}-${media_type}`}, ${userId}, ${tmdb_id}, ${media_type},
+        ${title.trim()}, ${poster_path ?? null}, ${overview ?? ""}, ${release_date ?? ""},
+        ${vote_average ?? 0}, ${status}, ${status === "watching" ? now : null},
+        ${status === "completed" ? now : null}, ${watchedNow ? now : null},
+        ${rating ?? null}, ${notes ?? null}, ${now}, ${now}
+      )
+      ON CONFLICT (user_id, tmdb_id, media_type) DO UPDATE SET
+        status = excluded.status,
+        started_at = COALESCE(viewing_history.started_at, excluded.started_at),
+        completed_at = CASE
+          WHEN excluded.status = 'completed' AND viewing_history.status != 'completed'
+          THEN excluded.completed_at ELSE viewing_history.completed_at END,
+        last_watched_at = CASE
+          WHEN excluded.status != viewing_history.status
+          THEN COALESCE(excluded.last_watched_at, viewing_history.last_watched_at)
+          ELSE viewing_history.last_watched_at END,
+        rating = CASE WHEN ${rating !== undefined ? 1 : 0} = 1
+          THEN excluded.rating ELSE viewing_history.rating END,
+        notes = CASE WHEN ${notes !== undefined ? 1 : 0} = 1
+          THEN excluded.notes ELSE viewing_history.notes END,
+        updated_at = excluded.updated_at
+    `;
+
+    // Marking a show watched means every aired episode was seen.
+    if (media_type === "tv" && status === "completed") {
       try {
-        // Check if item already exists
-        const { rows: existingRows } = await sql`
-          SELECT * FROM viewing_history 
-          WHERE user_id = ${session.user.id} 
-          AND tmdb_id = ${tmdb_id} 
-          AND media_type = ${media_type}
-        `;
-
-        if (existingRows.length > 0) {
-          const existing = existingRows[0];
-
-          const startedAt =
-            existing.started_at || (status === "watching" ? now : null);
-          const completedAt =
-            status === "completed" ? now : existing.completed_at;
-          const lastWatchedAt = ["watching", "completed"].includes(status)
-            ? now
-            : existing.last_watched_at;
-
-          await sql`
-            UPDATE viewing_history SET
-              status = ${status},
-              started_at = ${startedAt},
-              completed_at = ${completedAt},
-              last_watched_at = ${lastWatchedAt},
-              rating = ${rating !== undefined ? rating : existing.rating},
-              notes = ${notes !== undefined ? notes : existing.notes},
-              updated_at = ${now}
-            WHERE user_id = ${session.user.id} 
-            AND tmdb_id = ${tmdb_id} 
-            AND media_type = ${media_type}
-          `;
-
-          const { rows: updatedRows } = await sql`
-            SELECT * FROM viewing_history 
-            WHERE user_id = ${session.user.id} 
-            AND tmdb_id = ${tmdb_id} 
-            AND media_type = ${media_type}
-          `;
-
-          return NextResponse.json({ item: updatedRows[0] });
+        const show = await getShowInfo(tmdb_id);
+        const seasons = airedSeasons(show).filter((season) => season.aired > 0);
+        const last = seasons.at(-1);
+        if (last) {
+          await markWatchedThrough(userId, tmdb_id, show, {
+            season_number: last.season_number,
+            episode_number: last.aired,
+          });
         }
-
-        // Create new item
-        const startedAt = status === "watching" ? now : null;
-        const completedAt = status === "completed" ? now : null;
-        const lastWatchedAt = ["watching", "completed"].includes(status)
-          ? now
-          : null;
-
-        const viewingHistoryItem: ViewingHistoryItem = {
-          id,
-          user_id: session.user.id,
-          tmdb_id,
-          media_type,
-          title: title.trim(),
-          poster_path: poster_path || null,
-          overview: overview || "",
-          release_date: release_date || "",
-          vote_average: vote_average || 0,
-          status: status as WatchStatus,
-          started_at: startedAt,
-          completed_at: completedAt,
-          last_watched_at: lastWatchedAt,
-          rating: rating ?? null,
-          notes: notes ?? null,
-          created_at: now,
-          updated_at: now,
-        };
-
-        await sql`
-          INSERT INTO viewing_history (
-            id, user_id, tmdb_id, media_type, title, poster_path, 
-            overview, release_date, vote_average, status,
-            started_at, completed_at, last_watched_at, rating, notes,
-            created_at, updated_at
-          ) VALUES (
-            ${viewingHistoryItem.id}, ${viewingHistoryItem.user_id}, ${viewingHistoryItem.tmdb_id}, 
-            ${viewingHistoryItem.media_type}, ${viewingHistoryItem.title}, ${viewingHistoryItem.poster_path},
-            ${viewingHistoryItem.overview}, ${viewingHistoryItem.release_date}, ${viewingHistoryItem.vote_average},
-            ${viewingHistoryItem.status}, ${viewingHistoryItem.started_at},
-            ${viewingHistoryItem.completed_at}, ${viewingHistoryItem.last_watched_at}, ${viewingHistoryItem.rating},
-            ${viewingHistoryItem.notes}, ${viewingHistoryItem.created_at}, ${viewingHistoryItem.updated_at}
-          )
-        `;
-
-        return NextResponse.json({ item: viewingHistoryItem }, { status: 201 });
-      } catch (dbError: unknown) {
-        console.error("Database error:", dbError);
-        throw dbError;
+      } catch (error) {
+        console.error(`Could not fill episodes for ${tmdb_id}:`, error);
       }
     }
 
-    // Development: Use in-memory storage
-    const userHistory = viewingHistoryData.get(session.user.id) || [];
-
-    const existingIndex = userHistory.findIndex(
-      (item) => item.tmdb_id === tmdb_id && item.media_type === media_type,
-    );
-
-    if (existingIndex >= 0) {
-      const existing = userHistory[existingIndex];
-
-      const startedAt =
-        existing.started_at || (status === "watching" ? now : null);
-      const completedAt = status === "completed" ? now : existing.completed_at;
-      const lastWatchedAt = ["watching", "completed"].includes(status)
-        ? now
-        : existing.last_watched_at;
-
-      userHistory[existingIndex] = {
-        ...existing,
-        status: status as WatchStatus,
-        started_at: startedAt,
-        completed_at: completedAt,
-        last_watched_at: lastWatchedAt,
-        rating: rating !== undefined ? rating : existing.rating,
-        notes: notes !== undefined ? notes : existing.notes,
-        updated_at: now,
-      };
-
-      viewingHistoryData.set(session.user.id, userHistory);
-      return NextResponse.json({ item: userHistory[existingIndex] });
-    }
-
-    // Create new item
-    const startedAt = status === "watching" ? now : null;
-    const completedAt = status === "completed" ? now : null;
-    const lastWatchedAt = ["watching", "completed"].includes(status)
-      ? now
-      : null;
-
-    const viewingHistoryItem: ViewingHistoryItem = {
-      id,
-      user_id: session.user.id,
-      tmdb_id,
-      media_type,
-      title: title.trim(),
-      poster_path: poster_path || null,
-      overview: overview || "",
-      release_date: release_date || "",
-      vote_average: vote_average || 0,
-      status: status as WatchStatus,
-      started_at: startedAt,
-      completed_at: completedAt,
-      last_watched_at: lastWatchedAt,
-      rating: rating ?? null,
-      notes: notes ?? null,
-      created_at: now,
-      updated_at: now,
-    };
-
-    userHistory.push(viewingHistoryItem);
-    viewingHistoryData.set(session.user.id, userHistory);
-
-    return NextResponse.json({ item: viewingHistoryItem }, { status: 201 });
+    const { rows } = await sql`
+      SELECT * FROM viewing_history
+      WHERE user_id = ${userId} AND tmdb_id = ${tmdb_id} AND media_type = ${media_type}
+    `;
+    return NextResponse.json({ item: rows[0] });
   } catch (error) {
     console.error("Error adding to viewing history:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
     const session = await getSession();
-
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    if (!hasDatabase()) return noDatabase();
 
     const { searchParams } = new URL(request.url);
-    const tmdbIdParam = searchParams.get("tmdb_id");
-    const media_type = searchParams.get("media_type");
-    const tmdbId = parsePositiveInteger(tmdbIdParam);
+    const tmdbId = parsePositiveInteger(searchParams.get("tmdb_id"));
+    const mediaType = searchParams.get("media_type");
 
-    if (tmdbId === null || !isMediaType(media_type)) {
-      return NextResponse.json(
-        { error: "Invalid tmdb_id or media_type" },
-        { status: 400 },
-      );
+    if (tmdbId === null || !isMediaType(mediaType)) {
+      return NextResponse.json({ error: "Invalid tmdb_id or media_type" }, { status: 400 });
     }
 
-    // Persistent storage: D1
-    if (hasDatabase()) {
+    const userId = session.user.id;
+    await sql`
+      DELETE FROM viewing_history
+      WHERE user_id = ${userId} AND tmdb_id = ${tmdbId} AND media_type = ${mediaType}
+    `;
+    // Removing a show also clears its episode history.
+    if (mediaType === "tv") {
       await sql`
-        DELETE FROM viewing_history 
-        WHERE user_id = ${session.user.id} 
-        AND tmdb_id = ${tmdbId}
-        AND media_type = ${media_type}
+        DELETE FROM episode_progress WHERE user_id = ${userId} AND tmdb_id = ${tmdbId}
       `;
-
-      return NextResponse.json({ success: true });
     }
-
-    // Development: Use in-memory storage
-    const userHistory = viewingHistoryData.get(session.user.id) || [];
-    const filteredHistory = userHistory.filter(
-      (item) =>
-        !(item.tmdb_id === tmdbId && item.media_type === media_type),
-    );
-
-    viewingHistoryData.set(session.user.id, filteredHistory);
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error removing from viewing history:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

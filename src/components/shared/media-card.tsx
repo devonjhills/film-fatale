@@ -38,7 +38,7 @@ export function MediaCard({
   const imageUrl = getImageUrl(item.poster_path || null, "poster", "w342");
   const title = item.title || item.name || "Untitled";
   const releaseDate = item.release_date || item.first_air_date;
-  const year = releaseDate ? new Date(releaseDate).getFullYear() : null;
+  const year = releaseDate ? new Date(releaseDate).getUTCFullYear() : null;
   const rating =
     showRating && item.vote_average > 0
       ? formatVoteAverage(item.vote_average)

@@ -50,7 +50,7 @@ function PersonDetailsSkeleton() {
 
 function creditYear(credit: Credit) {
   const date = credit.release_date || credit.first_air_date;
-  return date ? new Date(date).getFullYear() : null;
+  return date ? new Date(date).getUTCFullYear() : null;
 }
 
 export function PersonDetailsPage({

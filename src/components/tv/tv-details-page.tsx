@@ -176,7 +176,7 @@ export function TVDetailsPage({
                           <span>
                             {season.episode_count} ep{season.episode_count === 1 ? "" : "s"}
                           </span>
-                          {season.air_date && <span>{new Date(season.air_date).getFullYear()}</span>}
+                          {season.air_date && <span>{new Date(season.air_date).getUTCFullYear()}</span>}
                         </p>
                       </div>
                     </Link>
@@ -188,7 +188,18 @@ export function TVDetailsPage({
         )}
 
         {user && tvShow.seasons && tvShow.seasons.length > 0 && (
-          <EpisodeTracker tmdb_id={tvShow.id} seasons={tvShow.seasons} />
+          <EpisodeTracker
+            show={{
+              tmdb_id: tvShow.id,
+              media_type: "tv",
+              title: tvShow.name,
+              poster_path: tvShow.poster_path,
+              overview: tvShow.overview,
+              release_date: tvShow.first_air_date,
+              vote_average: tvShow.vote_average,
+            }}
+            seasons={tvShow.seasons}
+          />
         )}
 
         {mainCast.length > 0 && (

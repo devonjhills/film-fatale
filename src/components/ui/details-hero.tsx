@@ -125,7 +125,7 @@ export function DetailsHero({
                   {certification}
                 </span>
               )}
-              {rawReleaseDate && <span>{new Date(rawReleaseDate).getFullYear()}</span>}
+              {rawReleaseDate && <span>{new Date(rawReleaseDate).getUTCFullYear()}</span>}
               {runtime && <span>{runtime}</span>}
               {isTVShowDetails(item) && item.number_of_seasons ? (
                 <span>

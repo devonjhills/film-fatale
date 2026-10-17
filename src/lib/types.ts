@@ -536,7 +536,7 @@ export interface ViewingHistoryItem {
   rating: number | null; // User's personal rating (1-10)
   created_at: string;
   updated_at: string;
-  episode_progress?: TVShowProgress | null; // Episode progress for TV shows
+  progress?: ShowProgress | null;
 }
 
 export interface ViewingHistoryResponse {
@@ -544,37 +544,32 @@ export interface ViewingHistoryResponse {
   total: number;
 }
 
-// TV Episode Tracking
-export interface EpisodeProgress {
-  id: string;
-  user_id: string;
-  tmdb_id: number; // TV show ID
+// TV episode tracking. A row in episode_progress means the episode was watched.
+export interface WatchedEpisode {
   season_number: number;
   episode_number: number;
-  watched: boolean;
   watched_at: string | null;
-  created_at: string;
-  updated_at: string;
 }
 
-export interface SeasonProgress {
+export interface EpisodeRef {
   season_number: number;
-  total_episodes: number;
-  watched_episodes: number;
-  completion_percentage: number;
+  episode_number: number;
 }
 
-export interface TVShowProgress {
-  tmdb_id: number;
-  total_seasons: number;
-  total_episodes: number;
+/** Progress measured against episodes that have already aired. */
+export interface ShowProgress {
+  aired_episodes: number;
   watched_episodes: number;
-  completion_percentage: number;
-  seasons: SeasonProgress[];
-  next_episode?: {
-    season_number: number;
-    episode_number: number;
-  };
+  /** Aired episodes after the furthest one watched. */
+  remaining: number;
+  /** Episodes have aired since the last update. */
+  has_new: boolean;
+  next_episode: EpisodeRef | null;
+  /** The final aired episode, used to tell when a show is finished. */
+  last_aired: EpisodeRef | null;
+  next_air_date: string | null;
+  ended: boolean;
+  seasons: { season_number: number; aired: number; watched: number }[];
 }
 
 // Watch Sessions (for tracking multiple viewings)
@@ -594,24 +589,6 @@ export interface WatchSession {
 export interface WatchSessionsResponse {
   sessions: WatchSession[];
   total: number;
-}
-
-// Calendar View Data
-export interface CalendarDay {
-  date: string;
-  watchedItems: {
-    tmdb_id: number;
-    media_type: "movie" | "tv";
-    title: string;
-    poster_path: string | null;
-    session_count: number;
-  }[];
-}
-
-export interface CalendarMonth {
-  year: number;
-  month: number;
-  days: CalendarDay[];
 }
 
 // Statistics

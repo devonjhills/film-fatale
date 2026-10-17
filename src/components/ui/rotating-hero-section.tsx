@@ -69,7 +69,7 @@ export function RotatingHeroSection({
                 {formatVoteAverage(item.vote_average)}
               </span>
             )}
-            {releaseDate && <span>{new Date(releaseDate).getFullYear()}</span>}
+            {releaseDate && <span>{new Date(releaseDate).getUTCFullYear()}</span>}
           </p>
 
           {item.overview && (
