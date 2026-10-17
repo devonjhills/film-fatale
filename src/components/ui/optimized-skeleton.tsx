@@ -15,7 +15,7 @@ function OptimizedSkeleton({
 }: OptimizedSkeletonProps) {
   const variants = {
     default: "animate-pulse bg-muted",
-    shimmer: "shimmer rounded-md",
+    shimmer: "animate-pulse bg-muted",
     pulse: "animate-pulse bg-muted",
     wave: "animate-pulse bg-muted",
   };
@@ -34,41 +34,23 @@ function OptimizedSkeleton({
   );
 }
 
-// Mirrors MediaCard exactly: aspect-[2/3] poster + text below
-function MediaCardSkeleton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
-  const sizeClasses = {
-    sm: "w-full max-w-[160px] mx-auto",
-    md: "w-full max-w-[170px] mx-auto",
-    lg: "w-full max-w-[180px] mx-auto",
-  };
-
+// Mirrors MediaCard: 2:3 poster, title, then year and rating.
+function MediaCardSkeleton() {
   return (
-    <div className={cn(sizeClasses[size], "h-full")}>
-      <div className="space-y-3 h-full flex flex-col">
-        {/* Poster — exact aspect ratio match */}
-        <div className="relative aspect-[2/3] overflow-hidden rounded-md flex-shrink-0">
-          <OptimizedSkeleton variant="shimmer" className="absolute inset-0 rounded-md" />
-          {/* Rating badge position */}
-          <div className="absolute top-2 right-2">
-            <OptimizedSkeleton className="h-5 w-10 rounded" variant="shimmer" />
-          </div>
-        </div>
-
-        {/* Title + year — below the poster, same as real card */}
-        <div className="space-y-1.5 flex-grow">
-          <OptimizedSkeleton className="h-[14px] w-full" variant="shimmer" />
-          <OptimizedSkeleton className="h-[14px] w-3/4" variant="shimmer" />
-          <OptimizedSkeleton className="h-[11px] w-1/3 mt-0.5" variant="shimmer" />
-        </div>
+    <div className="poster-card">
+      <OptimizedSkeleton className="aspect-[2/3] w-full rounded-none" />
+      <div className="poster-card-body">
+        <OptimizedSkeleton className="h-3.5 w-4/5 rounded-sm" />
+        <OptimizedSkeleton className="mt-1 h-3 w-1/3 rounded-sm" />
       </div>
     </div>
   );
 }
 
-// Mirrors RotatingHeroSection exactly: h-[420px] md:h-[620px] lg:h-[720px], content at bottom-left
+// Mirrors RotatingHeroSection: min-h-[34rem] md:min-h-[42rem], content at bottom-left
 function HeroSectionSkeleton() {
   return (
-    <div className="relative h-[420px] md:h-[620px] lg:h-[720px] overflow-hidden">
+    <div className="relative h-[34rem] md:h-[42rem] overflow-hidden">
       {/* Full background shimmer */}
       <OptimizedSkeleton
         variant="shimmer"
@@ -105,21 +87,16 @@ function HeroSectionSkeleton() {
   );
 }
 
-// Grid columns match MediaGrid defaults: grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6
-function MediaSectionSkeleton({ cardCount = 6 }: { cardCount?: number }) {
+// Mirrors MediaSection: title row with a rule, then the shared poster grid.
+function MediaSectionSkeleton({ cardCount = 16 }: { cardCount?: number }) {
   return (
-    <div className="space-y-4 md:space-y-6">
-      {/* Section header — matches MediaSection header layout */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <OptimizedSkeleton className="h-8 w-44 md:h-9 md:w-56" variant="shimmer" />
-          <OptimizedSkeleton className="h-6 w-20 rounded-full" variant="shimmer" />
-        </div>
-        <OptimizedSkeleton className="h-9 w-24 rounded-md" variant="shimmer" />
+    <div>
+      <div className="mb-6 flex items-baseline justify-between border-b border-border pb-3">
+        <OptimizedSkeleton className="h-8 w-44 rounded-sm md:h-9 md:w-56" />
+        <OptimizedSkeleton className="h-4 w-14 rounded-sm" />
       </div>
 
-      {/* Cards grid — same breakpoints as MediaGrid default columns */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-5 md:gap-6 lg:gap-8 justify-items-center">
+      <div className="poster-grid poster-grid-two-rows">
         {Array.from({ length: cardCount }).map((_, i) => (
           <MediaCardSkeleton key={i} />
         ))}

@@ -29,12 +29,12 @@ export function MediaGrid({
     return (
       <div
         className={cn(
-          "grid grid-cols-2 gap-x-3 gap-y-7 min-[480px]:grid-cols-3 sm:gap-x-5 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6",
+          "poster-grid",
           className,
         )}
       >
-        {Array.from({ length: 12 }).map((_, i) => (
-          <MediaCardSkeleton key={i} size={cardSize} />
+        {Array.from({ length: 24 }).map((_, i) => (
+          <MediaCardSkeleton key={i} />
         ))}
       </div>
     );
@@ -68,11 +68,11 @@ export function MediaGrid({
   return (
     <div
       className={cn(
-        "grid grid-cols-2 gap-x-3 gap-y-7 min-[480px]:grid-cols-3 sm:gap-x-5 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6",
+        "poster-grid",
         className,
       )}
     >
-      {items.slice(0, 20).map((item, index) => (
+      {items.map((item, index) => (
         <MediaCard
           key={item.id}
           item={item}

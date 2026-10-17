@@ -130,7 +130,7 @@ export function StatusUpdateDialog({
                       weight={starValue <= rating ? "fill" : "regular"}
                       className={`h-5 w-5 ${
                         starValue <= rating
-                          ? "text-brass"
+                          ? "text-foreground"
                           : "text-muted-foreground"
                       }`}
                     />

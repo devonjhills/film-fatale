@@ -1,30 +1,41 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/*
+ * Film Fatale — silver screen palette.
+ * Monochrome to match the logo; posters supply the color.
+ * Red is reserved for destructive actions.
+ */
 :root {
   color-scheme: dark;
-  --background: oklch(0.075 0.006 70);
-  --foreground: oklch(0.945 0.018 86);
-  --card: oklch(0.115 0.009 70);
-  --card-foreground: oklch(0.945 0.018 86);
-  --popover: oklch(0.145 0.011 68);
-  --popover-foreground: oklch(0.945 0.018 86);
-  --primary: oklch(0.79 0.105 78);
-  --primary-foreground: oklch(0.115 0.012 68);
-  --secondary: oklch(0.17 0.012 70);
-  --secondary-foreground: oklch(0.92 0.018 84);
-  --muted: oklch(0.155 0.011 68);
-  --muted-foreground: oklch(0.705 0.022 82);
-  --accent: oklch(0.255 0.072 25);
-  --accent-foreground: oklch(0.965 0.014 84);
-  --destructive: oklch(0.56 0.19 25);
-  --destructive-foreground: oklch(0.985 0.008 84);
-  --border: oklch(0.285 0.017 70);
-  --input: oklch(0.32 0.02 70);
-  --ring: oklch(0.84 0.115 80);
-  --brass: oklch(0.79 0.105 78);
-  --cinema-red: oklch(0.55 0.155 24);
-  --silver: oklch(0.82 0.018 82);
+
+  --black: #000000;
+  --graphite: #141414;
+  --graphite-raised: #1b1b1b;
+  --smoke: #2b2b2b;
+  --ash: #a3a3a3;
+  --paper: #efede8;
+  --blood: #d2283c;
+
+  --background: var(--black);
+  --foreground: var(--paper);
+  --card: var(--graphite);
+  --card-foreground: var(--paper);
+  --popover: var(--graphite-raised);
+  --popover-foreground: var(--paper);
+  --primary: var(--paper);
+  --primary-foreground: var(--black);
+  --secondary: var(--graphite-raised);
+  --secondary-foreground: var(--paper);
+  --muted: var(--graphite);
+  --muted-foreground: var(--ash);
+  --accent: #232323;
+  --accent-foreground: var(--paper);
+  --destructive: var(--blood);
+  --destructive-foreground: #ffffff;
+  --border: var(--smoke);
+  --input: #3a3a3a;
+  --ring: var(--paper);
   --radius: 0.25rem;
 }
 
@@ -48,15 +59,12 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-brass: var(--brass);
-  --color-cinema-red: var(--cinema-red);
-  --color-silver: var(--silver);
   --font-sans: var(--font-ui);
   --font-serif: var(--font-display);
-  --radius-sm: calc(var(--radius) - 2px);
+  --radius-sm: var(--radius);
   --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 4px);
-  --radius-xl: calc(var(--radius) + 8px);
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius);
 }
 
 @layer base {
@@ -66,43 +74,40 @@
 
   html {
     min-width: 320px;
-    scroll-behavior: smooth;
     background: var(--background);
     scrollbar-gutter: stable;
   }
 
   body {
-    position: relative;
-    isolation: isolate;
     min-height: 100vh;
     overflow-x: hidden;
-    background:
-      radial-gradient(circle at 8% -10%, oklch(0.45 0.12 25 / 0.12), transparent 34rem),
-      radial-gradient(circle at 92% 18%, oklch(0.42 0.07 76 / 0.08), transparent 38rem),
-      linear-gradient(115deg, transparent 0 48%, oklch(1 0 0 / 0.012) 48.2% 48.5%, transparent 48.7%),
-      var(--background);
+    isolation: isolate;
     color: var(--foreground);
     font-family: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    letter-spacing: -0.008em;
-    text-rendering: optimizeLegibility;
+    line-height: 1.5;
   }
 
   html body[data-scroll-locked] {
     margin-right: 0 !important;
   }
 
-  body::before {
+  /*
+   * Window light through venetian blinds, cast over the whole page like a
+   * room's light source: lit bands and slat shadows. Sits above content but
+   * below the header, menus and dialogs (z-50).
+   */
+  body::after {
     position: fixed;
-    z-index: -1;
     inset: 0;
+    z-index: 45;
     pointer-events: none;
     content: "";
-    opacity: 0.18;
-    background-image:
-      repeating-linear-gradient(0deg, transparent 0 3px, oklch(1 0 0 / 0.018) 3px 4px),
-      radial-gradient(circle at 20% 30%, oklch(1 0 0 / 0.035) 0 0.65px, transparent 0.9px);
-    background-size: auto, 7px 7px;
+    background: repeating-linear-gradient(
+      -24deg,
+      rgb(239 237 232 / 0.035) 0 1.75rem,
+      rgb(0 0 0 / 0.08) 1.75rem 3.25rem
+    );
+    mask-image: linear-gradient(to bottom left, #000 0%, transparent 55%);
   }
 
   h1,
@@ -134,32 +139,25 @@
   }
 
   :focus-visible {
-    outline: 3px solid var(--ring);
+    outline: 2px solid var(--ring);
     outline-offset: 3px;
   }
 
+  /*
+   * Noir prints: every image in hard-contrast black and white — crushed
+   * blacks, hot whites. Color mode removes the filter. Toggled in the header.
+   */
+  img {
+    transition: filter 400ms ease;
+  }
+
+  html[data-tone="noir"] img {
+    filter: grayscale(1) contrast(1.35) brightness(0.95);
+  }
+
   ::selection {
-    background: oklch(0.79 0.105 78 / 0.42);
-    color: white;
-  }
-
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: var(--background);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    border: 2px solid var(--background);
-    border-radius: 999px;
-    background: var(--border);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--muted-foreground);
+    background: var(--paper);
+    color: var(--black);
   }
 }
 
@@ -170,14 +168,12 @@
     top: 0.75rem;
     z-index: 100;
     translate: 0 -200%;
-    border: 1px solid var(--ring);
     border-radius: var(--radius);
-    background: var(--popover);
-    color: var(--foreground);
+    background: var(--paper);
+    color: var(--black);
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
     font-weight: 600;
-    transition: translate 150ms ease;
   }
 
   .skip-link:focus {
@@ -185,171 +181,160 @@
   }
 
   .site-container {
-    width: min(100% - clamp(2rem, 5vw, 5rem), 90rem);
+    width: min(100% - 2rem, 90rem);
     margin-inline: auto;
   }
 
-  .editorial-rule {
-    height: 1px;
-    width: 100%;
-    background: linear-gradient(90deg, var(--primary), var(--border) 34%, transparent 88%);
+  @media (min-width: 768px) {
+    .site-container {
+      width: min(100% - 4rem, 90rem);
+    }
   }
 
   .surface-panel {
-    border: 1px solid color-mix(in oklch, var(--border) 86%, transparent);
-    border-radius: var(--radius-lg);
-    background:
-      linear-gradient(135deg, oklch(1 0 0 / 0.025), transparent 32%),
-      color-mix(in oklch, var(--card) 96%, transparent);
-    box-shadow:
-      0 1px 0 oklch(1 0 0 / 0.035) inset,
-      0 22px 70px oklch(0 0 0 / 0.24);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
   }
 
   .surface-float {
-    border: 1px solid color-mix(in oklch, var(--border) 94%, transparent);
-    border-radius: var(--radius-lg);
-    background:
-      linear-gradient(145deg, oklch(1 0 0 / 0.035), transparent 36%),
-      color-mix(in oklch, var(--popover) 98%, transparent);
-    box-shadow:
-      0 1px 0 oklch(1 0 0 / 0.05) inset,
-      0 28px 90px oklch(0 0 0 / 0.62);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--popover);
+    box-shadow: 0 16px 48px rgb(0 0 0 / 0.6);
   }
 
   .art-scrim {
     background:
-      linear-gradient(to top, var(--background) 0%, oklch(0.07 0.008 65 / 0.9) 30%, transparent 74%),
-      linear-gradient(to right, oklch(0.055 0.008 65 / 0.94), transparent 72%),
-      linear-gradient(120deg, oklch(0.22 0.065 25 / 0.2), transparent 38%);
-  }
-
-  .eyebrow {
-    color: var(--primary);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    line-height: 1;
-    text-transform: uppercase;
+      linear-gradient(to top, var(--background) 0%, rgb(0 0 0 / 0.75) 35%, transparent 75%),
+      linear-gradient(to right, rgb(0 0 0 / 0.85), transparent 70%);
   }
 
   .display-title {
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-size: clamp(3rem, 7vw, 7.25rem);
+    font-size: clamp(2.75rem, 6.5vw, 6.5rem);
     font-weight: 500;
-    letter-spacing: -0.052em;
-    line-height: 0.84;
-  }
-
-  .section-title {
-    font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-size: clamp(2rem, 3.4vw, 3.25rem);
-    font-weight: 500;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.02em;
     line-height: 0.95;
-  }
-
-  .text-shadow-cinematic {
-    text-shadow: 0 2px 24px oklch(0 0 0 / 0.92);
-  }
-
-  .poster-frame {
-    border: 1px solid color-mix(in oklch, var(--silver) 32%, var(--border));
-    border-radius: var(--radius-sm);
-    background: var(--muted);
-    box-shadow:
-      0 0 0 4px oklch(0.07 0.006 70),
-      0 18px 45px oklch(0 0 0 / 0.46);
-  }
-
-  .noir-page-header {
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid color-mix(in oklch, var(--border) 78%, transparent);
-    background:
-      linear-gradient(115deg, oklch(0.25 0.08 24 / 0.2), transparent 34%),
-      linear-gradient(180deg, oklch(0.16 0.018 70 / 0.72), transparent);
-  }
-
-  .noir-page-header::after {
-    position: absolute;
-    right: -6rem;
-    bottom: -5rem;
-    width: min(48vw, 36rem);
-    aspect-ratio: 1;
-    border: 1px solid oklch(0.79 0.105 78 / 0.12);
-    border-radius: 50%;
-    box-shadow:
-      0 0 0 3rem oklch(0.79 0.105 78 / 0.025),
-      0 0 0 8rem oklch(0.79 0.105 78 / 0.018);
-    content: "";
-    pointer-events: none;
   }
 
   .page-title {
     max-width: 18ch;
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-size: clamp(2.75rem, 6vw, 5.75rem);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: 500;
-    letter-spacing: -0.05em;
-    line-height: 0.9;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .section-title {
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
   }
 
   .page-lede {
-    max-width: 42rem;
+    max-width: 38rem;
     color: var(--muted-foreground);
-    font-size: clamp(1rem, 1.5vw, 1.15rem);
-    line-height: 1.75;
+    font-size: 1.0625rem;
+    line-height: 1.65;
   }
 
-  .dossier-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.65rem;
-    color: var(--primary);
-    font-size: 0.68rem;
-    font-weight: 750;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+  .page-header {
+    border-bottom: 1px solid var(--border);
   }
 
-  .dossier-label::before {
-    width: 1.75rem;
-    height: 1px;
-    background: currentColor;
-    content: "";
+  /*
+   * One grid for every poster wall. Column counts are fixed per breakpoint
+   * at 3, 4, 6 and 8 so cards stay ~125–190px wide and every row fills:
+   * shelves show two rows of 16, category pages show 24 per page.
+   */
+  .poster-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--poster-cols, 3), minmax(0, 1fr));
+    gap: 0.625rem;
   }
 
-  .noir-grid {
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 3rem 3rem;
-    background-position: -1px -1px;
+  @media (min-width: 640px) {
+    .poster-grid {
+      --poster-cols: 4;
+      gap: 1rem;
+    }
   }
 
-  .ticket-edge {
+  @media (min-width: 900px) {
+    .poster-grid {
+      --poster-cols: 6;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .poster-grid {
+      --poster-cols: 8;
+    }
+  }
+
+  /* Shelf sections: show exactly two full rows at every width. */
+  @media (max-width: 639.98px) {
+    .poster-grid-two-rows > :nth-child(n + 7) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 899.98px) {
+    .poster-grid-two-rows > :nth-child(n + 9) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 900px) and (max-width: 1279.98px) {
+    .poster-grid-two-rows > :nth-child(n + 13) {
+      display: none;
+    }
+  }
+
+  /*
+   * A poster wall tile: a graphite print with a hairline edge, so dark
+   * posters in noir still read as separate cards against the black page.
+   */
+  .poster-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    transition: border-color 150ms ease;
+  }
+
+  .poster-card:hover {
+    border-color: rgb(255 255 255 / 0.4);
+  }
+
+  .poster-card-art {
     position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    background: var(--muted);
   }
 
-  .ticket-edge::before,
-  .ticket-edge::after {
-    position: absolute;
-    top: 50%;
-    width: 0.8rem;
-    aspect-ratio: 1;
-    border-radius: 999px;
-    background: var(--background);
-    content: "";
-    translate: 0 -50%;
+  .poster-card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.625rem 0.625rem 0.75rem;
   }
 
-  .ticket-edge::before {
-    left: -0.4rem;
-  }
-
-  .ticket-edge::after {
-    right: -0.4rem;
+  .poster-frame {
+    border-radius: var(--radius);
+    background: var(--muted);
+    outline: 1px solid rgb(255 255 255 / 0.1);
+    outline-offset: -1px;
   }
 
   .custom-search-clear::-webkit-search-cancel-button,
@@ -359,50 +344,22 @@
     -webkit-appearance: none;
   }
 
-  .custom-search-clear::-ms-clear,
-  .custom-search-clear::-ms-reveal {
-    display: none;
-    width: 0;
-    height: 0;
-  }
-
-  .legal-copy {
-    position: relative;
-  }
-
   .legal-copy section {
-    position: relative;
-    padding: 1.5rem 0 1.5rem 3.25rem;
-    border-bottom: 1px solid color-mix(in oklch, var(--border) 62%, transparent);
-  }
-
-  .legal-copy section::before {
-    position: absolute;
-    left: 0;
-    top: 2.2rem;
-    width: 1.75rem;
-    height: 1px;
-    background: var(--primary);
-    content: "";
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--border);
   }
 
   .legal-copy section h2 {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.75rem;
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-size: 1.4rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-size: 1.375rem;
+    font-weight: 500;
   }
 
   .legal-copy section p {
+    max-width: 68ch;
     color: var(--muted-foreground);
-    line-height: 1.75;
-  }
-
-  @media (max-width: 479px) {
-    .legal-copy section {
-      padding-left: 2.5rem;
-    }
+    line-height: 1.7;
   }
 }
 
@@ -416,12 +373,13 @@
   }
 
   .text-shadow-sm {
-    text-shadow: 0 1px 4px oklch(0 0 0 / 0.72);
+    text-shadow: 0 1px 4px rgb(0 0 0 / 0.7);
   }
 
   .text-shadow,
-  .text-shadow-strong {
-    text-shadow: 0 2px 16px oklch(0 0 0 / 0.88);
+  .text-shadow-strong,
+  .text-shadow-cinematic {
+    text-shadow: 0 2px 16px rgb(0 0 0 / 0.85);
   }
 
   .divider {
@@ -432,14 +390,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

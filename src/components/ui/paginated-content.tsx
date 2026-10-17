@@ -17,6 +17,8 @@ interface PaginatedContentProps {
   totalPages: number;
   totalResults: number;
   onPageChange: (page: number) => void;
+  /** Items per page, for the "Showing x to y" line. */
+  pageSize?: number;
   className?: string;
 }
 
@@ -25,6 +27,7 @@ export function PaginatedContent({
   totalPages,
   totalResults,
   onPageChange,
+  pageSize = 20,
   className,
 }: PaginatedContentProps) {
   // Generate page numbers to show
@@ -146,8 +149,8 @@ export function PaginatedContent({
 
       {totalResults > 0 && (
         <p className="text-sm text-muted-foreground text-center">
-          Showing {((currentPage - 1) * 20 + 1).toLocaleString()} to{" "}
-          {Math.min(currentPage * 20, totalResults).toLocaleString()} of{" "}
+          Showing {((currentPage - 1) * pageSize + 1).toLocaleString()} to{" "}
+          {Math.min(currentPage * pageSize, totalResults).toLocaleString()} of{" "}
           {totalResults.toLocaleString()} results
         </p>
       )}

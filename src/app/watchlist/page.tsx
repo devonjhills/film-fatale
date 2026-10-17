@@ -23,10 +23,9 @@ export default function WatchlistPage() {
   // Show loading state while redirecting
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4">
-      <div className="surface-panel ticket-edge max-w-md space-y-5 px-8 py-12 text-center">
-        <Bookmark className="mx-auto h-14 w-14 animate-pulse text-primary" weight="duotone" />
-        <p className="eyebrow">Private collection</p>
-        <h1 className="font-serif text-4xl font-medium tracking-[-0.03em]">Opening your library…</h1>
+      <div className="max-w-md space-y-4 text-center">
+        <Bookmark className="mx-auto size-10 animate-pulse text-muted-foreground" aria-hidden="true" />
+        <h1 className="font-serif text-4xl font-medium">Opening your library…</h1>
         <p className="text-muted-foreground">
           Your watchlist is now part of your movie library.
         </p>

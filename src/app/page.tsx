@@ -35,25 +35,21 @@ export default async function Home() {
         />
       )}
 
-      <div className="site-container space-y-24 py-18 md:space-y-28 md:py-28">
+      <div className="site-container space-y-16 py-14 md:space-y-20 md:py-20">
         <MediaSection
-          title="Now Playing"
+          title="Now playing"
           items={nowPlaying}
           mediaType="movie"
           href="/movies/now-playing"
-          limit={12}
-          badge="In theaters"
+          limit={16}
         />
 
-        <div className="editorial-rule opacity-70" />
-
         <MediaSection
-          title="Critically Acclaimed"
+          title="Top rated"
           items={topRated}
           mediaType="movie"
           href="/movies/top-rated"
-          limit={12}
-          badge="The highest rated"
+          limit={16}
         />
       </div>
     </div>

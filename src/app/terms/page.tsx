@@ -12,8 +12,7 @@ export default function TermsPage() {
   return (
     <div className="site-container max-w-4xl py-12 md:py-20">
       <article className="space-y-12">
-        <header className="space-y-5 border-b border-border/75 pb-10">
-          <p className="dossier-label">The fine print</p>
+        <header className="space-y-5 border-b border-border pb-10">
           <h1 className="page-title">Terms of Service</h1>
           <p className="text-muted-foreground">
             Last updated: {new Date().toLocaleDateString()}

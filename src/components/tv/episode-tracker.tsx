@@ -206,7 +206,7 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
           onValueChange={(value) => setSelectedSeason(parseInt(value))}
         >
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            <h4 className="text-sm font-medium text-muted-foreground">
               Select Season
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -222,7 +222,7 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
                   <button
                     key={season.season_number}
                     onClick={() => setSelectedSeason(season.season_number)}
-                    className={`flex flex-col items-center gap-2 p-3 rounded-lg border transition-colors min-w-[70px] ${
+                    className={`flex flex-col items-center gap-2 p-3 rounded-sm border transition-colors min-w-[70px] ${
                       isSelected
                         ? "border-primary bg-primary/10"
                         : "border-border hover:border-primary"
@@ -286,7 +286,7 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
                 </div>
 
                 {currentSeasonProgress && (
-                  <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
+                  <div className="space-y-3 p-4 bg-muted/50 rounded-sm">
                     <div className="flex justify-between text-sm font-medium">
                       <span className="text-muted-foreground">
                         Season Progress
@@ -312,7 +312,7 @@ export function EpisodeTracker({ tmdb_id, seasons }: EpisodeTrackerProps) {
                 )}
 
                 <div className="space-y-3">
-                  <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                  <h4 className="text-sm font-medium text-muted-foreground">
                     Episodes ({season.episode_count} total)
                   </h4>
                   <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">

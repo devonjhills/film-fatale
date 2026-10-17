@@ -114,7 +114,7 @@ export function WatchProviders({ providers, className }: WatchProvidersProps) {
     return (
       <div
         className={cn(
-          "p-6 rounded-xl bg-gradient-to-br from-card/80 to-card/40",
+          "p-6 rounded-sm",
           "border border-border/60 shadow-lg",
           className,
         )}
@@ -138,7 +138,7 @@ export function WatchProviders({ providers, className }: WatchProvidersProps) {
   return (
     <div
       className={cn(
-        "space-y-6 p-6 rounded-xl bg-gradient-to-br from-card/80 to-card/40",
+        "space-y-6 p-6 rounded-sm",
         "border border-border/60 shadow-lg",
         className,
       )}
@@ -227,7 +227,7 @@ export function WatchProvidersCompact({
       {visibleProviders.map((provider) => (
         <Tooltip key={provider.provider_id}>
           <TooltipTrigger asChild>
-            <div className="relative h-10 w-10 cursor-pointer overflow-hidden rounded-lg border border-border/70 bg-background shadow-sm transition-colors duration-100 hover:border-primary/60">
+            <div className="relative h-10 w-10 cursor-pointer overflow-hidden rounded-sm border border-border/70 bg-background shadow-sm transition-colors duration-100 hover:border-primary/60">
               <div className="absolute inset-0 p-1">
                 <Image
                   src={getImageUrl(provider.logo_path, "logo", "w154")}
@@ -258,7 +258,7 @@ export function WatchProvidersCompact({
               {hiddenProviders.map((provider) => (
                 <Tooltip key={provider.provider_id}>
                   <TooltipTrigger asChild>
-                    <div className="relative h-10 w-10 cursor-pointer overflow-hidden rounded-lg border border-border/70 bg-background shadow-sm transition-colors duration-100 hover:border-primary/60">
+                    <div className="relative h-10 w-10 cursor-pointer overflow-hidden rounded-sm border border-border/70 bg-background shadow-sm transition-colors duration-100 hover:border-primary/60">
                       <div className="absolute inset-0 p-1">
                         <Image
                           src={getImageUrl(provider.logo_path, "logo", "w154")}

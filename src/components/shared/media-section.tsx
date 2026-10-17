@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { MediaGrid } from "./media-grid";
-import { ArrowRight } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 interface MediaItem {
@@ -40,33 +39,23 @@ export function MediaSection({
   href,
   className,
   showViewAll = true,
-  limit = 12,
-  showTrending = false,
-  badge,
+  limit = 16,
   cardSize = "md",
   showYear = true,
   showRating = true,
 }: MediaSectionProps) {
   return (
     <section className={cn("layout-stable", className)}>
-      <div className="mb-7 flex items-end justify-between gap-4 md:mb-9">
-        <div className="min-w-0 flex-1">
-          {(badge || showTrending) && (
-            <p className="eyebrow mb-3">
-              {showTrending ? "Trending now" : badge}
-            </p>
-          )}
-          <h2 className="section-title">{title}</h2>
-          <div className="editorial-rule mt-4 max-w-sm" aria-hidden="true" />
-        </div>
+      <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-border pb-3">
+        <h2 className="section-title min-w-0">{title}</h2>
 
         {href && showViewAll && (
           <Link
             href={href}
-            className="flex min-h-11 shrink-0 items-center gap-2 rounded-sm px-2 text-xs font-bold uppercase tracking-[0.09em] text-muted-foreground transition-colors duration-150 hover:text-primary"
+            className="flex min-h-11 shrink-0 items-center gap-1.5 text-sm text-muted-foreground transition-colors duration-150 hover:text-foreground"
           >
             View all
-            <ArrowRight className="size-4" aria-hidden="true" />
+            <span className="sr-only"> {title}</span>
           </Link>
         )}
       </div>
@@ -79,6 +68,7 @@ export function MediaSection({
         cardSize={cardSize}
         showYear={showYear}
         showRating={showRating}
+        className="poster-grid-two-rows"
       />
     </section>
   );

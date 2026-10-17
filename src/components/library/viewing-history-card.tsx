@@ -28,15 +28,15 @@ interface ViewingHistoryCardProps {
 }
 
 const statusColors = {
-  watching: "border-primary/35 bg-primary/10 text-primary",
-  completed: "border-cinema-red/50 bg-accent text-accent-foreground",
-  plan_to_watch: "bg-muted text-muted-foreground",
+  watching: "border-foreground bg-foreground text-background",
+  completed: "border-input bg-transparent text-foreground",
+  plan_to_watch: "border-border bg-muted text-muted-foreground",
 };
 
 const statusLabels = {
-  watching: "Currently Watching",
+  watching: "Watching",
   completed: "Watched",
-  plan_to_watch: "Want to Watch",
+  plan_to_watch: "Want to watch",
 };
 
 export function ViewingHistoryCard({
@@ -87,8 +87,8 @@ export function ViewingHistoryCard({
                       sizes="80px"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center">
-                      <span className="text-xs text-muted-foreground font-medium text-center text-sm">
+                    <div className="w-full h-full bg-muted flex items-center justify-center">
+                      <span className="text-xs text-muted-foreground text-center">
                         No Image
                       </span>
                     </div>
@@ -106,7 +106,7 @@ export function ViewingHistoryCard({
               <div className="flex items-start justify-between gap-3">
                 <Link
                   href={`/${item.media_type}/${item.tmdb_id}`}
-                  className="block min-w-0 flex-1 transition-colors duration-100 hover:text-primary"
+                  className="block min-w-0 flex-1 transition-colors duration-100 hover:underline hover:underline-offset-4"
                 >
                   <h3 className="font-semibold text-lg line-clamp-2 leading-tight">
                     {item.title}
@@ -168,7 +168,7 @@ export function ViewingHistoryCard({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center gap-1 cursor-default">
-                        <Star className="h-4 w-4 text-brass" weight="fill" />
+                        <Star className="h-4 w-4" weight="fill" aria-hidden="true" />
                         <span className="text-sm font-semibold">
                           {item.rating}/10
                         </span>

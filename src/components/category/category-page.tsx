@@ -1,6 +1,7 @@
 "use client";
 
 import { MediaGrid } from "@/components/shared/media-grid";
+import { CATEGORY_PAGE_SIZE } from "@/lib/hooks/api-hooks";
 import { PaginatedContent } from "@/components/ui/paginated-content";
 import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";
 import { BackNavigation } from "@/components/ui/back-navigation";
@@ -52,9 +53,9 @@ export function CategoryPage({
 
   return (
     <div className="min-h-screen">
-      <header className="noir-page-header">
-        <div className="site-container relative z-10 py-12 md:py-18">
-          <div className="mb-8 flex items-center justify-between gap-4">
+      <header className="page-header">
+        <div className="site-container py-10 md:py-14">
+          <div className="mb-6 flex items-center justify-between gap-4">
             <BreadcrumbNavigation
               items={[
                 { label: breadcrumbParent, href: breadcrumbParentHref },
@@ -63,19 +64,18 @@ export function CategoryPage({
             />
             <BackNavigation fallbackHref={breadcrumbParentHref} />
           </div>
-          <p className="dossier-label mb-5">{mediaType === "movie" ? "Film archive" : "Television archive"}</p>
           <h1 className="page-title">
             {title}
           </h1>
           {description && (
-            <p className="page-lede mt-6">
+            <p className="page-lede mt-4">
               {description}
             </p>
           )}
         </div>
       </header>
 
-      <div className="site-container py-12 md:py-16">
+      <div className="site-container py-10 md:py-14">
         <div className="space-y-10">
           <MediaGrid
             items={data}
@@ -94,6 +94,7 @@ export function CategoryPage({
               totalPages={totalPages}
               totalResults={totalResults}
               onPageChange={handlePageChange}
+              pageSize={CATEGORY_PAGE_SIZE}
               className="pt-8"
             />
           )}

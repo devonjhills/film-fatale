@@ -30,25 +30,21 @@ export default async function TVPage() {
         />
       )}
 
-      <div className="site-container space-y-24 py-18 md:space-y-28 md:py-28">
+      <div className="site-container space-y-16 py-14 md:space-y-20 md:py-20">
         <MediaSection
-          title="On The Air"
+          title="On the air"
           items={onTheAir}
           mediaType="tv"
           href="/tv/on-the-air"
-          limit={12}
-          badge="Airing now"
+          limit={16}
         />
 
-        <div className="editorial-rule opacity-70" />
-
         <MediaSection
-          title="The Essential List"
+          title="Top rated"
           items={topRated}
           mediaType="tv"
           href="/tv/top-rated"
-          limit={12}
-          badge="The highest rated"
+          limit={16}
         />
       </div>
     </div>

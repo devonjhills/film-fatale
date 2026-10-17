@@ -98,7 +98,7 @@ export default function MyLibraryPage() {
     return (
       <div className="min-h-screen">
         <div className="site-container py-8">
-          <div className="text-center">Loading...</div>
+          <p className="text-muted-foreground">Loading your library…</p>
         </div>
       </div>
     );
@@ -106,7 +106,7 @@ export default function MyLibraryPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="noir-page-header">
+      <header className="page-header">
         <div className="site-container relative z-10 py-12 md:py-18">
           <div className="mb-8 flex items-center justify-between gap-4">
             <BreadcrumbNavigation
@@ -116,7 +116,6 @@ export default function MyLibraryPage() {
           </div>
 
           <div>
-            <p className="dossier-label mb-5">Private collection</p>
             <h1 className="page-title">
               My Library
             </h1>

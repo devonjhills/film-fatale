@@ -58,7 +58,7 @@ export function MediaCardHorizontal({
           <h4
             className={cn(
               "font-serif font-semibold text-base leading-tight line-clamp-2 tracking-wide",
-              showCard ? "hover:text-primary" : "group-hover:text-primary",
+              showCard ? "hover:underline hover:underline-offset-4" : "group-hover:underline group-hover:underline-offset-4",
               "transition-colors duration-100",
             )}
           >

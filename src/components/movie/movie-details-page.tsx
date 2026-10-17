@@ -1,18 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Building,
-  Calendar,
-  Clapperboard,
-  Clock,
-  DollarSign,
-  Film,
-  Info,
-  Star,
-  Tag,
-  Users,
-} from "@/components/ui/icons";
+
 import { useMovieDetails, useMovieWatchProviders } from "@/lib/hooks/api-hooks";
 import { DetailsHero } from "@/components/ui/details-hero";
 import { CastGrid } from "@/components/person/cast-grid";
@@ -227,8 +216,7 @@ export function MovieDetailsPage({
           {/* Movie Details */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                <Film className="h-6 w-6 text-primary" weight="duotone" />
+              <CardTitle className="font-serif text-2xl font-medium text-foreground">
                 Movie Details
               </CardTitle>
             </CardHeader>
@@ -236,13 +224,12 @@ export function MovieDetailsPage({
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {director && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Clapperboard className="h-4 w-4" />
+                    <h4 className="text-sm text-muted-foreground">
                       Director
                     </h4>
                     <Link
                       href={`/person/${director.id}`}
-                      className="text-base font-medium text-primary hover:text-primary/80"
+                      className="text-base font-medium text-primary hover:text-muted-foreground"
                     >
                       {director.name}
                     </Link>
@@ -251,8 +238,7 @@ export function MovieDetailsPage({
 
                 {movie.release_date && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Calendar className="h-4 w-4" />
+                    <h4 className="text-sm text-muted-foreground">
                       Release Date
                     </h4>
                     <p className="text-base">{releaseDate}</p>
@@ -261,8 +247,7 @@ export function MovieDetailsPage({
 
                 {runtime && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Clock className="h-4 w-4" />
+                    <h4 className="text-sm text-muted-foreground">
                       Runtime
                     </h4>
                     <p className="text-base">{runtime}</p>
@@ -271,8 +256,7 @@ export function MovieDetailsPage({
 
                 {usCertification && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Info className="h-4 w-4" />
+                    <h4 className="text-sm text-muted-foreground">
                       Rating
                     </h4>
                     <Badge variant="outline">{usCertification}</Badge>
@@ -281,8 +265,7 @@ export function MovieDetailsPage({
 
                 {movie.vote_average > 0 && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Star className="h-4 w-4" weight="fill" />
+                    <h4 className="text-sm text-muted-foreground">
                       Rating
                     </h4>
                     <div className="flex items-center gap-2">
@@ -298,8 +281,7 @@ export function MovieDetailsPage({
 
                 {movie.budget > 0 && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <DollarSign className="h-4 w-4" />
+                    <h4 className="text-sm text-muted-foreground">
                       Budget
                     </h4>
                     <p className="text-base">{budget}</p>
@@ -308,8 +290,7 @@ export function MovieDetailsPage({
 
                 {movie.revenue > 0 && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <DollarSign className="h-4 w-4" />
+                    <h4 className="text-sm text-muted-foreground">
                       Revenue
                     </h4>
                     <p className="text-base font-medium text-primary">{revenue}</p>
@@ -318,8 +299,7 @@ export function MovieDetailsPage({
 
                 {movie.production_companies.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                      <Building className="h-4 w-4" />
+                    <h4 className="text-sm text-muted-foreground">
                       Production
                     </h4>
                     <div className="space-y-1">
@@ -336,8 +316,7 @@ export function MovieDetailsPage({
               {/* Keywords */}
               {keywords.length > 0 && (
                 <div className="space-y-3 pt-6 border-t mt-6">
-                  <h4 className="text-sm font-serif font-semibold text-muted-foreground flex items-center gap-1.5 tracking-wide">
-                    <Tag className="h-4 w-4" />
+                  <h4 className="text-sm text-muted-foreground">
                     Keywords
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -356,8 +335,7 @@ export function MovieDetailsPage({
           {mainCast.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                  <Users className="h-6 w-6 text-primary" weight="duotone" />
+                <CardTitle className="font-serif text-2xl font-medium text-foreground">
                   Cast
                 </CardTitle>
               </CardHeader>
@@ -375,8 +353,7 @@ export function MovieDetailsPage({
           {keyCrew.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                  <Users className="h-6 w-6 text-primary" weight="duotone" />
+                <CardTitle className="font-serif text-2xl font-medium text-foreground">
                   Key Crew
                 </CardTitle>
               </CardHeader>
@@ -398,8 +375,7 @@ export function MovieDetailsPage({
           {recommendations.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                  <Film className="h-6 w-6 text-primary" weight="duotone" />
+                <CardTitle className="font-serif text-2xl font-medium text-foreground">
                   You might also like
                 </CardTitle>
               </CardHeader>

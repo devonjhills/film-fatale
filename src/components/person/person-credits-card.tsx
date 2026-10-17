@@ -59,7 +59,7 @@ export function PersonCreditsCard({
           {/* Content */}
           <div className="flex-1 min-w-0 space-y-2">
             {/* Title */}
-            <h4 className="font-serif font-semibold text-base leading-tight line-clamp-2 transition-colors duration-100 group-hover:text-primary">
+            <h4 className="font-serif font-semibold text-base leading-tight line-clamp-2 transition-colors duration-100 group-hover:underline group-hover:underline-offset-4">
               {title}
             </h4>
 
@@ -82,7 +82,7 @@ export function PersonCreditsCard({
 
               {rating && rating > 0 && (
                 <div className="flex items-center gap-1">
-                  <Star className="h-3 w-3 text-brass" weight="fill" />
+                  <Star className="h-3 w-3" weight="fill" aria-hidden="true" />
                   <span className="font-medium">{rating}</span>
                 </div>
               )}

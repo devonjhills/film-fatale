@@ -57,8 +57,8 @@ export function DetailsHero({
     Boolean(item.external_ids?.imdb_id) || Boolean(item.homepage);
 
   return (
-    <section className="relative isolate overflow-hidden border-b border-border/75">
-      <div className="absolute inset-x-0 top-0 -z-20 h-[38rem] md:h-[48rem]">
+    <section className="relative isolate overflow-hidden border-b border-border">
+      <div className="absolute inset-x-0 top-0 -z-20 h-[32rem] md:h-[40rem]">
         {backdropUrl ? (
           <Image
             src={backdropUrl}
@@ -67,17 +67,15 @@ export function DetailsHero({
             priority
             fetchPriority="high"
             sizes="100vw"
-            className="object-cover object-top opacity-70 saturate-[0.58] contrast-[1.1]"
+            className="object-cover object-top opacity-60"
           />
         ) : (
           <div className="size-full bg-muted" />
         )}
       </div>
       <div className="art-scrim absolute inset-0 -z-10" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-background/15 to-background" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-56 bg-gradient-to-b from-background/48 to-transparent" />
 
-      <div className="site-container pb-16 pt-36 md:pb-24 md:pt-60">
+      <div className="site-container pb-14 pt-28 md:pb-20 md:pt-48">
         <div className="grid items-end gap-10 lg:grid-cols-[minmax(220px,300px)_minmax(0,1fr)] lg:gap-14">
           <div>
             <div className="poster-frame relative mx-auto aspect-[2/3] w-48 overflow-hidden sm:w-56 lg:mx-0 lg:w-full">
@@ -102,33 +100,27 @@ export function DetailsHero({
             </div>
 
             {watchProviders?.flatrate?.length ? (
-              <div className="ticket-edge mx-auto mt-4 flex w-48 items-center justify-between gap-3 rounded-sm border border-border/80 bg-card/95 p-3.5 shadow-lg sm:w-56 lg:w-full">
-                <div>
-                  <p className="eyebrow text-[0.58rem]">Streaming</p>
-                  <p className="mt-1 text-xs font-semibold">Watch on</p>
-                </div>
+              <div className="mx-auto mt-4 flex w-48 items-center justify-between gap-3 rounded-sm border border-border bg-card p-3 sm:w-56 lg:w-full">
+                <p className="text-sm text-muted-foreground">Stream on</p>
                 <WatchProvidersCompact providers={watchProviders} />
               </div>
             ) : null}
           </div>
 
           <div className="min-w-0">
-            <p className="dossier-label mb-5">
-              {mediaType === "movie" ? "Film dossier" : "Series dossier"}
-            </p>
             <h1 className="display-title text-shadow-cinematic max-w-5xl">
               {title}
             </h1>
             {tagline && (
-              <p className="mt-6 max-w-3xl font-serif text-xl italic leading-relaxed text-foreground/76 md:text-2xl">
-                “{tagline}”
+              <p className="mt-5 max-w-3xl font-serif text-xl leading-snug text-muted-foreground md:text-2xl">
+                {tagline}
               </p>
             )}
 
             <div className="mt-7 flex flex-wrap items-center gap-2">
               {item.vote_average > 0 && (
                 <Badge variant="secondary" className="gap-1.5">
-                  <Star className="size-3.5 text-brass" weight="fill" />
+                  <Star className="size-3.5" weight="fill" aria-hidden="true" />
                   {formatVoteAverage(item.vote_average)}
                 </Badge>
               )}
@@ -148,17 +140,13 @@ export function DetailsHero({
             </div>
 
             {genres.length > 0 && (
-              <div className="mt-5 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                {genres.map((genre: { id: number; name: string }) => (
-                  <span key={genre.id} className="border-l border-primary/55 pl-2.5">
-                    {genre.name}
-                  </span>
-                ))}
-              </div>
+              <p className="mt-4 text-sm text-muted-foreground">
+                {genres.map((genre: { id: number; name: string }) => genre.name).join(", ")}
+              </p>
             )}
 
             {item.overview && (
-              <p className="mt-7 max-w-4xl text-base leading-7 text-foreground/86 md:text-lg md:leading-8">
+              <p className="mt-6 max-w-[65ch] text-base leading-7 text-foreground/90 md:text-lg md:leading-8">
                 {item.overview}
               </p>
             )}
@@ -181,7 +169,7 @@ export function DetailsHero({
             </div>
 
             {hasExternalLinks && (
-              <div className="mt-8 border-t border-border/70 pt-5">
+              <div className="mt-8 border-t border-border pt-5">
                 <ExternalLinks
                   externalIds={item.external_ids}
                   homepage={item.homepage}

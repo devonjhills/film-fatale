@@ -78,13 +78,12 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
 
   return (
     <div className="min-h-screen">
-      <header className="noir-page-header">
+      <header className="page-header">
         <div className="site-container relative z-10 py-12 md:py-18">
           <div className="mb-8 flex items-center justify-between gap-4">
             <BreadcrumbNavigation items={[{ label: "Search", current: true }]} />
             <BackNavigation fallbackHref="/" />
           </div>
-          <p className="dossier-label mb-5">Search the archive</p>
           <h1 className="page-title max-w-4xl">
             Find your next obsession
           </h1>
@@ -104,7 +103,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
               onChange={(event) => setQuery(event.target.value)}
               placeholder="A title, actor, or director…"
               aria-label="Search films, TV shows, and people"
-              className="custom-search-clear min-h-16 w-full rounded-sm border border-input bg-background/82 py-3 pl-12 pr-14 font-serif text-xl text-foreground shadow-[0_20px_55px_oklch(0_0_0/0.32)] backdrop-blur-sm placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-4 focus:ring-primary/10 md:text-2xl"
+              className="custom-search-clear min-h-16 w-full rounded-sm border border-input bg-card py-3 pl-12 pr-14 font-serif text-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none md:text-2xl"
             />
             {query && (
               <button
@@ -194,8 +193,8 @@ function SearchState({
   description: string;
 }) {
   return (
-    <div className="surface-panel ticket-edge mx-auto max-w-xl px-7 py-16 text-center">
-      <Icon className="mx-auto size-10 text-primary" aria-hidden="true" />
+    <div className="mx-auto max-w-xl py-16 text-center">
+      <Icon className="mx-auto size-10 text-muted-foreground" aria-hidden="true" />
       <h2 className="mt-5 font-serif text-4xl font-medium tracking-[-0.03em]">{title}</h2>
       <p className="mx-auto mt-3 max-w-md leading-7 text-muted-foreground">
         {description}

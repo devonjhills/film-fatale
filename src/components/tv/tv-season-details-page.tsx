@@ -78,8 +78,8 @@ function SeasonDetailsSkeleton() {
               </div>
               <div className="space-y-4">
                 {Array.from({ length: 10 }).map((_, i) => (
-                  <div key={i} className="flex gap-4 p-4 border rounded-lg">
-                    <Skeleton className="aspect-video w-32 rounded-lg flex-shrink-0" />
+                  <div key={i} className="flex gap-4 p-4 border rounded-sm">
+                    <Skeleton className="aspect-video w-32 rounded-sm flex-shrink-0" />
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2">
                         <Skeleton className="h-5 w-16" />
@@ -111,7 +111,7 @@ function SeasonDetailsSkeleton() {
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div
                     key={i}
-                    className="flex items-center space-x-3 p-3 rounded-lg"
+                    className="flex items-center space-x-3 p-3 rounded-sm"
                   >
                     <Skeleton className="h-20 w-20 rounded-full flex-shrink-0" />
                     <div className="min-w-0 flex-1 space-y-1">
@@ -158,7 +158,7 @@ export function TVSeasonDetailsPage({
           </p>
           <Link
             href={`/tv/${tvId}`}
-            className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 transition-colors"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to TV Show
@@ -201,7 +201,7 @@ export function TVSeasonDetailsPage({
       {/* Main Content */}
       <div className="site-container space-y-8 pb-16">
         {/* Season Header */}
-        <Card className="overflow-hidden bg-[linear-gradient(120deg,oklch(0.25_0.072_25/0.22),transparent_42%),var(--card)]">
+        <Card className="overflow-hidden">
           <CardContent className="p-7 md:p-9">
             <div className="flex flex-col gap-8 md:flex-row md:items-end">
               {/* Season Poster */}
@@ -224,10 +224,7 @@ export function TVSeasonDetailsPage({
               {/* Season Info */}
               <div className="flex-1 space-y-5 text-center md:text-left">
                 <div>
-                  <p className="dossier-label mb-4 justify-center md:justify-start">
-                    Season dossier
-                  </p>
-                  <h1 className="font-serif text-4xl font-medium tracking-[-0.04em] md:text-6xl">
+                  <h1 className="font-serif text-4xl font-medium md:text-6xl">
                     {season.name}
                   </h1>
                   <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-muted-foreground md:justify-start">

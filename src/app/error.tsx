@@ -19,17 +19,17 @@ export default function Error({
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center py-16">
-      <div className="surface-panel ticket-edge mx-4 max-w-lg space-y-7 px-8 py-14 text-center">
+      <div className="mx-4 max-w-lg space-y-6 text-center">
         <div className="space-y-4">
-          <AlertTriangle className="mx-auto size-12 text-destructive" weight="duotone" />
-          <h1 className="font-serif text-5xl font-medium tracking-[-0.035em]">
-            The picture went dark
+          <AlertTriangle className="mx-auto size-10 text-destructive" aria-hidden="true" />
+          <h1 className="font-serif text-4xl font-medium md:text-5xl">
+            This page didn&apos;t load
           </h1>
         </div>
 
         <div className="space-y-2">
           <p className="text-muted-foreground">
-            An unexpected error occurred while loading this page.
+            Something failed while loading. Try again, or go back to Discover.
           </p>
           {process.env.NODE_ENV === "development" && (
             <details className="text-left mt-4">

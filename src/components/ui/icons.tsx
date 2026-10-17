@@ -18,6 +18,7 @@ export { CaretLeftIcon as ChevronLeft } from "@phosphor-icons/react/dist/ssr/Car
 export { CaretRightIcon as ChevronRight } from "@phosphor-icons/react/dist/ssr/CaretRight";
 export { CaretUpIcon as ChevronUp } from "@phosphor-icons/react/dist/ssr/CaretUp";
 export { CircleIcon as Circle } from "@phosphor-icons/react/dist/ssr/Circle";
+export { CircleHalfIcon as CircleHalf } from "@phosphor-icons/react/dist/ssr/CircleHalf";
 export { FilmSlateIcon as Clapperboard } from "@phosphor-icons/react/dist/ssr/FilmSlate";
 export { ClockIcon as Clock } from "@phosphor-icons/react/dist/ssr/Clock";
 export { CurrencyDollarIcon as DollarSign } from "@phosphor-icons/react/dist/ssr/CurrencyDollar";
@@ -33,6 +34,7 @@ export { SignOutIcon as LogOut } from "@phosphor-icons/react/dist/ssr/SignOut";
 export { ListIcon as Menu } from "@phosphor-icons/react/dist/ssr/List";
 export { MonitorPlayIcon as MonitorPlay } from "@phosphor-icons/react/dist/ssr/MonitorPlay";
 export { DotsThreeIcon as MoreHorizontal } from "@phosphor-icons/react/dist/ssr/DotsThree";
+export { PaletteIcon as Palette } from "@phosphor-icons/react/dist/ssr/Palette";
 export { PlayIcon as Play } from "@phosphor-icons/react/dist/ssr/Play";
 export { PopcornIcon as Popcorn } from "@phosphor-icons/react/dist/ssr/Popcorn";
 export { ArrowCounterClockwiseIcon as RotateCcw } from "@phosphor-icons/react/dist/ssr/ArrowCounterClockwise";

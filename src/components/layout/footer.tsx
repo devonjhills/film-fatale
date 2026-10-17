@@ -10,24 +10,21 @@ const links = [
 
 export function Footer() {
   return (
-    <footer className="relative z-20 mt-auto overflow-hidden border-t border-border/75 bg-card/40">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary/70 via-border to-transparent" />
+    <footer className="mt-auto border-t border-border">
       <div className="site-container grid gap-8 py-10 text-sm text-muted-foreground md:grid-cols-[1fr_auto] md:items-end">
         <div className="flex items-center gap-4">
           <Image
             src="/logo.png"
             alt=""
-            width={44}
-            height={44}
-            className="size-11 rounded-full border border-border bg-foreground"
+            width={36}
+            height={36}
+            className="size-9 rounded-full bg-foreground"
           />
           <div>
-            <p className="font-serif text-lg font-semibold tracking-[-0.02em] text-foreground">
-              Film <span className="italic text-primary">Fatale</span>
+            <p className="font-serif text-lg font-medium text-foreground">
+              Film Fatale
             </p>
-            <p className="mt-1 text-xs uppercase tracking-[0.12em]">
-              A private cinema companion
-            </p>
+            <p className="text-xs">A private cinema companion</p>
           </div>
         </div>
 
@@ -38,7 +35,7 @@ export function Footer() {
                 key={link.href}
                 href={link.href}
                 rel={link.nofollow ? "nofollow" : undefined}
-                className="text-xs font-bold uppercase tracking-[0.08em] transition-colors duration-150 hover:text-primary"
+                className="text-sm transition-colors duration-150 hover:text-foreground"
               >
                 {link.label}
               </Link>

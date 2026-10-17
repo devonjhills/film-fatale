@@ -53,19 +53,19 @@ const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       // Variant styles
       {
         // Default link
-        "font-medium text-primary underline-offset-4 hover:text-foreground hover:underline":
+        "font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground":
           variant === "default",
 
         // Navigation link with underline animation
-        "text-xs font-bold uppercase tracking-[0.09em] text-muted-foreground hover:text-primary":
+        "text-sm font-medium text-muted-foreground hover:text-foreground":
           variant === "nav",
 
         // Button-like link
-        "inline-flex items-center justify-center rounded-sm border border-primary bg-primary font-bold text-primary-foreground hover:border-foreground hover:bg-foreground":
+        "inline-flex items-center justify-center rounded-sm border border-primary bg-primary font-semibold text-primary-foreground hover:bg-primary/85":
           variant === "button",
 
         // Ghost button link
-        "inline-flex items-center justify-center rounded-sm border border-transparent font-bold text-muted-foreground hover:border-border hover:bg-accent hover:text-foreground":
+        "inline-flex items-center justify-center rounded-sm border border-transparent font-semibold text-muted-foreground hover:border-border hover:bg-accent hover:text-foreground":
           variant === "ghost",
 
         // Accent colored link

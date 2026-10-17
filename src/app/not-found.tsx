@@ -5,26 +5,22 @@ import { Button } from "@/components/ui/button";
 export default function NotFound() {
   return (
     <div className="flex min-h-[70vh] items-center justify-center py-16">
-      <div className="surface-panel ticket-edge mx-4 max-w-lg space-y-7 px-8 py-14 text-center">
-        <div className="space-y-4">
-          <Film className="mx-auto size-14 text-primary" weight="duotone" />
-          <p className="eyebrow">Case number 404</p>
-        </div>
+      <div className="mx-4 max-w-lg space-y-6 text-center">
+        <Film className="mx-auto size-10 text-muted-foreground" aria-hidden="true" />
 
         <div className="space-y-2">
-          <h1 className="font-serif text-5xl font-medium tracking-[-0.035em]">This reel is missing</h1>
+          <h1 className="font-serif text-4xl font-medium md:text-5xl">Page not found</h1>
           <p className="text-muted-foreground">
-            The page you&apos;re looking for doesn&apos;t exist or has been
-            moved.
+            This link may be old or mistyped. Search for the title instead.
           </p>
         </div>
 
         <div className="flex flex-col justify-center gap-3 sm:flex-row">
           <Button asChild>
-            <Link href="/">Back to discover</Link>
+            <Link href="/">Go to Discover</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href="/search">Search the archive</Link>
+            <Link href="/search">Search</Link>
           </Button>
         </div>
       </div>

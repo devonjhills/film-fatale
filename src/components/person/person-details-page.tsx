@@ -7,12 +7,7 @@ import {
   ChevronDown,
   ChevronUp,
   ExternalLink,
-  FileText,
-  Film,
   Globe,
-  Info,
-  LinkIcon,
-  Tv,
   User,
 } from "@/components/ui/icons";
 import { usePersonDetails } from "@/lib/hooks/api-hooks";
@@ -44,7 +39,7 @@ function PersonDetailsSkeleton() {
           <div className="space-y-6">
             <div className="surface-panel p-6">
               <div className="space-y-6">
-                <Skeleton className="aspect-[2/3] w-full max-w-sm mx-auto rounded-lg" />
+                <Skeleton className="aspect-[2/3] w-full max-w-sm mx-auto rounded-sm" />
                 <div className="space-y-4 text-center">
                   <Skeleton className="h-10 w-48 mx-auto" />
                   <Skeleton className="h-6 w-32 mx-auto" />
@@ -101,10 +96,10 @@ function PersonDetailsSkeleton() {
                   {Array.from({ length: 12 }).map((_, i) => (
                     <div
                       key={i}
-                      className="flex h-full w-48 flex-col overflow-hidden rounded-lg border border-border/50 bg-card"
+                      className="flex h-full w-48 flex-col overflow-hidden rounded-sm border border-border/50 bg-card"
                     >
                       <div className="p-3 space-y-3 flex-1 flex flex-col">
-                        <div className="relative overflow-hidden rounded-lg aspect-[2/3]">
+                        <div className="relative overflow-hidden rounded-sm aspect-[2/3]">
                           <Skeleton className="h-full w-full" />
                           <div className="absolute top-2 right-2">
                             <Skeleton className="h-6 w-12 rounded-full" />
@@ -132,10 +127,10 @@ function PersonDetailsSkeleton() {
                   {Array.from({ length: 12 }).map((_, i) => (
                     <div
                       key={i}
-                      className="flex h-full w-48 flex-col overflow-hidden rounded-lg border border-border/50 bg-card"
+                      className="flex h-full w-48 flex-col overflow-hidden rounded-sm border border-border/50 bg-card"
                     >
                       <div className="p-3 space-y-3 flex-1 flex flex-col">
-                        <div className="relative overflow-hidden rounded-lg aspect-[2/3]">
+                        <div className="relative overflow-hidden rounded-sm aspect-[2/3]">
                           <Skeleton className="h-full w-full" />
                           <div className="absolute top-2 right-2">
                             <Skeleton className="h-6 w-12 rounded-full" />
@@ -298,7 +293,7 @@ export function PersonDetailsPage({
                   src={profileUrl}
                   alt={person.name}
                   fill
-                  className="object-cover saturate-[0.72] contrast-[1.08]"
+                  className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 300px"
                 />
               ) : (
@@ -312,7 +307,6 @@ export function PersonDetailsPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl font-serif font-bold text-foreground">
-                  <Info className="h-5 w-5 text-primary" />
                   Personal Info
                 </CardTitle>
               </CardHeader>
@@ -400,7 +394,6 @@ export function PersonDetailsPage({
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-xl font-serif font-bold text-foreground">
-                    <LinkIcon className="h-5 w-5 text-primary" />
                     External Links
                   </CardTitle>
                 </CardHeader>
@@ -447,7 +440,6 @@ export function PersonDetailsPage({
           <div className="min-w-0 space-y-8">
             {/* Name and Basic Info */}
             <div className="border-b border-border/75 pb-8">
-              <p className="dossier-label mb-5">Talent dossier</p>
               <div className="space-y-2">
                 <h1 className="page-title max-w-4xl">
                   {person.name}
@@ -475,8 +467,7 @@ export function PersonDetailsPage({
             {person.biography && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                    <FileText className="h-6 w-6 text-primary" weight="duotone" />
+                  <CardTitle className="font-serif text-2xl font-medium text-foreground">
                     Biography
                   </CardTitle>
                 </CardHeader>
@@ -497,8 +488,7 @@ export function PersonDetailsPage({
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                      <Film className="h-6 w-6 text-primary" weight="duotone" />
+                    <CardTitle className="font-serif text-2xl font-medium text-foreground">
                       <span>Movie Credits</span>
                       <span className="text-base font-medium text-muted-foreground ml-2 font-sans">
                         ({movieCredits.length} total)
@@ -571,8 +561,7 @@ export function PersonDetailsPage({
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-3 text-2xl font-serif font-bold text-foreground">
-                      <Tv className="h-6 w-6 text-primary" weight="duotone" />
+                    <CardTitle className="font-serif text-2xl font-medium text-foreground">
                       <span>TV Credits</span>
                       <span className="text-base font-medium text-muted-foreground ml-2 font-sans">
                         ({tvCredits.length} total)

@@ -1,25 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, Crimson_Pro } from "next/font/google";
+import { Archivo, Bodoni_Moda } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { Navigation } from "@/components/layout/navigation";
 import { Footer } from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { TONE_SCRIPT } from "@/lib/tone";
 
-const inter = Inter({
+const archivo = Archivo({
   subsets: ["latin"],
   variable: "--font-ui",
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-const crimsonPro = Crimson_Pro({
+const bodoni = Bodoni_Moda({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
+  axes: ["opsz"],
   display: "swap",
-  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -80,13 +79,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-US">
+    <html lang="en-US" data-tone="noir" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: TONE_SCRIPT }} />
         <link rel="preconnect" href="https://image.tmdb.org" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
       </head>
       <body
-        className={`${inter.variable} ${crimsonPro.variable} min-h-screen flex flex-col`}
+        className={`${archivo.variable} ${bodoni.variable} min-h-screen flex flex-col`}
       >
         <a href="#main-content" className="skip-link">
           Skip to content
@@ -94,7 +94,7 @@ export default function RootLayout({
         <AuthProvider>
           <TooltipProvider>
             <Navigation />
-            <main id="main-content" className="flex flex-1 flex-col pt-[4.5rem]">
+            <main id="main-content" className="flex flex-1 flex-col pt-16">
               {children}
             </main>
             <Footer />

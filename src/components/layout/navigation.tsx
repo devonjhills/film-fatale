@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Bookmark, LogOut, Menu, Search, X } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/providers/auth-provider";
+import { ToneToggle } from "@/components/layout/tone-toggle";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -44,9 +45,8 @@ export function Navigation() {
     exact ? pathname === href : pathname.startsWith(href);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/75 bg-background/88 shadow-[0_12px_35px_oklch(0_0_0/0.24)] backdrop-blur-xl">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/75 to-transparent" />
-      <div className="site-container flex h-[4.5rem] items-center gap-6">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background">
+      <div className="site-container flex h-16 items-center gap-6">
         <Link
           href="/"
           className="group flex shrink-0 items-center gap-3 rounded-sm"
@@ -55,13 +55,13 @@ export function Navigation() {
           <Image
             src="/logo.png"
             alt=""
-            width={42}
-            height={42}
-            className="size-[2.625rem] rounded-full border border-primary/35 bg-foreground shadow-[0_0_0_3px_oklch(0.79_0.105_78/0.04)] transition-transform duration-300 group-hover:-rotate-3"
+            width={36}
+            height={36}
+            className="size-9 rounded-full bg-foreground"
             priority
           />
-          <span className="hidden font-serif text-[1.35rem] font-semibold tracking-[-0.035em] text-foreground sm:block">
-            Film <span className="font-medium italic text-primary">Fatale</span>
+          <span className="hidden font-serif text-xl font-medium text-foreground sm:block">
+            Film Fatale
           </span>
         </Link>
 
@@ -75,9 +75,9 @@ export function Navigation() {
               href={link.href}
               aria-current={isActive(link.href, link.exact) ? "page" : undefined}
               className={cn(
-                "relative flex min-h-11 items-center rounded-sm px-3 text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground transition-colors duration-150 hover:bg-accent/40 hover:text-foreground",
+                "relative flex min-h-11 items-center px-3 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground",
                 isActive(link.href, link.exact) &&
-                  "text-primary after:absolute after:inset-x-3 after:-bottom-[15px] after:h-px after:bg-primary",
+                  "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-px after:bg-foreground",
               )}
             >
               {link.label}
@@ -88,9 +88,9 @@ export function Navigation() {
               href="/library"
               aria-current={pathname.startsWith("/library") ? "page" : undefined}
               className={cn(
-                "relative flex min-h-11 items-center rounded-sm px-3 text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground transition-colors duration-150 hover:bg-accent/40 hover:text-foreground",
+                "relative flex min-h-11 items-center px-3 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground",
                 pathname.startsWith("/library") &&
-                  "text-primary after:absolute after:inset-x-3 after:-bottom-[15px] after:h-px after:bg-primary",
+                  "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-px after:bg-foreground",
               )}
             >
               Library
@@ -114,9 +114,11 @@ export function Navigation() {
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search films, shows, people"
               aria-label="Search films, shows, and people"
-              className="h-10 border-border/75 bg-card/72 pl-10"
+              className="h-10 bg-card pl-10"
             />
           </form>
+
+          <ToneToggle />
 
           <Button variant="ghost" size="icon" asChild className="lg:hidden">
             <Link href="/search" aria-label="Search">
@@ -132,7 +134,7 @@ export function Navigation() {
                   size="icon"
                   aria-label="Open account menu"
                 >
-                  <span className="flex size-8 items-center justify-center rounded-full border border-primary/55 bg-primary/10 text-sm font-bold text-primary">
+                  <span className="flex size-8 items-center justify-center rounded-full border border-input text-sm font-semibold text-foreground">
                     {(user.name || user.email || "U").charAt(0).toUpperCase()}
                   </span>
                 </Button>
@@ -184,7 +186,7 @@ export function Navigation() {
         <nav
           id="mobile-navigation"
           aria-label="Mobile navigation"
-          className="border-t border-border/70 bg-background/98 px-4 pb-6 pt-4 shadow-2xl md:hidden"
+          className="border-t border-border bg-background px-4 pb-6 pt-4 md:hidden"
         >
           <div className="mx-auto flex max-w-lg flex-col gap-1">
             {navLinks.map((link) => (
@@ -193,8 +195,8 @@ export function Navigation() {
                 href={link.href}
                 aria-current={isActive(link.href, link.exact) ? "page" : undefined}
                 className={cn(
-                  "flex min-h-12 items-center rounded-sm border-l-2 border-transparent px-4 text-sm font-bold uppercase tracking-[0.09em] text-muted-foreground",
-                  isActive(link.href, link.exact) && "border-primary bg-accent/55 text-primary",
+                  "flex min-h-12 items-center border-l-2 border-transparent px-4 text-base font-medium text-muted-foreground",
+                  isActive(link.href, link.exact) && "border-foreground text-foreground",
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -206,8 +208,8 @@ export function Navigation() {
                 href="/library"
                 onClick={() => setMobileMenuOpen(false)}
                 className={cn(
-                  "flex min-h-12 items-center rounded-sm border-l-2 border-transparent px-4 text-sm font-bold uppercase tracking-[0.09em] text-muted-foreground",
-                  pathname.startsWith("/library") && "border-primary bg-accent/55 text-primary",
+                  "flex min-h-12 items-center border-l-2 border-transparent px-4 text-base font-medium text-muted-foreground",
+                  pathname.startsWith("/library") && "border-foreground text-foreground",
                 )}
               >
                 Library

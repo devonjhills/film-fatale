@@ -9,11 +9,10 @@ export default function Loading() {
       <HeroSectionSkeleton />
 
       <div className="site-container space-y-20 py-16 md:space-y-24 md:py-24">
-        <MediaSectionSkeleton cardCount={12} />
+        <MediaSectionSkeleton cardCount={16} />
 
-        <div className="editorial-rule opacity-70" />
 
-        <MediaSectionSkeleton cardCount={12} />
+        <MediaSectionSkeleton cardCount={16} />
       </div>
     </div>
   );

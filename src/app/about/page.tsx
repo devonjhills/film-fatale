@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
-  ArrowRight,
   Bookmark,
   Clapperboard,
   ExternalLink,
@@ -42,26 +41,24 @@ export default function AboutPage() {
     <div className="site-container py-14 md:py-24">
       <div className="grid gap-14 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)] lg:items-start">
         <article>
-          <p className="dossier-label mb-6">About the archive</p>
           <h1 className="display-title max-w-4xl">
             Every great night starts with the right film.
           </h1>
-          <p className="page-lede mt-9 max-w-3xl md:text-xl">
+          <p className="page-lede mt-8 md:text-xl">
             Film Fatale is a private cinema companion built for discovery,
             memory, and the pleasure of choosing well. It keeps movies and
             television in one sharply edited place without turning the
             experience into a noisy streaming storefront.
           </p>
 
-          <div className="mt-14 grid gap-px overflow-hidden rounded-sm border border-border/80 bg-border/80 md:grid-cols-3">
+          <div className="mt-14 grid gap-px overflow-hidden rounded-sm border border-border bg-border md:grid-cols-3">
             {features.map(({ title, copy, icon: Icon }) => (
-              <section key={title} className="group bg-card p-7 transition-colors hover:bg-accent/35">
+              <section key={title} className="bg-background p-7">
                 <Icon
-                  className="size-5 text-primary"
-                  weight="duotone"
+                  className="size-5 text-muted-foreground"
                   aria-hidden="true"
                 />
-                <h2 className="mt-6 font-serif text-2xl font-semibold tracking-[-0.025em]">{title}</h2>
+                <h2 className="mt-5 font-serif text-2xl font-medium">{title}</h2>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
                   {copy}
                 </p>
@@ -73,7 +70,6 @@ export default function AboutPage() {
             <Button asChild size="lg">
               <Link href="/">
                 Start discovering
-                <ArrowRight aria-hidden="true" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
@@ -82,18 +78,16 @@ export default function AboutPage() {
           </div>
         </article>
 
-        <aside className="surface-panel ticket-edge relative overflow-hidden p-8">
-          <div className="absolute -right-12 -top-12 size-48 rounded-full bg-primary/8 blur-3xl" />
+        <aside className="surface-panel p-8">
           <Image
             src="/logo.png"
             alt="Film Fatale emblem"
             width={180}
             height={180}
-            className="relative mx-auto size-40 rounded-full border border-border bg-foreground sm:size-44"
+            className="mx-auto size-40 rounded-full bg-foreground sm:size-44"
           />
-          <div className="relative mt-7 border-t border-border/70 pt-6">
-            <p className="eyebrow">The source</p>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+          <div className="mt-7 border-t border-border pt-6">
+            <p className="text-sm leading-6 text-muted-foreground">
               Film and television data is supplied by The Movie Database.
               Film Fatale is not endorsed or certified by TMDB.
             </p>
@@ -101,7 +95,7 @@ export default function AboutPage() {
               href="https://www.themoviedb.org/"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground hover:text-primary"
+              className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground underline underline-offset-4 hover:text-muted-foreground"
             >
               Visit TMDB
               <ExternalLink aria-hidden="true" />

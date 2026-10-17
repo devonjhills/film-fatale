@@ -85,7 +85,6 @@ export function CurrentlyWatchingSection({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h2 className="text-2xl font-bold flex items-center gap-3">
-            <Clock className="h-6 w-6 text-primary" weight="duotone" />
             Currently Watching
           </h2>
           <Badge variant="secondary" className="px-3 py-1">

@@ -58,7 +58,7 @@ export function TrailerModal({
           </DialogTitle>
         </DialogHeader>
         <div className="px-6 pb-6">
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+          <div className="relative aspect-video w-full overflow-hidden rounded-sm">
             {isOpen && (
               <iframe
                 src={embedUrl}

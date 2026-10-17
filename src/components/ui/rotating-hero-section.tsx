@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star } from "@/components/ui/icons";
+import { Star } from "@/components/ui/icons";
 import { cn, formatVoteAverage } from "@/lib/utils";
 import { getImageUrl } from "@/lib/api";
 import type { Movie, FormattedMovie, TVShow } from "@/lib/types";
@@ -31,7 +30,7 @@ export function RotatingHeroSection({
   return (
     <section
       className={cn(
-        "relative isolate min-h-[38rem] overflow-hidden border-b border-border/75 md:min-h-[48rem]",
+        "relative isolate overflow-hidden border-b border-border",
         className,
       )}
       aria-labelledby="featured-title"
@@ -43,69 +42,52 @@ export function RotatingHeroSection({
           fill
           priority
           sizes="100vw"
-          className="absolute inset-0 -z-20 object-cover object-center saturate-[0.58] contrast-[1.12]"
+          className="-z-20 object-cover object-center"
         />
       ) : (
         <div className="absolute inset-0 -z-20 bg-muted" />
       )}
-      <div className="art-scrim absolute inset-0 -z-10" />
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,transparent_0%,transparent_68%,oklch(0.06_0.006_70/0.58)_100%)]" />
-      <div
-        className="absolute inset-x-0 bottom-0 z-10 h-3 border-y border-white/10 bg-[repeating-linear-gradient(90deg,transparent_0_1.25rem,oklch(0_0_0/0.9)_1.25rem_1.6rem)] opacity-70"
-        aria-hidden="true"
-      />
+      <div className="art-scrim absolute inset-0 -z-10" aria-hidden="true" />
 
-      <div className="site-container flex min-h-[38rem] items-end pb-16 pt-24 md:min-h-[48rem] md:pb-24">
-        <div className="max-w-4xl">
-          <div className="mb-6 flex items-center gap-4">
-            <p className="eyebrow">Tonight&apos;s feature</p>
-            <span className="h-px w-12 bg-primary/70" aria-hidden="true" />
-            <span className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-white/62">
-              Feature presentation
-            </span>
-          </div>
+      <div className="site-container flex min-h-[34rem] items-end pb-14 pt-24 md:min-h-[42rem] md:pb-20">
+        <div className="max-w-3xl">
+          <p className="mb-5 text-sm text-white/70">
+            {mediaType === "movie" ? "Now in theaters" : "On the air"}
+          </p>
           <h1
             id="featured-title"
-            className="display-title text-shadow-cinematic max-w-[13ch] text-white"
+            className="display-title text-shadow-cinematic max-w-[14ch] text-white"
           >
             {title}
           </h1>
 
-          <div className="mt-7 flex flex-wrap items-center gap-2.5">
+          <p className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm tabular-nums text-white/80">
             {item.vote_average > 0 && (
-              <Badge
-                variant="overlay"
-                className="gap-1.5 border-white/25 bg-black/70"
-              >
-                <Star
-                  className="size-3.5 text-brass"
-                  weight="fill"
-                  aria-hidden="true"
-                />
+              <span className="inline-flex items-center gap-1.5">
+                <Star className="size-3.5" weight="fill" aria-hidden="true" />
+                <span className="sr-only">Rated </span>
                 {formatVoteAverage(item.vote_average)}
-              </Badge>
+              </span>
             )}
-            {releaseDate && (
-              <Badge variant="overlay" className="border-white/25 bg-black/70">
-                {new Date(releaseDate).getFullYear()}
-              </Badge>
-            )}
-          </div>
+            {releaseDate && <span>{new Date(releaseDate).getFullYear()}</span>}
+          </p>
 
           {item.overview && (
-            <p className="text-shadow-cinematic mt-6 max-w-2xl text-base leading-7 text-white/85 md:text-lg md:leading-8">
+            <p className="text-shadow-cinematic mt-4 line-clamp-3 max-w-xl text-base leading-7 text-white/85 md:text-lg md:leading-8">
               {item.overview}
             </p>
           )}
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
-              <Link href={`/${mediaType}/${item.id}`}>
-                View details
-                <ArrowRight aria-hidden="true" />
-              </Link>
+              <Link href={`/${mediaType}/${item.id}`}>View details</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/35 bg-black/48 text-white backdrop-blur-sm hover:border-primary hover:bg-black/72 hover:text-primary">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-white/40 bg-black/40 text-white hover:border-white hover:bg-black/60"
+            >
               <Link href={mediaType === "movie" ? "/movies/popular" : "/tv/popular"}>
                 Browse {mediaType === "movie" ? "films" : "shows"}
               </Link>
