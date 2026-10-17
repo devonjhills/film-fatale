@@ -1,285 +1,51 @@
-"use client";
-
 import Image from "next/image";
-import Link from "next/link";
-import { MoreHorizontal } from "@/components/ui/icons";
-import { cn } from "@/lib/utils";
 import { getImageUrl } from "@/lib/api";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import type { WatchProviderRegion, WatchProvider } from "@/lib/types";
+import { streamingServices } from "@/lib/watch-providers";
+import { cn } from "@/lib/utils";
+import type { WatchProviderRegion } from "@/lib/types";
 
-interface WatchProvidersProps {
+interface StreamingOnProps {
   providers?: WatchProviderRegion;
   className?: string;
 }
 
-const ProviderLogo = ({
-  provider,
-  onClick,
-}: {
-  provider: WatchProvider;
-  onClick?: () => void;
-}) => (
-  <Tooltip>
-    <TooltipTrigger asChild>
-      <div
-        className={cn(
-          "relative w-16 h-16 rounded-2xl overflow-hidden",
-          "border border-border/70 bg-background shadow-md",
-          "transition-colors duration-100 hover:border-primary/60",
-          onClick && "cursor-pointer",
-        )}
-        onClick={onClick}
-      >
-        <div className="absolute inset-0 p-2">
-          <Image
-            src={getImageUrl(provider.logo_path, "logo", "w300")}
-            alt={provider.provider_name}
-            fill
-            className="object-contain"
-            sizes="64px"
-            quality={95}
-          />
-        </div>
-      </div>
-    </TooltipTrigger>
-    <TooltipContent side="bottom">
-      <p>{provider.provider_name}</p>
-    </TooltipContent>
-  </Tooltip>
-);
-
-const ProviderSection = ({
-  title,
-  providers,
-  onProviderClick,
-}: {
-  title: string;
-  providers: WatchProvider[];
-  onProviderClick?: (provider: WatchProvider) => void;
-}) => {
-  const getTitle = (title: string) => {
-    switch (title.toLowerCase()) {
-      case "stream":
-        return "Streaming now on";
-      case "free with ads":
-        return "Free with ads on";
-      case "buy":
-        return "Buy on";
-      case "rent":
-        return "Rent on";
-      default:
-        return `${title} on`;
-    }
-  };
+/** "Stream on" list of base services (no storefront channels or plan tiers). */
+export function StreamingOn({ providers, className }: StreamingOnProps) {
+  const services = streamingServices(providers?.flatrate);
+  if (!services.length) return null;
 
   return (
-    <div className="space-y-4">
-      <h4 className="text-base font-semibold text-foreground">
-        {getTitle(title)}
-      </h4>
-      <div className="flex flex-wrap gap-4">
-        {providers.map((provider) => (
-          <ProviderLogo
-            key={provider.provider_id}
-            provider={provider}
-            onClick={() => onProviderClick?.(provider)}
-          />
+    <div className={cn("border-t border-border pt-4", className)}>
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="text-sm text-muted-foreground">Stream on</p>
+        {providers?.link && (
+          <a
+            href={providers.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            All options
+          </a>
+        )}
+      </div>
+      <ul className="mt-3 flex flex-wrap gap-2">
+        {services.map((service) => (
+          <li
+            key={service.name}
+            className="flex items-center gap-2 rounded-sm border border-input py-1 pl-1 pr-2.5 text-sm"
+          >
+            <Image
+              src={getImageUrl(service.logo_path, "logo", "w92")}
+              alt=""
+              width={24}
+              height={24}
+              className="size-6 rounded-[3px]"
+            />
+            {service.name}
+          </li>
         ))}
-      </div>
-    </div>
-  );
-};
-
-export function WatchProviders({ providers, className }: WatchProvidersProps) {
-  if (!providers) {
-    return null;
-  }
-
-  const { flatrate, buy, rent, ads, link } = providers;
-  const hasProviders =
-    flatrate?.length || buy?.length || rent?.length || ads?.length;
-
-  if (!hasProviders) {
-    return (
-      <div
-        className={cn(
-          "p-6 rounded-sm",
-          "border border-border/60 shadow-lg",
-          className,
-        )}
-      >
-        <div className="text-center text-muted-foreground">
-          <p className="text-sm font-medium">
-            No streaming information available
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  const handleProviderClick = () => {
-    // Open TMDB link if available
-    if (link) {
-      window.open(link, "_blank", "noopener,noreferrer");
-    }
-  };
-
-  return (
-    <div
-      className={cn(
-        "space-y-6 p-6 rounded-sm",
-        "border border-border/60 shadow-lg",
-        className,
-      )}
-    >
-      <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold tracking-tight">Where to Watch</h3>
-        {link && (
-          <Link
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm font-medium text-muted-foreground transition-colors duration-100 hover:text-foreground"
-          >
-            View on TMDB →
-          </Link>
-        )}
-      </div>
-
-      <div className="space-y-5">
-        {flatrate && flatrate.length > 0 && (
-          <ProviderSection
-            title="Stream"
-            providers={flatrate}
-            onProviderClick={handleProviderClick}
-          />
-        )}
-
-        {ads && ads.length > 0 && (
-          <ProviderSection
-            title="Free with Ads"
-            providers={ads}
-            onProviderClick={handleProviderClick}
-          />
-        )}
-
-        {buy && buy.length > 0 && (
-          <ProviderSection
-            title="Buy"
-            providers={buy}
-            onProviderClick={handleProviderClick}
-          />
-        )}
-
-        {rent && rent.length > 0 && (
-          <ProviderSection
-            title="Rent"
-            providers={rent}
-            onProviderClick={handleProviderClick}
-          />
-        )}
-      </div>
-
-      <div className="pt-3 border-t border-border/20">
-        <p className="text-xs text-muted-foreground/80">
-          Streaming data provided by{" "}
-          <Link
-            href="https://www.justwatch.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium underline-offset-2 transition-colors duration-100 hover:text-foreground hover:underline"
-          >
-            JustWatch
-          </Link>
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// Compact version for cards
-export function WatchProvidersCompact({
-  providers,
-  className,
-}: WatchProvidersProps) {
-  if (!providers?.flatrate?.length) {
-    return null;
-  }
-
-  const maxVisible = 3; // Show max 3 badges initially
-  const hasOverflow = providers.flatrate.length > maxVisible;
-  const visibleProviders = providers.flatrate.slice(0, maxVisible);
-  const hiddenProviders = providers.flatrate.slice(maxVisible);
-
-  return (
-    <div className={cn("flex items-center gap-1.5", className)}>
-      {visibleProviders.map((provider) => (
-        <Tooltip key={provider.provider_id}>
-          <TooltipTrigger asChild>
-            <div className="relative h-10 w-10 cursor-pointer overflow-hidden rounded-sm border border-border/70 bg-background shadow-sm transition-colors duration-100 hover:border-primary/60">
-              <div className="absolute inset-0 p-1">
-                <Image
-                  src={getImageUrl(provider.logo_path, "logo", "w154")}
-                  alt={provider.provider_name}
-                  fill
-                  className="object-contain"
-                  sizes="40px"
-                  quality={90}
-                />
-              </div>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <p>{provider.provider_name}</p>
-          </TooltipContent>
-        </Tooltip>
-      ))}
-
-      {hasOverflow && (
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-10 w-10 p-0">
-              <MoreHorizontal className="h-4 w-4" weight="bold" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-fit p-2">
-            <div className="flex flex-wrap gap-1.5 max-w-48">
-              {hiddenProviders.map((provider) => (
-                <Tooltip key={provider.provider_id}>
-                  <TooltipTrigger asChild>
-                    <div className="relative h-10 w-10 cursor-pointer overflow-hidden rounded-sm border border-border/70 bg-background shadow-sm transition-colors duration-100 hover:border-primary/60">
-                      <div className="absolute inset-0 p-1">
-                        <Image
-                          src={getImageUrl(provider.logo_path, "logo", "w154")}
-                          alt={provider.provider_name}
-                          fill
-                          className="object-contain"
-                          sizes="40px"
-                          quality={90}
-                        />
-                      </div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom">
-                    <p>{provider.provider_name}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ))}
-            </div>
-          </PopoverContent>
-        </Popover>
-      )}
+      </ul>
     </div>
   );
 }

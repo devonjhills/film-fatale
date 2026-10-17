@@ -11,8 +11,8 @@ export default function TopRatedTVShowsPage() {
 
   return (
     <CategoryPage
-      title="Top Rated TV Shows"
-      description="Explore the highest-rated TV shows of all time, as voted by audiences and critics worldwide."
+      title="Top rated shows"
+      description="The highest-rated series, as voted by TMDB members."
       mediaType="tv"
       data={tvShows}
       isLoading={isLoading}
@@ -21,8 +21,6 @@ export default function TopRatedTVShowsPage() {
       totalResults={totalResults}
       currentPage={currentPage}
       onPageChange={handlePageChange}
-      breadcrumbParent="TV Shows"
-      breadcrumbParentHref="/tv"
     />
   );
 }

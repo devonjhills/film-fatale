@@ -1,9 +1,12 @@
 "use client";
 
+import Link from "next/link";
+import { EmptyState } from "@/components/shared/empty-state";
+
 import { ViewingHistoryItem } from "@/lib/types";
 import { ViewingHistoryCard } from "./viewing-history-card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Play } from "@/components/ui/icons";
+import { Clock } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -28,7 +31,7 @@ export function CurrentlyWatchingSection({
         <div className="space-y-3">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <Clock className="h-5 w-5" />
-            Currently Watching
+            Watching
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -51,31 +54,14 @@ export function CurrentlyWatchingSection({
 
   if (watchingItems.length === 0) {
     return (
-      <Card className="p-12 text-center">
-        <div className="max-w-md mx-auto space-y-6">
-          <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-            <Play className="h-10 w-10 text-primary" weight="duotone" />
-          </div>
-          <div className="space-y-3">
-            <h3 className="text-xl font-semibold">
-              Start Your Viewing Journey
-            </h3>
-            <p className="text-muted-foreground">
-              Begin tracking your movie and TV show progress. Add items to your
-              library and mark them as &quot;Currently Watching&quot; to see
-              them here.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button variant="default" asChild>
-              <a href="/search">Discover Movies & Shows</a>
-            </Button>
-            <Button variant="outline" onClick={onRefresh}>
-              Refresh Library
-            </Button>
-          </div>
-        </div>
-      </Card>
+      <EmptyState
+        title="Nothing in progress"
+        description="Mark a film or show as Watching from its page and it will wait for you here."
+      >
+        <Button asChild>
+          <Link href="/">Go to Discover</Link>
+        </Button>
+      </EmptyState>
     );
   }
 
@@ -85,7 +71,7 @@ export function CurrentlyWatchingSection({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h2 className="text-2xl font-bold flex items-center gap-3">
-            Currently Watching
+            Watching
           </h2>
           <Badge variant="secondary" className="px-3 py-1">
             {watchingItems.length}{" "}

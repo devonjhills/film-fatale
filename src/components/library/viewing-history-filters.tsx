@@ -23,16 +23,16 @@ interface ViewingHistoryFiltersProps {
 }
 
 const statusOptions = [
-  { value: "watching", label: "Currently Watching" },
-  { value: "plan_to_watch", label: "Want to Watch" },
+  { value: "watching", label: "Watching" },
+  { value: "plan_to_watch", label: "Want to watch" },
   { value: "completed", label: "Watched" },
-  { value: "all", label: "All Statuses" },
+  { value: "all", label: "All statuses" },
 ] as const;
 
 const mediaTypeOptions = [
-  { value: "all", label: "All Types" },
+  { value: "all", label: "All types" },
   { value: "movie", label: "Movies" },
-  { value: "tv", label: "TV Shows" },
+  { value: "tv", label: "TV shows" },
 ] as const;
 
 export function ViewingHistoryFilters({
@@ -53,7 +53,7 @@ export function ViewingHistoryFilters({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <h3 className="text-lg font-semibold">Filter Library</h3>
+        <h3 className="text-lg font-semibold">Filter</h3>
         {hasActiveFilters && (
           <Button
             variant="ghost"
@@ -82,7 +82,7 @@ export function ViewingHistoryFilters({
               }
             >
               <SelectTrigger className="h-9 w-44">
-                <SelectValue placeholder="All Statuses" />
+                <SelectValue placeholder="All statuses" />
               </SelectTrigger>
               <SelectContent>
                 {statusOptions.map((option) => (
@@ -109,7 +109,7 @@ export function ViewingHistoryFilters({
             }
           >
             <SelectTrigger className="w-36 h-9">
-              <SelectValue placeholder="All Types" />
+              <SelectValue placeholder="All types" />
             </SelectTrigger>
             <SelectContent>
               {mediaTypeOptions.map((option) => (

@@ -28,8 +28,8 @@ interface StatusUpdateDialogProps {
 }
 
 const statusOptions = [
-  { value: "plan_to_watch", label: "Want to Watch" },
-  { value: "watching", label: "Currently Watching" },
+  { value: "plan_to_watch", label: "Want to watch" },
+  { value: "watching", label: "Watching" },
   { value: "completed", label: "Watched" },
 ] as const;
 

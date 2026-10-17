@@ -3,8 +3,22 @@
 import { MediaGrid } from "@/components/shared/media-grid";
 import { CATEGORY_PAGE_SIZE } from "@/lib/hooks/api-hooks";
 import { PaginatedContent } from "@/components/ui/paginated-content";
-import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";
-import { BackNavigation } from "@/components/ui/back-navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+const CATEGORIES = {
+  movie: [
+    { href: "/movies/now-playing", label: "Now playing" },
+    { href: "/movies/popular", label: "Popular" },
+    { href: "/movies/top-rated", label: "Top rated" },
+  ],
+  tv: [
+    { href: "/tv/on-the-air", label: "On the air" },
+    { href: "/tv/popular", label: "Popular" },
+    { href: "/tv/top-rated", label: "Top rated" },
+  ],
+};
 
 interface MediaItem {
   id: number;
@@ -28,8 +42,6 @@ interface CategoryPageProps {
   totalResults: number;
   currentPage: number;
   onPageChange: (page: number) => void;
-  breadcrumbParent?: string;
-  breadcrumbParentHref?: string;
 }
 
 export function CategoryPage({
@@ -43,9 +55,8 @@ export function CategoryPage({
   totalResults,
   currentPage,
   onPageChange,
-  breadcrumbParent = "Home",
-  breadcrumbParentHref = "/",
 }: CategoryPageProps) {
+  const pathname = usePathname();
   // Combine local page change handler with external handler
   const handlePageChange = (page: number) => {
     onPageChange(page);
@@ -55,15 +66,6 @@ export function CategoryPage({
     <div className="min-h-screen">
       <header className="page-header">
         <div className="site-container py-10 md:py-14">
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <BreadcrumbNavigation
-              items={[
-                { label: breadcrumbParent, href: breadcrumbParentHref },
-                { label: title, current: true },
-              ]}
-            />
-            <BackNavigation fallbackHref={breadcrumbParentHref} />
-          </div>
           <h1 className="page-title">
             {title}
           </h1>
@@ -72,6 +74,29 @@ export function CategoryPage({
               {description}
             </p>
           )}
+          <nav aria-label={mediaType === "movie" ? "Movie lists" : "TV lists"} className="mt-8">
+            <ul className="flex flex-wrap gap-2">
+              {CATEGORIES[mediaType].map((category) => {
+                const current = pathname === category.href;
+                return (
+                  <li key={category.href}>
+                    <Link
+                      href={category.href}
+                      aria-current={current ? "page" : undefined}
+                      className={cn(
+                        "flex min-h-10 items-center rounded-sm border px-4 text-sm font-medium transition-colors",
+                        current
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",
+                      )}
+                    >
+                      {category.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
         </div>
       </header>
 

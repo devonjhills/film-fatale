@@ -1,12 +1,11 @@
 import Image from "next/image";
 import { Film, MonitorPlay, Star } from "@/components/ui/icons";
-import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getImageUrl } from "@/lib/api";
 import { WatchStatusButton } from "@/components/shared/watch-status-button";
 import { ShareButton } from "@/components/ui/share-button";
 import { TrailerModal } from "@/components/ui/trailer-modal";
-import { WatchProvidersCompact } from "@/components/shared/watch-providers";
-import { ExternalLinks } from "@/components/ui/external-links";
+import { StreamingOn } from "@/components/shared/watch-providers";
 import {
   formatRuntime,
   formatVoteAverage,
@@ -53,12 +52,10 @@ export function DetailsHero({
       : null;
   const genres =
     isMovieDetails(item) || isTVShowDetails(item) ? item.genres : [];
-  const hasExternalLinks =
-    Boolean(item.external_ids?.imdb_id) || Boolean(item.homepage);
 
   return (
     <section className="relative isolate overflow-hidden border-b border-border">
-      <div className="absolute inset-x-0 top-0 -z-20 h-[32rem] md:h-[40rem]">
+      <div className="absolute inset-x-0 top-0 -z-20 h-[32rem] [mask-image:linear-gradient(to_bottom,#000_55%,transparent)] md:h-[40rem]">
         {backdropUrl ? (
           <Image
             src={backdropUrl}
@@ -99,12 +96,10 @@ export function DetailsHero({
               )}
             </div>
 
-            {watchProviders?.flatrate?.length ? (
-              <div className="mx-auto mt-4 flex w-48 items-center justify-between gap-3 rounded-sm border border-border bg-card p-3 sm:w-56 lg:w-full">
-                <p className="text-sm text-muted-foreground">Stream on</p>
-                <WatchProvidersCompact providers={watchProviders} />
-              </div>
-            ) : null}
+            <StreamingOn
+              providers={watchProviders}
+              className="mx-auto mt-5 w-48 sm:w-56 lg:w-full"
+            />
           </div>
 
           <div className="min-w-0">
@@ -117,41 +112,38 @@ export function DetailsHero({
               </p>
             )}
 
-            <div className="mt-7 flex flex-wrap items-center gap-2">
+            <p className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm tabular-nums text-muted-foreground">
               {item.vote_average > 0 && (
-                <Badge variant="secondary" className="gap-1.5">
+                <span className="inline-flex items-center gap-1.5 font-medium text-foreground">
                   <Star className="size-3.5" weight="fill" aria-hidden="true" />
+                  <span className="sr-only">Rated </span>
                   {formatVoteAverage(item.vote_average)}
-                </Badge>
+                </span>
               )}
-              {certification && <Badge variant="outline">{certification}</Badge>}
-              {rawReleaseDate && (
-                <Badge variant="secondary">
-                  {new Date(rawReleaseDate).getFullYear()}
-                </Badge>
+              {certification && (
+                <span className="rounded-sm border border-input px-1.5 py-px text-xs font-medium text-foreground">
+                  {certification}
+                </span>
               )}
-              {runtime && <Badge variant="secondary">{runtime}</Badge>}
+              {rawReleaseDate && <span>{new Date(rawReleaseDate).getFullYear()}</span>}
+              {runtime && <span>{runtime}</span>}
               {isTVShowDetails(item) && item.number_of_seasons ? (
-                <Badge variant="secondary">
-                  {item.number_of_seasons} season
-                  {item.number_of_seasons === 1 ? "" : "s"}
-                </Badge>
+                <span>
+                  {item.number_of_seasons} season{item.number_of_seasons === 1 ? "" : "s"}
+                </span>
               ) : null}
-            </div>
-
-            {genres.length > 0 && (
-              <p className="mt-4 text-sm text-muted-foreground">
-                {genres.map((genre: { id: number; name: string }) => genre.name).join(", ")}
-              </p>
-            )}
+              {genres.length > 0 && (
+                <span>{genres.map((genre: { id: number; name: string }) => genre.name).join(", ")}</span>
+              )}
+            </p>
 
             {item.overview && (
-              <p className="mt-6 max-w-[65ch] text-base leading-7 text-foreground/90 md:text-lg md:leading-8">
+              <p className="mt-5 max-w-[65ch] text-base leading-7 text-foreground/90 md:text-lg md:leading-8">
                 {item.overview}
               </p>
             )}
 
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               {trailer && (
                 <TrailerModal trailer={trailer} title={title} size="lg" />
               )}
@@ -168,19 +160,48 @@ export function DetailsHero({
               <ShareButton />
             </div>
 
-            {hasExternalLinks && (
-              <div className="mt-8 border-t border-border pt-5">
-                <ExternalLinks
-                  externalIds={item.external_ids}
-                  homepage={item.homepage}
-                  title={title}
-                  releaseDate={rawReleaseDate}
-                />
-              </div>
-            )}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+/** Loading state for movie and TV detail pages: hero, then two sections. */
+export function DetailsPageSkeleton() {
+  return (
+    <div aria-busy="true">
+      <div className="border-b border-border">
+        <div className="site-container pb-14 pt-28 md:pb-20 md:pt-48">
+          <div className="grid items-end gap-10 lg:grid-cols-[minmax(220px,300px)_minmax(0,1fr)] lg:gap-14">
+            <Skeleton className="mx-auto aspect-[2/3] w-48 sm:w-56 lg:mx-0 lg:w-full" />
+            <div className="space-y-5">
+              <Skeleton className="h-16 w-3/4 max-w-2xl md:h-24" />
+              <Skeleton className="h-4 w-64" />
+              <Skeleton className="h-24 w-full max-w-2xl" />
+              <div className="flex gap-3">
+                <Skeleton className="h-11 w-36" />
+                <Skeleton className="h-11 w-32" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="site-container space-y-16 py-14 md:py-20">
+        {[0, 1].map((section) => (
+          <div key={section}>
+            <Skeleton className="mb-6 h-9 w-40" />
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-3.5 w-20" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

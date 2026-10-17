@@ -11,8 +11,8 @@ export default function PopularMoviesPage() {
 
   return (
     <CategoryPage
-      title="Popular Movies"
-      description="Discover the most popular movies trending right now. These are the films everyone's talking about."
+      title="Popular movies"
+      description="What people are watching right now."
       mediaType="movie"
       data={movies}
       isLoading={isLoading}
@@ -21,8 +21,6 @@ export default function PopularMoviesPage() {
       totalResults={totalResults}
       currentPage={currentPage}
       onPageChange={handlePageChange}
-      breadcrumbParent="Movies"
-      breadcrumbParentHref="/"
     />
   );
 }

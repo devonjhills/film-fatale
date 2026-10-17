@@ -11,8 +11,7 @@ import {
 import { useMultiSearch } from "@/lib/hooks/api-hooks";
 import { SearchResults } from "./search-results";
 import { Button } from "@/components/ui/button";
-import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";
-import { BackNavigation } from "@/components/ui/back-navigation";
+import { MediaCardSkeleton } from "@/components/ui/optimized-skeleton";
 
 interface BrowsePageProps {
   initialQuery?: string;
@@ -80,10 +79,6 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
     <div className="min-h-screen">
       <header className="page-header">
         <div className="site-container relative z-10 py-12 md:py-18">
-          <div className="mb-8 flex items-center justify-between gap-4">
-            <BreadcrumbNavigation items={[{ label: "Search", current: true }]} />
-            <BackNavigation fallbackHref="/" />
-          </div>
           <h1 className="page-title max-w-4xl">
             Find your next obsession
           </h1>
@@ -150,9 +145,9 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
             </div>
 
             {isLoading ? (
-              <div className="grid grid-cols-2 gap-4 min-[480px]:grid-cols-3 md:grid-cols-4 lg:grid-cols-6" aria-label="Loading search results">
-                {Array.from({ length: 12 }).map((_, index) => (
-                  <div key={index} className="aspect-[2/3] animate-pulse rounded-md bg-muted" />
+              <div className="poster-grid poster-grid-two-rows" aria-busy="true" aria-label="Loading search results">
+                {Array.from({ length: 16 }).map((_, index) => (
+                  <MediaCardSkeleton key={index} />
                 ))}
               </div>
             ) : isError ? (

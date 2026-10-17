@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
+import { EmptyState } from "@/components/shared/empty-state";
+
 import { ViewingHistoryItem } from "@/lib/types";
 import { ViewingHistoryCard } from "./viewing-history-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Archive, ChevronLeft, ChevronRight } from "@/components/ui/icons";
+import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
 
 interface ViewingHistoryGridProps {
   items: ViewingHistoryItem[];
@@ -53,28 +56,14 @@ export function ViewingHistoryGrid({
 
   if (items.length === 0) {
     return (
-      <Card className="p-12 text-center">
-        <div className="max-w-lg mx-auto space-y-6">
-          <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-            <Archive className="h-10 w-10 text-primary" weight="duotone" />
-          </div>
-          <div className="space-y-3">
-            <h3 className="text-xl font-semibold">Your Library Awaits</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              No items match your current filters. Try adjusting your search
-              criteria or explore new content to add to your library.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button variant="default" asChild>
-              <a href="/search">Discover Content</a>
-            </Button>
-            <Button onClick={onRefresh} variant="outline">
-              Refresh Library
-            </Button>
-          </div>
-        </div>
-      </Card>
+      <EmptyState
+        title="Nothing here yet"
+        description="Add films and shows from their pages and they'll appear in this list."
+      >
+        <Button asChild>
+          <Link href="/">Go to Discover</Link>
+        </Button>
+      </EmptyState>
     );
   }
 
@@ -110,7 +99,7 @@ export function ViewingHistoryGrid({
       {shouldGroupByMediaType ? (
         <>
           {movieItems.length > 0 && renderGrid(movieItems, "Movies")}
-          {tvItems.length > 0 && renderGrid(tvItems, "TV Shows")}
+          {tvItems.length > 0 && renderGrid(tvItems, "TV shows")}
           {movieItems.length === 0 && tvItems.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
               No items found for the current filters.

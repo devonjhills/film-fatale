@@ -1,7 +1,4 @@
-import Image from "next/image";
-import Link from "next/link";
-import { User } from "@/components/ui/icons";
-import { getImageUrl } from "@/lib/api";
+import { PersonTile } from "@/components/person/person-tile";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { Person } from "@/lib/types";
@@ -24,8 +21,6 @@ function PersonCardSkeleton() {
 }
 
 function PersonCard({ person, className }: PersonCardProps) {
-  const profileUrl = getImageUrl(person.profile_path, "profile", "h632");
-
   const topKnownFor = person.known_for?.[0];
   const knownForTitle = topKnownFor
     ? "title" in topKnownFor
@@ -34,39 +29,11 @@ function PersonCard({ person, className }: PersonCardProps) {
     : null;
 
   return (
-    <article className={cn("group min-w-0", className)}>
-      <Link href={`/person/${person.id}`} className="poster-card">
-        <div className="poster-card-art">
-          {profileUrl ? (
-            <Image
-              src={profileUrl}
-              alt=""
-              fill
-              sizes="(max-width: 639px) 33vw, 180px"
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex size-full items-center justify-center">
-              <User
-                className="size-7 text-muted-foreground/50"
-                aria-hidden="true"
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="poster-card-body">
-          <h3 className="line-clamp-2 min-h-[2.75em] text-[0.8125rem] font-medium leading-snug text-foreground group-hover:underline group-hover:underline-offset-4">
-            {person.name}
-          </h3>
-          {(knownForTitle || person.known_for_department) && (
-            <p className="mt-auto line-clamp-1 text-xs text-muted-foreground">
-              {knownForTitle ?? person.known_for_department}
-            </p>
-          )}
-        </div>
-      </Link>
-    </article>
+    <PersonTile
+      person={person}
+      subtitle={knownForTitle ?? person.known_for_department}
+      className={className}
+    />
   );
 }
 

@@ -11,8 +11,8 @@ export default function TopRatedMoviesPage() {
 
   return (
     <CategoryPage
-      title="Top Rated Movies"
-      description="Explore the highest-rated movies of all time, as voted by audiences and critics worldwide."
+      title="Top rated movies"
+      description="The highest-rated films, as voted by TMDB members."
       mediaType="movie"
       data={movies}
       isLoading={isLoading}
@@ -21,8 +21,6 @@ export default function TopRatedMoviesPage() {
       totalResults={totalResults}
       currentPage={currentPage}
       onPageChange={handlePageChange}
-      breadcrumbParent="Movies"
-      breadcrumbParentHref="/"
     />
   );
 }

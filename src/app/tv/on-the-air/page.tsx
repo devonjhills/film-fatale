@@ -11,8 +11,8 @@ export default function OnTheAirTVShowsPage() {
 
   return (
     <CategoryPage
-      title="On The Air TV Shows"
-      description="Watch TV shows currently airing new episodes. Stay up-to-date with the latest releases and ongoing series."
+      title="On the air"
+      description="Shows with new episodes airing now."
       mediaType="tv"
       data={tvShows}
       isLoading={isLoading}
@@ -21,8 +21,6 @@ export default function OnTheAirTVShowsPage() {
       totalResults={totalResults}
       currentPage={currentPage}
       onPageChange={handlePageChange}
-      breadcrumbParent="TV Shows"
-      breadcrumbParentHref="/tv"
     />
   );
 }

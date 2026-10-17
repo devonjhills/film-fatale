@@ -11,8 +11,8 @@ export default function NowPlayingMoviesPage() {
 
   return (
     <CategoryPage
-      title="Now Playing Movies"
-      description="Check out the latest movies currently playing in theaters near you."
+      title="Now playing"
+      description="In theaters now."
       mediaType="movie"
       data={movies}
       isLoading={isLoading}
@@ -21,8 +21,6 @@ export default function NowPlayingMoviesPage() {
       totalResults={totalResults}
       currentPage={currentPage}
       onPageChange={handlePageChange}
-      breadcrumbParent="Movies"
-      breadcrumbParentHref="/"
     />
   );
 }

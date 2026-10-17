@@ -8,8 +8,6 @@ import { ViewingHistoryFilters } from "@/components/library/viewing-history-filt
 import { CurrentlyWatchingSection } from "@/components/library/currently-watching-section";
 import { useAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
-import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";
-import { BackNavigation } from "@/components/ui/back-navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -108,16 +106,10 @@ export default function MyLibraryPage() {
     <div className="min-h-screen">
       <header className="page-header">
         <div className="site-container relative z-10 py-12 md:py-18">
-          <div className="mb-8 flex items-center justify-between gap-4">
-            <BreadcrumbNavigation
-              items={[{ label: "My Library", current: true }]}
-            />
-            <BackNavigation fallbackHref="/" />
-          </div>
 
           <div>
             <h1 className="page-title">
-              My Library
+              Library
             </h1>
             <p className="page-lede mt-6">
               Pick up where you left off, keep a watchlist, and remember every

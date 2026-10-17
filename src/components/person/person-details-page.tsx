@@ -2,155 +2,55 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import {
-  Calendar,
-  ChevronDown,
-  ChevronUp,
-  ExternalLink,
-  Globe,
-  User,
-} from "@/components/ui/icons";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { User } from "@/components/ui/icons";
 import { usePersonDetails } from "@/lib/hooks/api-hooks";
 import { getImageUrl } from "@/lib/api";
 import { formatDate, calculateAge } from "@/lib/utils";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { Movie, PersonDetails, TVShow } from "@/lib/types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { CombinedCredits, PersonDetails } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";
-import { BackNavigation } from "@/components/ui/back-navigation";
-import { PaginatedContent } from "@/components/ui/paginated-content";
-import { Badge } from "@/components/ui/badge";
-import { PersonCreditsCard } from "./person-credits-card";
-import { notFound } from "next/navigation";
+import { MediaCard } from "@/components/shared/media-card";
+import { Section, FactList } from "@/components/shared/section";
 
 interface PersonDetailsPageProps {
   personId: number;
   initialPerson?: PersonDetails;
 }
 
+type Credit = CombinedCredits["cast"][number] & { role: string };
+
+const FILMOGRAPHY_PREVIEW = 20;
+// Talk shows and news: appearances, not roles.
+const APPEARANCE_GENRES = new Set([10763, 10767]);
+const SELF_ROLE = /\b(self|himself|herself|themselves|narrator \(voice\))\b/i;
+
 function PersonDetailsSkeleton() {
   return (
-    <div className="min-h-screen">
-      <div className="site-container py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Profile Skeleton */}
-          <div className="space-y-6">
-            <div className="surface-panel p-6">
-              <div className="space-y-6">
-                <Skeleton className="aspect-[2/3] w-full max-w-sm mx-auto rounded-sm" />
-                <div className="space-y-4 text-center">
-                  <Skeleton className="h-10 w-48 mx-auto" />
-                  <Skeleton className="h-6 w-32 mx-auto" />
-                </div>
+    <div className="site-container py-14 md:py-20" aria-busy="true">
+      <div className="grid gap-10 md:grid-cols-[minmax(12rem,17rem)_minmax(0,1fr)] md:gap-14">
+        <Skeleton className="mx-auto aspect-[2/3] w-48 md:w-full" />
+        <div className="space-y-6">
+          <Skeleton className="h-14 w-2/3 max-w-md" />
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="space-y-2">
+                <Skeleton className="h-3.5 w-16" />
+                <Skeleton className="h-4 w-32" />
               </div>
-            </div>
-
-            {/* Personal Information Card */}
-            <div className="surface-panel p-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-5 w-5" />
-                  <Skeleton className="h-6 w-40" />
-                </div>
-                <div className="space-y-4">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="space-y-2">
-                      <Skeleton className="h-4 w-20" />
-                      <Skeleton className="h-5 w-32" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-
-          {/* Content Skeleton */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Biography Card */}
-            <div className="surface-panel p-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-5 w-5" />
-                  <Skeleton className="h-6 w-24" />
-                </div>
-                <div className="space-y-3">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                </div>
-              </div>
-            </div>
-
-            {/* Known For Movies Card */}
-            <div className="surface-panel p-6">
-              <div className="space-y-6">
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-5 w-5" />
-                  <Skeleton className="h-6 w-32" />
-                </div>
-                <div className="grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="flex h-full w-48 flex-col overflow-hidden rounded-sm border border-border/50 bg-card"
-                    >
-                      <div className="p-3 space-y-3 flex-1 flex flex-col">
-                        <div className="relative overflow-hidden rounded-sm aspect-[2/3]">
-                          <Skeleton className="h-full w-full" />
-                          <div className="absolute top-2 right-2">
-                            <Skeleton className="h-6 w-12 rounded-full" />
-                          </div>
-                        </div>
-                        <div className="space-y-1 flex-1 flex flex-col">
-                          <Skeleton className="h-10 w-full" />
-                          <Skeleton className="h-5 w-24" />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Known For TV Shows Card */}
-            <div className="surface-panel p-6">
-              <div className="space-y-6">
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-5 w-5" />
-                  <Skeleton className="h-6 w-32" />
-                </div>
-                <div className="grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="flex h-full w-48 flex-col overflow-hidden rounded-sm border border-border/50 bg-card"
-                    >
-                      <div className="p-3 space-y-3 flex-1 flex flex-col">
-                        <div className="relative overflow-hidden rounded-sm aspect-[2/3]">
-                          <Skeleton className="h-full w-full" />
-                          <div className="absolute top-2 right-2">
-                            <Skeleton className="h-6 w-12 rounded-full" />
-                          </div>
-                        </div>
-                        <div className="space-y-1 flex-1 flex flex-col">
-                          <Skeleton className="h-10 w-full" />
-                          <Skeleton className="h-5 w-24" />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <Skeleton className="h-40 w-full max-w-2xl" />
         </div>
       </div>
     </div>
   );
+}
+
+function creditYear(credit: Credit) {
+  const date = credit.release_date || credit.first_air_date;
+  return date ? new Date(date).getFullYear() : null;
 }
 
 export function PersonDetailsPage({
@@ -161,12 +61,8 @@ export function PersonDetailsPage({
     personId,
     initialPerson,
   );
-  const [movieCreditsExpanded, setMovieCreditsExpanded] = useState(false);
-  const [tvCreditsExpanded, setTvCreditsExpanded] = useState(false);
-  const [movieCreditsPage, setMovieCreditsPage] = useState(1);
-  const [tvCreditsPage, setTvCreditsPage] = useState(1);
-
-  const ITEMS_PER_PAGE = 12;
+  const [bioExpanded, setBioExpanded] = useState(false);
+  const [filmographyExpanded, setFilmographyExpanded] = useState(false);
 
   if (isLoading) {
     return <PersonDetailsSkeleton />;
@@ -177,460 +73,211 @@ export function PersonDetailsPage({
   }
 
   const profileUrl = getImageUrl(person.profile_path, "profile", "h632");
-  const birthDate = formatDate(person.birthday);
-  const deathDate = formatDate(person.deathday);
   const age = calculateAge(person.birthday, person.deathday);
+  const isActor = (person.known_for_department || "Acting") === "Acting";
 
-  // Sort and organize credits
-  const movieCredits =
-    person.combined_credits?.cast?.filter(
-      (credit) => credit.media_type === "movie",
-    ) || [];
-  const tvCredits =
-    person.combined_credits?.cast?.filter(
-      (credit) => credit.media_type === "tv",
-    ) || [];
+  // Actors are listed by role; directors, writers etc. by their main job.
+  const credits: Credit[] = isActor
+    ? (person.combined_credits?.cast || []).map((credit) => ({
+        ...credit,
+        role: credit.character,
+      }))
+    : (person.combined_credits?.crew || [])
+        .filter((credit) => credit.department === person.known_for_department)
+        .map((credit) => ({ ...credit, character: "", role: credit.job }));
 
-  // Sort by release date (newest to oldest)
-  const sortedMovieCredits = [...movieCredits].sort((a, b) => {
-    // Sort by release date (descending - newest first)
-    const dateA = new Date(a.release_date || "").getTime() || 0;
-    const dateB = new Date(b.release_date || "").getTime() || 0;
+  // One row per title, with every role on it combined.
+  const byTitle = new Map<string, Credit>();
+  for (const credit of credits) {
+    const key = `${credit.media_type}-${credit.id}`;
+    const existing = byTitle.get(key);
+    if (!existing) {
+      byTitle.set(key, { ...credit });
+    } else if (credit.role && !existing.role.includes(credit.role)) {
+      existing.role = existing.role ? `${existing.role}, ${credit.role}` : credit.role;
+    }
+  }
+  const titles = [...byTitle.values()];
 
-    // If dates are different, sort by date
-    if (dateA !== dateB) return dateB - dateA;
+  const knownFor = titles
+    .filter(
+      (credit) =>
+        credit.poster_path &&
+        !SELF_ROLE.test(credit.role) &&
+        !credit.genre_ids?.some((genre) => APPEARANCE_GENRES.has(genre)),
+    )
+    .sort((a, b) => (b.vote_count || 0) - (a.vote_count || 0))
+    .slice(0, 16);
 
-    // If dates are same or both missing, sort by popularity as secondary
-    return (b.popularity || 0) - (a.popularity || 0);
+  // Newest first; titles without a date are upcoming, so they lead.
+  const filmography = titles.sort((a, b) => {
+    const yearA = creditYear(a) ?? Infinity;
+    const yearB = creditYear(b) ?? Infinity;
+    return yearB - yearA || (b.popularity || 0) - (a.popularity || 0);
   });
+  const shownFilmography = filmographyExpanded
+    ? filmography
+    : filmography.slice(0, FILMOGRAPHY_PREVIEW);
 
-  const sortedTVCredits = [...tvCredits].sort((a, b) => {
-    // Sort by first air date (descending - newest first)
-    const dateA = new Date(a.first_air_date || "").getTime() || 0;
-    const dateB = new Date(b.first_air_date || "").getTime() || 0;
+  const paragraphs = person.biography
+    ? person.biography.split(/\n+/).filter((paragraph) => paragraph.trim())
+    : [];
+  const longBio = paragraphs.length > 2;
+  const shownBio = bioExpanded ? paragraphs : paragraphs.slice(0, 2);
 
-    // If dates are different, sort by date
-    if (dateA !== dateB) return dateB - dateA;
-
-    // If dates are same or both missing, sort by popularity as secondary
-    return (b.popularity || 0) - (a.popularity || 0);
-  });
-
-  // Get credits for display based on expansion state and pagination
-  const getDisplayedCredits = <T,>(
-    credits: T[],
-    expanded: boolean,
-    page: number,
-  ): T[] => {
-    if (!expanded) {
-      return credits.slice(0, 6);
-    }
-    const startIndex = (page - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    return credits.slice(startIndex, endIndex);
-  };
-
-  const displayedMovies = getDisplayedCredits(
-    sortedMovieCredits,
-    movieCreditsExpanded,
-    movieCreditsPage,
-  );
-  const displayedTV = getDisplayedCredits(
-    sortedTVCredits,
-    tvCreditsExpanded,
-    tvCreditsPage,
-  );
-
-  const movieTotalPages = Math.ceil(sortedMovieCredits.length / ITEMS_PER_PAGE);
-  const tvTotalPages = Math.ceil(sortedTVCredits.length / ITEMS_PER_PAGE);
-
-  // Get all departments the person has worked in
-  const getAllDepartments = () => {
-    const departments = new Set<string>();
-
-    // Add primary known_for_department
-    if (person.known_for_department) {
-      departments.add(person.known_for_department);
-    }
-
-    // Add departments from crew credits
-    if (person.combined_credits?.crew) {
-      person.combined_credits.crew.forEach((credit) => {
-        if (credit.department) {
-          departments.add(credit.department);
-        }
-      });
-    }
-
-    return Array.from(departments).sort();
-  };
-
-  const allDepartments = getAllDepartments();
+  const links = [
+    person.external_ids?.imdb_id && {
+      label: "IMDb",
+      href: `https://www.imdb.com/name/${person.external_ids.imdb_id}`,
+    },
+    person.external_ids?.instagram_id && {
+      label: "Instagram",
+      href: `https://www.instagram.com/${person.external_ids.instagram_id}`,
+    },
+    person.homepage && { label: "Website", href: person.homepage },
+  ].filter(Boolean) as { label: string; href: string }[];
 
   return (
-    <div className="min-h-screen">
-      {/* Navigation */}
-      <div className="site-container pb-6 pt-10">
-        <div className="flex items-center justify-between gap-4">
-          <BreadcrumbNavigation
-            items={[
-              { label: "People", href: "/search?tab=people" },
-              { label: person.name, current: true },
+    <div className="site-container space-y-16 py-14 md:space-y-20 md:py-20">
+      <div className="grid gap-10 md:grid-cols-[minmax(12rem,17rem)_minmax(0,1fr)] md:gap-14">
+        <div className="poster-frame relative mx-auto aspect-[2/3] w-48 overflow-hidden sm:w-56 md:w-full">
+          {profileUrl ? (
+            <Image
+              src={profileUrl}
+              alt={person.name}
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 768px) 224px, 272px"
+            />
+          ) : (
+            <div className="flex size-full items-center justify-center">
+              <User className="size-20 text-muted-foreground/50" aria-hidden="true" />
+            </div>
+          )}
+        </div>
+
+        <div className="min-w-0">
+          <h1 className="page-title">{person.name}</h1>
+          {person.known_for_department && (
+            <p className="mt-3 text-muted-foreground">{person.known_for_department}</p>
+          )}
+
+          <FactList
+            className="mt-8 border-t border-border pt-6 lg:grid-cols-3"
+            facts={[
+              {
+                label: "Born",
+                value: person.birthday
+                  ? `${formatDate(person.birthday)}${age !== null && !person.deathday ? ` (age ${age})` : ""}`
+                  : null,
+              },
+              { label: "Birthplace", value: person.place_of_birth },
+              {
+                label: "Died",
+                value: person.deathday
+                  ? `${formatDate(person.deathday)}${age !== null ? ` (aged ${age})` : ""}`
+                  : null,
+              },
             ]}
           />
-          <BackNavigation fallbackHref="/search?tab=people" />
-        </div>
-      </div>
 
-      <div className="site-container pb-16">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(15rem,19rem)_minmax(0,1fr)] lg:gap-12">
-          {/* Profile Sidebar */}
-          <div className="space-y-6">
-            {/* Profile Image */}
-            <div className="poster-frame relative mx-auto aspect-[2/3] w-full max-w-sm overflow-hidden lg:max-w-full">
-              {profileUrl ? (
-                <Image
-                  src={profileUrl}
-                  alt={person.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 300px"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center bg-muted">
-                  <User className="h-24 w-24 text-muted-foreground" weight="duotone" />
-                </div>
+          {shownBio.length > 0 && (
+            <div className="mt-8 max-w-[68ch] space-y-4 leading-7 text-foreground/90">
+              {shownBio.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+              {longBio && (
+                <button
+                  type="button"
+                  onClick={() => setBioExpanded(!bioExpanded)}
+                  aria-expanded={bioExpanded}
+                  className="text-sm font-medium underline underline-offset-4 hover:text-muted-foreground"
+                >
+                  {bioExpanded ? "Show less" : "Read full biography"}
+                </button>
               )}
             </div>
+          )}
 
-            {/* Personal Info */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-xl font-serif font-bold text-foreground">
-                  Personal Info
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {allDepartments.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground tracking-wide">
-                      Known For
-                    </h4>
-                    <div className="flex flex-wrap gap-1">
-                      {allDepartments.map((department, index) => (
-                        <Badge
-                          key={index}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {department}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {person.birthday && (
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground tracking-wide">
-                      Born
-                    </h4>
-                    <div className="text-base font-medium space-y-1">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span>{birthDate}</span>
-                        {age !== null && !person.deathday && (
-                          <span className="text-muted-foreground">
-                            ({age} years old)
-                          </span>
-                        )}
-                      </div>
-                      {person.place_of_birth && (
-                        <div className="flex items-center space-x-1">
-                          <Globe className="h-4 w-4 text-muted-foreground" />
-                          <span>{person.place_of_birth}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {person.deathday && (
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground tracking-wide">
-                      Died
-                    </h4>
-                    <div className="text-base font-medium">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span>{deathDate}</span>
-                        {age !== null && (
-                          <span className="text-muted-foreground">
-                            (aged {age})
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {person.also_known_as && person.also_known_as.length > 0 && (
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-serif font-semibold text-muted-foreground tracking-wide">
-                      Also Known As
-                    </h4>
-                    <div className="text-base font-medium space-y-1">
-                      {person.also_known_as.slice(0, 3).map((name, index) => (
-                        <p key={index}>{name}</p>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* External Links */}
-            {person.external_ids && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-xl font-serif font-bold text-foreground">
-                    External Links
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  {person.external_ids.imdb_id && (
-                    <a
-                      href={`https://www.imdb.com/name/${person.external_ids.imdb_id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex min-h-10 items-center space-x-2 border-b border-border/50 text-sm font-semibold text-primary transition-colors hover:text-foreground"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      <span>IMDB</span>
-                    </a>
-                  )}
-                  {person.external_ids.instagram_id && (
-                    <a
-                      href={`https://www.instagram.com/${person.external_ids.instagram_id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex min-h-10 items-center space-x-2 border-b border-border/50 text-sm font-semibold text-primary transition-colors hover:text-foreground"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      <span>Instagram</span>
-                    </a>
-                  )}
-                  {person.external_ids.twitter_id && (
-                    <a
-                      href={`https://www.twitter.com/${person.external_ids.twitter_id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex min-h-10 items-center space-x-2 border-b border-border/50 text-sm font-semibold text-primary transition-colors hover:text-foreground"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      <span>Twitter</span>
-                    </a>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-          </div>
-
-          {/* Main Content */}
-          <div className="min-w-0 space-y-8">
-            {/* Name and Basic Info */}
-            <div className="border-b border-border/75 pb-8">
-              <div className="space-y-2">
-                <h1 className="page-title max-w-4xl">
-                  {person.name}
-                </h1>
-              </div>
-
-              {/* Quick stats for mobile */}
-              <div className="lg:hidden flex flex-wrap gap-4 text-sm">
-                {person.birthday && (
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span>{formatDate(person.birthday)}</span>
-                  </div>
-                )}
-                {person.place_of_birth && (
-                  <div className="flex items-center gap-1">
-                    <Globe className="h-4 w-4 text-muted-foreground" />
-                    <span>{person.place_of_birth}</span>
-                  </div>
-                )}
-              </div>
+          {links.length > 0 && (
+            <div className="mt-8 flex flex-wrap gap-2">
+              {links.map((link) => (
+                <Button key={link.label} variant="outline" size="sm" asChild>
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">
+                    {link.label}
+                  </a>
+                </Button>
+              ))}
             </div>
-
-            {/* Biography */}
-            {person.biography && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-serif text-2xl font-medium text-foreground">
-                    Biography
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="max-w-none text-base leading-8 text-foreground/88">
-                    {person.biography.split("\n\n").map((paragraph, index) => (
-                      <p key={index} className="mb-4 last:mb-0">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Movie Credits */}
-            {displayedMovies.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="font-serif text-2xl font-medium text-foreground">
-                      <span>Movie Credits</span>
-                      <span className="text-base font-medium text-muted-foreground ml-2 font-sans">
-                        ({movieCredits.length} total)
-                      </span>
-                    </CardTitle>
-                    {movieCredits.length > 6 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setMovieCreditsExpanded(!movieCreditsExpanded);
-                          if (movieCreditsExpanded) {
-                            setMovieCreditsPage(1);
-                          }
-                        }}
-                        className="flex items-center gap-1"
-                      >
-                        {movieCreditsExpanded ? (
-                          <>
-                            Show Less
-                            <ChevronUp className="h-4 w-4" />
-                          </>
-                        ) : (
-                          <>
-                            Show All
-                            <ChevronDown className="h-4 w-4" />
-                          </>
-                        )}
-                      </Button>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {displayedMovies.map((movie) => (
-                      <PersonCreditsCard
-                        key={`${movie.id}-${movie.credit_id}`}
-                        credit={{ ...movie, media_type: "movie" }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Pagination for expanded view */}
-                  {movieCreditsExpanded && movieTotalPages > 1 && (
-                    <div className="mt-6">
-                      <PaginatedContent
-                        currentPage={movieCreditsPage}
-                        totalPages={movieTotalPages}
-                        totalResults={movieCredits.length}
-                        onPageChange={setMovieCreditsPage}
-                      />
-                    </div>
-                  )}
-
-                  {/* Show count for collapsed view */}
-                  {!movieCreditsExpanded && movieCredits.length > 6 && (
-                    <div className="mt-4 text-center">
-                      <p className="text-sm text-muted-foreground">
-                        Showing {displayedMovies.length} of{" "}
-                        {movieCredits.length} movie credits
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-
-            {/* TV Credits */}
-            {displayedTV.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="font-serif text-2xl font-medium text-foreground">
-                      <span>TV Credits</span>
-                      <span className="text-base font-medium text-muted-foreground ml-2 font-sans">
-                        ({tvCredits.length} total)
-                      </span>
-                    </CardTitle>
-                    {tvCredits.length > 6 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setTvCreditsExpanded(!tvCreditsExpanded);
-                          if (tvCreditsExpanded) {
-                            setTvCreditsPage(1);
-                          }
-                        }}
-                        className="flex items-center gap-1"
-                      >
-                        {tvCreditsExpanded ? (
-                          <>
-                            Show Less
-                            <ChevronUp className="h-4 w-4" />
-                          </>
-                        ) : (
-                          <>
-                            Show All
-                            <ChevronDown className="h-4 w-4" />
-                          </>
-                        )}
-                      </Button>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {displayedTV.map((show) => (
-                      <PersonCreditsCard
-                        key={`${show.id}-${show.credit_id}`}
-                        credit={{ ...show, media_type: "tv" }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Pagination for expanded view */}
-                  {tvCreditsExpanded && tvTotalPages > 1 && (
-                    <div className="mt-6">
-                      <PaginatedContent
-                        currentPage={tvCreditsPage}
-                        totalPages={tvTotalPages}
-                        totalResults={tvCredits.length}
-                        onPageChange={setTvCreditsPage}
-                      />
-                    </div>
-                  )}
-
-                  {/* Show count for collapsed view */}
-                  {!tvCreditsExpanded && tvCredits.length > 6 && (
-                    <div className="mt-4 text-center">
-                      <p className="text-sm text-muted-foreground">
-                        Showing {displayedTV.length} of {tvCredits.length} TV
-                        credits
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-          </div>
+          )}
         </div>
       </div>
+
+      {knownFor.length > 0 && (
+        <Section title="Known for">
+          <div className="poster-grid poster-grid-two-rows">
+            {knownFor.map((credit) => (
+              <MediaCard
+                key={`${credit.media_type}-${credit.id}`}
+                item={credit}
+                mediaType={credit.media_type}
+              />
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {filmography.length > 0 && (
+        <Section
+          title="Filmography"
+          action={
+            <span className="text-sm tabular-nums text-muted-foreground">
+              {filmography.length} titles
+            </span>
+          }
+        >
+          <ol className="divide-y divide-border">
+            {shownFilmography.map((credit) => (
+              <li key={`${credit.media_type}-${credit.id}`}>
+                <Link
+                  href={`/${credit.media_type}/${credit.id}`}
+                  className="group grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-4 py-3 sm:grid-cols-[4rem_minmax(0,1fr)_auto]"
+                >
+                  <span className="text-sm tabular-nums text-muted-foreground">
+                    {creditYear(credit) ?? "TBA"}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="font-medium group-hover:underline group-hover:underline-offset-4">
+                      {credit.title || credit.name}
+                    </span>
+                    {credit.role && (
+                      <span className="block truncate text-sm text-muted-foreground">
+                        {credit.role}
+                      </span>
+                    )}
+                  </span>
+                  <span className="hidden text-sm text-muted-foreground sm:block">
+                    {credit.media_type === "tv" ? "TV" : "Film"}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+
+          {filmography.length > FILMOGRAPHY_PREVIEW && (
+            <div className="mt-8 flex justify-center">
+              <Button
+                variant="outline"
+                onClick={() => setFilmographyExpanded(!filmographyExpanded)}
+                aria-expanded={filmographyExpanded}
+              >
+                {filmographyExpanded ? "Show less" : `Show all ${filmography.length}`}
+              </Button>
+            </div>
+          )}
+        </Section>
+      )}
     </div>
   );
 }

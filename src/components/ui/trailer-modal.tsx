@@ -48,7 +48,7 @@ export function TrailerModal({
       <DialogTrigger asChild>
         <Button size={size} variant={variant} className={className}>
           <Play className="h-5 w-5" weight="fill" />
-          Watch Trailer
+          Watch trailer
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-6xl w-[95vw] p-0">

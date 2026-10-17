@@ -34,7 +34,7 @@ export function ExternalLinks({
       icon: Film,
     },
     {
-      name: "Official Site",
+      name: "Official site",
       url: homepage,
       icon: Globe,
     },

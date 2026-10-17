@@ -20,9 +20,10 @@ import { ToneToggle } from "@/components/layout/tone-toggle";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/", label: "Discover", exact: true },
-  { href: "/movies/popular", label: "Movies" },
-  { href: "/tv", label: "TV" },
+  { href: "/", label: "Discover", match: /^\/$/ },
+  // Covers the movie lists (/movies/…) and movie pages (/movie/…).
+  { href: "/movies/popular", label: "Movies", match: /^\/movies?(\/|$)/ },
+  { href: "/tv", label: "TV", match: /^\/tv(\/|$)/ },
 ];
 
 export function Navigation() {
@@ -41,8 +42,8 @@ export function Navigation() {
     setMobileMenuOpen(false);
   };
 
-  const isActive = (href: string, exact?: boolean) =>
-    exact ? pathname === href : pathname.startsWith(href);
+  const isActive = (href: string, match?: RegExp) =>
+    match ? match.test(pathname) : pathname.startsWith(href);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background">
@@ -73,10 +74,10 @@ export function Navigation() {
             <Link
               key={link.href}
               href={link.href}
-              aria-current={isActive(link.href, link.exact) ? "page" : undefined}
+              aria-current={isActive(link.href, link.match) ? "page" : undefined}
               className={cn(
                 "relative flex min-h-11 items-center px-3 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground",
-                isActive(link.href, link.exact) &&
+                isActive(link.href, link.match) &&
                   "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-px after:bg-foreground",
               )}
             >
@@ -193,10 +194,10 @@ export function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                aria-current={isActive(link.href, link.exact) ? "page" : undefined}
+                aria-current={isActive(link.href, link.match) ? "page" : undefined}
                 className={cn(
                   "flex min-h-12 items-center border-l-2 border-transparent px-4 text-base font-medium text-muted-foreground",
-                  isActive(link.href, link.exact) && "border-foreground text-foreground",
+                  isActive(link.href, link.match) && "border-foreground text-foreground",
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >

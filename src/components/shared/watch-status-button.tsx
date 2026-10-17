@@ -32,7 +32,7 @@ interface WatchStatusButtonProps {
 const statusOptions = [
   {
     value: "plan_to_watch",
-    label: "Plan to Watch",
+    label: "Want to watch",
     icon: Clock,
     color: "text-muted-foreground",
   },
@@ -161,7 +161,7 @@ export function WatchStatusButton({
             className="h-4 w-4"
             weight={currentStatus === "completed" ? "bold" : "duotone"}
           />
-          {loading ? "Updating..." : currentOption?.label || "Add to List"}
+          {loading ? "Updating…" : currentOption?.label || "Add to library"}
           <ChevronDown className="h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>

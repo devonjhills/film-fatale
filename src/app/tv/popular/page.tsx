@@ -11,8 +11,8 @@ export default function PopularTVShowsPage() {
 
   return (
     <CategoryPage
-      title="Popular TV Shows"
-      description="Discover the most popular TV shows trending right now. These are the series everyone's binge-watching."
+      title="Popular shows"
+      description="The series people are watching right now."
       mediaType="tv"
       data={tvShows}
       isLoading={isLoading}
@@ -21,8 +21,6 @@ export default function PopularTVShowsPage() {
       totalResults={totalResults}
       currentPage={currentPage}
       onPageChange={handlePageChange}
-      breadcrumbParent="TV Shows"
-      breadcrumbParentHref="/tv"
     />
   );
 }

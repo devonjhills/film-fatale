@@ -2,15 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Calendar, Clock, Film, Play, Star } from "@/components/ui/icons";
+import { ArrowLeft, ArrowRight, Film, Play, Star } from "@/components/ui/icons";
 import { useTVSeasonDetails, useTVDetails } from "@/lib/hooks/api-hooks";
 import { getImageUrl } from "@/lib/api";
-import { PersonCard } from "@/components/person/person-card";
+import { CastGrid, CrewList } from "@/components/person/cast-grid";
+import { Section } from "@/components/shared/section";
+import { Button } from "@/components/ui/button";
 import { formatDate, formatVoteAverage, formatRuntime } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BreadcrumbNavigation } from "@/components/ui/breadcrumb-navigation";
-import { BackNavigation } from "@/components/ui/back-navigation";
 import type { TVSeasonDetails, TVShowDetails } from "@/lib/types";
 
 interface TVSeasonDetailsPageProps {
@@ -22,108 +21,26 @@ interface TVSeasonDetailsPageProps {
 
 function SeasonDetailsSkeleton() {
   return (
-    <div className="min-h-screen">
-      {/* Header Skeleton */}
-      <div className="relative bg-muted p-8">
-        <div className="site-container space-y-4">
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-8 w-8 rounded-full" />
-            <Skeleton className="h-6 w-24" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-            <div className="md:col-span-3">
-              <Skeleton className="aspect-[2/3] w-full max-w-xs" />
-            </div>
-            <div className="md:col-span-9 space-y-4">
-              <Skeleton className="h-12 w-96" />
-              <div className="flex gap-4">
-                <Skeleton className="h-6 w-20" />
-                <Skeleton className="h-6 w-24" />
-              </div>
-              <Skeleton className="h-20 w-full max-w-2xl" />
-            </div>
-          </div>
+    <div className="site-container space-y-16 py-14 md:py-20" aria-busy="true">
+      <div className="flex flex-col gap-8 md:flex-row md:items-end">
+        <Skeleton className="mx-auto aspect-[2/3] w-36 md:mx-0 md:w-44" />
+        <div className="flex-1 space-y-4">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-14 w-64" />
+          <Skeleton className="h-16 w-full max-w-2xl" />
         </div>
       </div>
-
-      {/* Content Skeleton */}
-      <div className="site-container space-y-8 py-8">
-        {/* Season Overview Card */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-5 w-5" />
-                <Skeleton className="h-6 w-32" />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="space-y-2">
-                    <Skeleton className="h-4 w-20" />
-                    <Skeleton className="h-6 w-full" />
-                  </div>
-                ))}
-              </div>
+      <div className="space-y-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="flex gap-5">
+            <Skeleton className="aspect-video w-40 shrink-0" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-5 w-48" />
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-10 w-full" />
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Episodes List Card */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-5 w-5" />
-                <Skeleton className="h-6 w-20" />
-              </div>
-              <div className="space-y-4">
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <div key={i} className="flex gap-4 p-4 border rounded-sm">
-                    <Skeleton className="aspect-video w-32 rounded-sm flex-shrink-0" />
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Skeleton className="h-5 w-16" />
-                        <Skeleton className="h-5 w-48" />
-                      </div>
-                      <Skeleton className="h-4 w-20" />
-                      <Skeleton className="h-12 w-full" />
-                      <div className="flex gap-2">
-                        <Skeleton className="h-4 w-16" />
-                        <Skeleton className="h-4 w-12" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Cast Section Card */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-5 w-5" />
-                <Skeleton className="h-6 w-16" />
-              </div>
-              <div className="space-y-4">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center space-x-3 p-3 rounded-sm"
-                  >
-                    <Skeleton className="h-20 w-20 rounded-full flex-shrink-0" />
-                    <div className="min-w-0 flex-1 space-y-1">
-                      <Skeleton className="h-5 w-32" />
-                      <Skeleton className="h-4 w-24" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -148,233 +65,175 @@ export function TVSeasonDetailsPage({
 
   if (isError || !season) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Film className="mx-auto h-16 w-16 text-muted-foreground" weight="duotone" />
-          <h1 className="text-2xl font-bold">Season Not Found</h1>
-          <p className="text-muted-foreground">
-            The season you&apos;re looking for doesn&apos;t exist or has been
-            removed.
-          </p>
-          <Link
-            href={`/tv/${tvId}`}
-            className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 transition-colors"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to TV Show
-          </Link>
-        </div>
+      <div className="site-container flex min-h-[60vh] flex-col items-center justify-center gap-4 py-20 text-center">
+        <h1 className="page-title">Season not found</h1>
+        <p className="page-lede">This season isn&apos;t listed for this show.</p>
+        <Button asChild>
+          <Link href={`/tv/${tvId}`}>Back to the show</Link>
+        </Button>
       </div>
     );
   }
 
-  const rating = formatVoteAverage(season.vote_average);
-  const airDate = formatDate(season.air_date);
-
-  // Get season cast with episode counts
+  const posterUrl = getImageUrl(season.poster_path, "poster", "w342");
+  const episodes = season.episodes || [];
   const seasonCast = season.credits?.cast || [];
   const seasonCrew = season.credits?.crew || [];
 
-  // Prepare breadcrumb items
-  const breadcrumbItems = [
-    { label: "TV Shows", href: "/tv" },
-    {
-      label: tvShow?.name || "TV Show",
-      href: `/tv/${tvId}`,
-    },
-    {
-      label: `Season ${seasonNumber}`,
-      current: true,
-    },
-  ];
+  const seasonNumbers = (tvShow?.seasons || [])
+    .map((s) => s.season_number)
+    .sort((a, b) => a - b);
+  const index = seasonNumbers.indexOf(seasonNumber);
+  const previous = index > 0 ? tvShow?.seasons.find((s) => s.season_number === seasonNumbers[index - 1]) : undefined;
+  const next = index >= 0 && index < seasonNumbers.length - 1
+    ? tvShow?.seasons.find((s) => s.season_number === seasonNumbers[index + 1])
+    : undefined;
 
   return (
-    <div className="min-h-screen">
-      {/* Navigation */}
-      <div className="site-container pb-6 pt-10">
-        <div className="flex items-center justify-between gap-4">
-          <BreadcrumbNavigation items={breadcrumbItems} />
-          <BackNavigation fallbackHref={`/tv/${tvId}`} />
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="site-container space-y-8 pb-16">
-        {/* Season Header */}
-        <Card className="overflow-hidden">
-          <CardContent className="p-7 md:p-9">
-            <div className="flex flex-col gap-8 md:flex-row md:items-end">
-              {/* Season Poster */}
-              <div className="poster-frame relative mx-auto aspect-[2/3] w-36 flex-shrink-0 overflow-hidden md:mx-0 md:w-44">
-                {season.poster_path ? (
-                  <Image
-                    src={getImageUrl(season.poster_path, "poster", "w185")}
-                    alt={season.name}
-                    fill
-                    className="object-cover"
-                    sizes="160px"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-muted">
-                    <Film className="h-8 w-8 text-muted-foreground" weight="duotone" />
-                  </div>
-                )}
-              </div>
-
-              {/* Season Info */}
-              <div className="flex-1 space-y-5 text-center md:text-left">
-                <div>
-                  <h1 className="font-serif text-4xl font-medium md:text-6xl">
-                    {season.name}
-                  </h1>
-                  <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-muted-foreground md:justify-start">
-                    {season.vote_average > 0 && (
-                      <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4" weight="fill" />
-                        <span>{rating}</span>
-                      </div>
-                    )}
-                    {airDate && (
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>{airDate}</span>
-                      </div>
-                    )}
-                    {season.episodes && season.episodes.length > 0 && (
-                      <span>
-                        {season.episodes.length} episode
-                        {season.episodes.length !== 1 ? "s" : ""}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {season.overview && (
-                  <p className="max-w-3xl text-base leading-7 text-muted-foreground">
-                    {season.overview}
-                  </p>
-                )}
-              </div>
+    <div className="site-container space-y-16 py-14 md:space-y-20 md:py-20">
+      <header className="flex flex-col gap-8 md:flex-row md:items-end md:gap-12">
+        <div className="poster-frame relative mx-auto aspect-[2/3] w-36 shrink-0 overflow-hidden md:mx-0 md:w-48">
+          {posterUrl ? (
+            <Image
+              src={posterUrl}
+              alt=""
+              fill
+              priority
+              className="object-cover"
+              sizes="192px"
+            />
+          ) : (
+            <div className="flex size-full items-center justify-center">
+              <Film className="size-8 text-muted-foreground/50" aria-hidden="true" />
             </div>
-          </CardContent>
-        </Card>
-        {/* Episodes */}
-        {season.episodes && season.episodes.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Episodes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {season.episodes.map((episode) => (
-                  <div
-                    key={episode.id}
-                    className="flex flex-col gap-4 rounded-sm border border-border/70 bg-background/30 p-4 transition-colors duration-150 hover:border-primary/55 hover:bg-accent/25 sm:flex-row"
-                  >
-                    {/* Episode Still */}
-                    <div className="relative aspect-video w-full flex-shrink-0 overflow-hidden rounded-sm bg-muted sm:w-32">
-                      {episode.still_path ? (
-                        <Image
-                          src={getImageUrl(
-                            episode.still_path,
-                            "backdrop",
-                            "w300",
-                          )}
-                          alt={episode.name}
-                          fill
-                          className="object-cover"
-                          sizes="96px"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <Play className="h-6 w-6 text-muted-foreground" weight="duotone" />
-                        </div>
-                      )}
-                    </div>
+          )}
+        </div>
 
-                    {/* Episode Info */}
-                    <div className="flex-1 space-y-2">
-                      <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:gap-4">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-base">
-                            {episode.episode_number}. {episode.name}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            {episode.air_date && formatDate(episode.air_date)}
-                          </p>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                          {episode.vote_average > 0 && (
-                            <div className="flex items-center gap-1">
-                              <Star className="h-3 w-3" weight="fill" />
-                              <span>
-                                {formatVoteAverage(episode.vote_average)}
-                              </span>
-                            </div>
-                          )}
-                          {episode.runtime > 0 && (
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              <span>{formatRuntime(episode.runtime)}</span>
-                            </div>
-                          )}
-                        </div>
+        <div className="min-w-0 flex-1">
+          <Link
+            href={`/tv/${tvId}`}
+            className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+          >
+            {tvShow?.name || "Back to the show"}
+          </Link>
+          <h1 className="page-title mt-2">{season.name}</h1>
+          <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm tabular-nums text-muted-foreground">
+            {season.vote_average > 0 && (
+              <span className="inline-flex items-center gap-1.5 font-medium text-foreground">
+                <Star className="size-3.5" weight="fill" aria-hidden="true" />
+                <span className="sr-only">Rated </span>
+                {formatVoteAverage(season.vote_average)}
+              </span>
+            )}
+            {season.air_date && <span>{formatDate(season.air_date)}</span>}
+            {episodes.length > 0 && (
+              <span>
+                {episodes.length} episode{episodes.length === 1 ? "" : "s"}
+              </span>
+            )}
+          </p>
+          {season.overview && (
+            <p className="mt-5 max-w-[65ch] leading-7 text-foreground/90">{season.overview}</p>
+          )}
+        </div>
+      </header>
+
+      {episodes.length > 0 && (
+        <Section title="Episodes">
+          <ol className="divide-y divide-border">
+            {episodes.map((episode) => {
+              const stillUrl = getImageUrl(episode.still_path, "backdrop", "w300");
+              return (
+                <li key={episode.id} className="flex flex-col gap-4 py-5 first:pt-0 sm:flex-row sm:gap-6">
+                  <div className="poster-frame relative aspect-video w-full shrink-0 overflow-hidden sm:w-44">
+                    {stillUrl ? (
+                      <Image
+                        src={stillUrl}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, 176px"
+                      />
+                    ) : (
+                      <div className="flex size-full items-center justify-center">
+                        <Play className="size-6 text-muted-foreground/50" aria-hidden="true" />
                       </div>
-
-                      {episode.overview && (
-                        <p className="text-sm text-muted-foreground">
-                          {episode.overview}
-                        </p>
-                      )}
-                    </div>
+                    )}
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
-        {/* Season Cast */}
-        {seasonCast.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Season Cast</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {seasonCast.slice(0, 8).map((person) => (
-                  <PersonCard
-                    key={person.id}
-                    person={person}
-                    role={person.character}
-                    mediaType="tv"
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                      <h3 className="font-medium">
+                        <span className="tabular-nums text-muted-foreground">
+                          {episode.episode_number}.
+                        </span>{" "}
+                        {episode.name}
+                      </h3>
+                      <p className="flex gap-4 text-sm tabular-nums text-muted-foreground">
+                        {episode.vote_average > 0 && (
+                          <span className="inline-flex items-center gap-1">
+                            <Star className="size-3" weight="fill" aria-hidden="true" />
+                            <span className="sr-only">Rated </span>
+                            {formatVoteAverage(episode.vote_average)}
+                          </span>
+                        )}
+                        {episode.runtime > 0 && <span>{formatRuntime(episode.runtime)}</span>}
+                      </p>
+                    </div>
+                    {episode.air_date && (
+                      <p className="mt-0.5 text-sm text-muted-foreground">
+                        {formatDate(episode.air_date)}
+                      </p>
+                    )}
+                    {episode.overview && (
+                      <p className="mt-2 max-w-[75ch] text-sm leading-6 text-foreground/80">
+                        {episode.overview}
+                      </p>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </Section>
+      )}
 
-        {/* Season Crew */}
-        {seasonCrew.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Season Crew</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {seasonCrew.slice(0, 8).map((person) => (
-                  <PersonCard
-                    key={`${person.id}-${person.job}`}
-                    person={person}
-                    role={person.job}
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+      {seasonCast.length > 0 && (
+        <Section title="Cast">
+          <CastGrid cast={seasonCast} mediaType="movie" />
+        </Section>
+      )}
+
+      {seasonCrew.length > 0 && (
+        <Section title="Crew">
+          <CrewList crew={seasonCrew} />
+        </Section>
+      )}
+
+      {(previous || next) && (
+        <nav aria-label="Seasons" className="flex justify-between gap-4 border-t border-border pt-6">
+          {previous ? (
+            <Link
+              href={`/tv/${tvId}/season/${previous.season_number}`}
+              className="group flex min-h-11 items-center gap-2 text-sm"
+            >
+              <ArrowLeft className="size-4" aria-hidden="true" />
+              <span className="group-hover:underline">{previous.name}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+          {next && (
+            <Link
+              href={`/tv/${tvId}/season/${next.season_number}`}
+              className="group flex min-h-11 items-center gap-2 text-sm"
+            >
+              <span className="group-hover:underline">{next.name}</span>
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          )}
+        </nav>
+      )}
     </div>
   );
 }
