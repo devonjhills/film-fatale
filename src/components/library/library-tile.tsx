@@ -29,7 +29,7 @@ export function LibraryTile({ item, onChange }: LibraryTileProps) {
             </div>
           )}
           {badge && (
-            <span className="absolute bottom-2 left-2 rounded-sm bg-foreground px-1.5 py-0.5 text-xs font-medium tabular-nums text-background">
+            <span className="absolute bottom-2 left-2 rounded-sm bg-primary px-1.5 py-0.5 text-xs font-semibold tabular-nums text-primary-foreground">
               {badge}
             </span>
           )}

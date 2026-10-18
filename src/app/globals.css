@@ -2,40 +2,45 @@
 @import "tw-animate-css";
 
 /*
- * Film Fatale — silver screen palette.
- * Monochrome to match the logo; posters supply the color.
+ * Film Fatale — neo-noir night palette.
+ * A blue-black city night lit by sodium streetlight. Sodium amber is the one
+ * interface accent (primary actions, selection, progress); magenta and cyan
+ * neon only ever appear as light — through the blinds and in hero haze.
  * Red is reserved for destructive actions.
  */
 :root {
   color-scheme: dark;
 
-  --black: #000000;
-  --graphite: #141414;
-  --graphite-raised: #1b1b1b;
-  --smoke: #2b2b2b;
-  --ash: #a3a3a3;
-  --paper: #efede8;
-  --blood: #d2283c;
+  --night: #04060b;
+  --graphite: #0b0f16;
+  --graphite-raised: #111722;
+  --smoke: #1d2532;
+  --ash: #8f99aa;
+  --paper: #e9ecf1;
+  --sodium: #ff9d42;
+  --neon-magenta: #ff3f8e;
+  --neon-cyan: #3fd8f2;
+  --blood: #e0334a;
 
-  --background: var(--black);
+  --background: var(--night);
   --foreground: var(--paper);
   --card: var(--graphite);
   --card-foreground: var(--paper);
   --popover: var(--graphite-raised);
   --popover-foreground: var(--paper);
-  --primary: var(--paper);
-  --primary-foreground: var(--black);
+  --primary: var(--sodium);
+  --primary-foreground: var(--night);
   --secondary: var(--graphite-raised);
   --secondary-foreground: var(--paper);
   --muted: var(--graphite);
   --muted-foreground: var(--ash);
-  --accent: #232323;
+  --accent: #18202c;
   --accent-foreground: var(--paper);
   --destructive: var(--blood);
   --destructive-foreground: #ffffff;
   --border: var(--smoke);
-  --input: #3a3a3a;
-  --ring: var(--paper);
+  --input: #2c3646;
+  --ring: var(--sodium);
   --radius: 0.25rem;
 }
 
@@ -59,6 +64,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-sodium: var(--sodium);
+  --color-neon-magenta: var(--neon-magenta);
+  --color-neon-cyan: var(--neon-cyan);
   --font-sans: var(--font-ui);
   --font-serif: var(--font-display);
   --radius-sm: var(--radius);
@@ -92,9 +100,11 @@
   }
 
   /*
-   * Window light through venetian blinds, cast over the whole page like a
-   * room's light source: lit bands and slat shadows. Sits above content but
-   * below the header, menus and dialogs (z-50).
+   * Neon through venetian blinds: a city sign outside the window, cast over
+   * the whole page. The light is sodium amber nearest the window, shading
+   * into magenta and a little cyan as it falls across the room; the slats
+   * cut it into bands. Sits above content but below the header, menus and
+   * dialogs (z-50).
    */
   body::after {
     position: fixed;
@@ -102,10 +112,27 @@
     z-index: 45;
     pointer-events: none;
     content: "";
+    background: linear-gradient(
+      to bottom left,
+      rgb(255 157 66 / 0.11) 0%,
+      rgb(255 63 142 / 0.075) 30%,
+      rgb(63 216 242 / 0.04) 50%,
+      transparent 62%
+    );
+    mask-image: repeating-linear-gradient(-24deg, #000 0 1.75rem, transparent 1.75rem 3.25rem);
+  }
+
+  /* The slat shadows between the lit bands. */
+  body::before {
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    pointer-events: none;
+    content: "";
     background: repeating-linear-gradient(
       -24deg,
-      rgb(239 237 232 / 0.035) 0 1.75rem,
-      rgb(0 0 0 / 0.08) 1.75rem 3.25rem
+      transparent 0 1.75rem,
+      rgb(0 0 0 / 0.1) 1.75rem 3.25rem
     );
     mask-image: linear-gradient(to bottom left, #000 0%, transparent 55%);
   }
@@ -144,8 +171,8 @@
   }
 
   ::selection {
-    background: var(--paper);
-    color: var(--black);
+    background: var(--sodium);
+    color: var(--night);
   }
 }
 
@@ -157,8 +184,8 @@
     z-index: 100;
     translate: 0 -200%;
     border-radius: var(--radius);
-    background: var(--paper);
-    color: var(--black);
+    background: var(--sodium);
+    color: var(--night);
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
     font-weight: 600;
@@ -192,10 +219,37 @@
     box-shadow: 0 16px 48px rgb(0 0 0 / 0.6);
   }
 
+  /*
+   * Backdrop grade: a teal-and-sodium wash in overlay blend, so stills pick
+   * up the city's light without losing their own color.
+   */
+  .art-grade {
+    background: linear-gradient(
+      100deg,
+      rgb(63 216 242 / 0.3) 0%,
+      rgb(17 23 34 / 0) 50%,
+      rgb(255 157 66 / 0.32) 100%
+    );
+    mix-blend-mode: overlay;
+  }
+
   .art-scrim {
     background:
-      linear-gradient(to top, var(--background) 0%, rgb(0 0 0 / 0.75) 35%, transparent 75%),
-      linear-gradient(to right, rgb(0 0 0 / 0.85), transparent 70%);
+      radial-gradient(60% 50% at 0% 100%, rgb(255 63 142 / 0.14), transparent 70%),
+      linear-gradient(to top, var(--background) 0%, rgb(4 6 11 / 0.75) 35%, transparent 75%),
+      linear-gradient(to right, rgb(4 6 11 / 0.88), transparent 70%);
+  }
+
+  /* The header's lower edge: a single neon tube. */
+  .neon-rule {
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgb(255 63 142 / 0.95) 30%,
+      rgb(255 157 66 / 1) 70%,
+      transparent
+    );
+    box-shadow: 0 0 14px 1px rgb(255 63 142 / 0.5);
   }
 
   .display-title {
@@ -220,7 +274,7 @@
     font-family: var(--font-display), ui-serif, Georgia, serif;
     font-size: 1.125rem;
     line-height: 1.7;
-    color: rgb(239 237 232 / 0.9);
+    color: rgb(233 236 241 / 0.9);
   }
 
   @media (min-width: 768px) {
@@ -318,11 +372,14 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--card);
-    transition: border-color 150ms ease;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
   }
 
   .poster-card:hover {
-    border-color: rgb(255 255 255 / 0.4);
+    border-color: rgb(255 157 66 / 0.6);
+    box-shadow: 0 0 22px rgb(255 157 66 / 0.14);
   }
 
   .poster-card-art {
@@ -344,7 +401,7 @@
   .poster-frame {
     border-radius: var(--radius);
     background: var(--muted);
-    outline: 1px solid rgb(255 255 255 / 0.1);
+    outline: 1px solid rgb(233 236 241 / 0.1);
     outline-offset: -1px;
   }
 
@@ -388,9 +445,15 @@
   }
 
   .text-shadow,
-  .text-shadow-strong,
-  .text-shadow-cinematic {
+  .text-shadow-strong {
     text-shadow: 0 2px 16px rgb(0 0 0 / 0.85);
+  }
+
+  /* Hero titles: a dark drop for legibility plus a faint neon halo. */
+  .text-shadow-cinematic {
+    text-shadow:
+      0 2px 16px rgb(0 0 0 / 0.85),
+      0 0 42px rgb(255 63 142 / 0.28);
   }
 
   .divider {

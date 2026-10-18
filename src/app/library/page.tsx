@@ -133,7 +133,7 @@ export default function LibraryPage() {
                       className={cn(
                         "flex min-h-10 items-center gap-2 rounded-sm border px-4 text-sm font-medium transition-colors",
                         current
-                          ? "border-foreground bg-foreground text-background"
+                          ? "border-primary bg-primary text-primary-foreground"
                           : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",
                       )}
                     >

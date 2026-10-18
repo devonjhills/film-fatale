@@ -46,6 +46,7 @@ export function Navigation() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background">
+      <div className="neon-rule absolute inset-x-0 -bottom-px h-px" aria-hidden="true" />
       <div className="site-container flex h-16 items-center gap-6">
         <Link
           href="/"
@@ -77,7 +78,7 @@ export function Navigation() {
               className={cn(
                 "relative flex min-h-11 items-center px-3 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground",
                 isActive(link.href, link.match) &&
-                  "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-px after:bg-foreground",
+                  "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-px after:bg-primary",
               )}
             >
               {link.label}
@@ -90,7 +91,7 @@ export function Navigation() {
               className={cn(
                 "relative flex min-h-11 items-center px-3 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground",
                 pathname.startsWith("/library") &&
-                  "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-px after:bg-foreground",
+                  "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-px after:bg-primary",
               )}
             >
               Library

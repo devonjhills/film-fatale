@@ -27,7 +27,7 @@ export function ProgressBar({ value, className }: { value: number; className?: s
       aria-valuemax={100}
       className={cn("h-1 w-full overflow-hidden rounded-full bg-muted", className)}
     >
-      <div className="h-full bg-foreground" style={{ width: `${Math.min(value, 100)}%` }} />
+      <div className="h-full bg-primary" style={{ width: `${Math.min(value, 100)}%` }} />
     </div>
   );
 }

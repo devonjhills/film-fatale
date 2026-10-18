@@ -47,6 +47,7 @@ export function RotatingHeroSection({
       ) : (
         <div className="absolute inset-0 -z-20 bg-muted" />
       )}
+      <div className="art-grade absolute inset-0 -z-10" aria-hidden="true" />
       <div className="art-scrim absolute inset-0 -z-10" aria-hidden="true" />
 
       <div className="site-container flex min-h-[34rem] items-end pb-14 pt-24 md:min-h-[42rem] md:pb-20">

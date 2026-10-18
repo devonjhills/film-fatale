@@ -69,6 +69,7 @@ export function DetailsHero({
         ) : (
           <div className="size-full bg-muted" />
         )}
+        <div className="art-grade absolute inset-0" />
       </div>
       <div className="art-scrim absolute inset-0 -z-10" />
 

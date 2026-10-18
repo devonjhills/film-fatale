@@ -119,7 +119,7 @@ export function EpisodeTracker({ show, seasons }: EpisodeTrackerProps) {
               className={cn(
                 "flex min-h-11 min-w-14 items-center justify-center gap-1 rounded-sm border px-3 text-sm font-medium tabular-nums transition-colors",
                 isSelected
-                  ? "border-foreground bg-foreground text-background"
+                  ? "border-primary bg-primary text-primary-foreground"
                   : "border-input text-foreground hover:border-foreground/60",
                 !isSelected && p?.aired === 0 && "text-muted-foreground",
               )}
@@ -195,7 +195,7 @@ export function EpisodeTracker({ show, seasons }: EpisodeTrackerProps) {
                     className={cn(
                       "flex h-11 w-full items-center justify-center rounded-sm border text-sm font-medium tabular-nums transition-colors",
                       isWatched
-                        ? "border-foreground bg-foreground text-background"
+                        ? "border-primary bg-primary text-primary-foreground"
                         : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",
                       !hasAired && "border-dashed border-border text-muted-foreground/50 hover:border-border hover:text-muted-foreground/50",
                     )}
