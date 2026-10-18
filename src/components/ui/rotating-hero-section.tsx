@@ -73,7 +73,7 @@ export function RotatingHeroSection({
           </p>
 
           {item.overview && (
-            <p className="text-shadow-cinematic mt-4 line-clamp-3 max-w-xl text-base leading-7 text-white/85 md:text-lg md:leading-8">
+            <p className="text-shadow-cinematic mt-4 line-clamp-3 max-w-xl font-serif text-lg leading-[1.65] text-white/90 md:text-xl">
               {item.overview}
             </p>
           )}

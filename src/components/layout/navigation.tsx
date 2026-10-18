@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Bookmark, LogOut, Menu, Search, X } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/providers/auth-provider";
-import { ToneToggle } from "@/components/layout/tone-toggle";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -118,8 +117,6 @@ export function Navigation() {
               className="h-10 bg-card pl-10"
             />
           </form>
-
-          <ToneToggle />
 
           <Button variant="ghost" size="icon" asChild className="lg:hidden">
             <Link href="/search" aria-label="Search">

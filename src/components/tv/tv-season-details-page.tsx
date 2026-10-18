@@ -133,7 +133,7 @@ export function TVSeasonDetailsPage({
             )}
           </p>
           {season.overview && (
-            <p className="mt-5 max-w-[65ch] leading-7 text-foreground/90">{season.overview}</p>
+            <p className="reading-text mt-5 max-w-[62ch]">{season.overview}</p>
           )}
         </div>
       </header>

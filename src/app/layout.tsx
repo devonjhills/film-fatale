@@ -1,23 +1,26 @@
 import type { Metadata } from "next";
-import { Archivo, Bodoni_Moda } from "next/font/google";
+import { Instrument_Sans, Newsreader } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { Navigation } from "@/components/layout/navigation";
 import { Footer } from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
-import { TONE_SCRIPT } from "@/lib/tone";
 
-const archivo = Archivo({
+// Interface text: open, even letterforms that stay clear at small sizes.
+const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
   variable: "--font-ui",
   display: "swap",
 });
 
-const bodoni = Bodoni_Moda({
+// Headlines and reading text: a screen-first serif whose optical sizes
+// sharpen titles and soften long paragraphs.
+const newsreader = Newsreader({
   subsets: ["latin"],
   variable: "--font-display",
   axes: ["opsz"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -79,14 +82,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-US" data-tone="noir" suppressHydrationWarning>
+    <html lang="en-US">
       <head>
-        <script dangerouslySetInnerHTML={{ __html: TONE_SCRIPT }} />
         <link rel="preconnect" href="https://image.tmdb.org" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
       </head>
       <body
-        className={`${archivo.variable} ${bodoni.variable} min-h-screen flex flex-col`}
+        className={`${instrumentSans.variable} ${newsreader.variable} min-h-screen flex flex-col`}
       >
         <a href="#main-content" className="skip-link">
           Skip to content

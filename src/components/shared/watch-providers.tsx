@@ -15,25 +15,13 @@ export function StreamingOn({ providers, className }: StreamingOnProps) {
   if (!services.length) return null;
 
   return (
-    <div className={cn("border-t border-border pt-4", className)}>
-      <div className="flex items-baseline justify-between gap-3">
-        <p className="text-sm text-muted-foreground">Stream on</p>
-        {providers?.link && (
-          <a
-            href={providers.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-          >
-            All options
-          </a>
-        )}
-      </div>
-      <ul className="mt-3 flex flex-wrap gap-2">
+    <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-2", className)}>
+      <p className="text-sm text-muted-foreground">Stream on</p>
+      <ul className="flex flex-wrap gap-2">
         {services.map((service) => (
           <li
             key={service.name}
-            className="flex items-center gap-2 rounded-sm border border-input py-1 pl-1 pr-2.5 text-sm"
+            className="flex items-center gap-2 rounded-sm border border-input bg-background/40 py-1 pl-1 pr-2.5 text-sm"
           >
             <Image
               src={getImageUrl(service.logo_path, "logo", "w92")}
@@ -46,6 +34,16 @@ export function StreamingOn({ providers, className }: StreamingOnProps) {
           </li>
         ))}
       </ul>
+      {providers?.link && (
+        <a
+          href={providers.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+        >
+          All options
+        </a>
+      )}
     </div>
   );
 }

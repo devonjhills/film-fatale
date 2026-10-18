@@ -143,18 +143,6 @@
     outline-offset: 3px;
   }
 
-  /*
-   * Noir prints: every image in hard-contrast black and white — crushed
-   * blacks, hot whites. Color mode removes the filter. Toggled in the header.
-   */
-  img {
-    transition: filter 400ms ease;
-  }
-
-  html[data-tone="noir"] img {
-    filter: grayscale(1) contrast(1.35) brightness(0.95);
-  }
-
   ::selection {
     background: var(--paper);
     color: var(--black);
@@ -216,6 +204,29 @@
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 0.95;
+  }
+
+  /* Detail page titles: sized to sit beside a poster, not over it. */
+  .hero-title {
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    font-size: clamp(1.875rem, 4.6vw, 4.5rem);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1;
+  }
+
+  /* Overviews, biographies and other prose meant to be read. */
+  .reading-text {
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: rgb(239 237 232 / 0.9);
+  }
+
+  @media (min-width: 768px) {
+    .reading-text {
+      font-size: 1.1875rem;
+    }
   }
 
   .page-title {

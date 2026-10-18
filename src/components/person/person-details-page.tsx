@@ -183,7 +183,7 @@ export function PersonDetailsPage({
           />
 
           {shownBio.length > 0 && (
-            <div className="mt-8 max-w-[68ch] space-y-4 leading-7 text-foreground/90">
+            <div className="reading-text mt-8 max-w-[62ch] space-y-4">
               {shownBio.map((paragraph, index) => (
                 <p key={index}>{paragraph}</p>
               ))}
@@ -192,7 +192,7 @@ export function PersonDetailsPage({
                   type="button"
                   onClick={() => setBioExpanded(!bioExpanded)}
                   aria-expanded={bioExpanded}
-                  className="text-sm font-medium underline underline-offset-4 hover:text-muted-foreground"
+                  className="font-sans text-sm font-medium underline underline-offset-4 hover:text-muted-foreground"
                 >
                   {bioExpanded ? "Show less" : "Read full biography"}
                 </button>
