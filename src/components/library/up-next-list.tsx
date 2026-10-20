@@ -85,7 +85,7 @@ function UpNextRow({ item, onChange }: { item: ViewingHistoryItem; onChange: () 
             {item.title}
           </Link>
           {badge && (
-            <span className="rounded-sm bg-primary px-1.5 py-0.5 text-xs font-semibold tabular-nums text-primary-foreground">
+            <span className="rounded-sm bg-mint px-1.5 py-0.5 text-xs font-semibold tabular-nums text-background">
               {badge}
             </span>
           )}

@@ -195,7 +195,7 @@ export function EpisodeTracker({ show, seasons }: EpisodeTrackerProps) {
                     className={cn(
                       "flex h-11 w-full items-center justify-center rounded-sm border text-sm font-medium tabular-nums transition-colors",
                       isWatched
-                        ? "border-primary bg-primary text-primary-foreground"
+                        ? "border-mint bg-mint text-background"
                         : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",
                       !hasAired && "border-dashed border-border text-muted-foreground/50 hover:border-border hover:text-muted-foreground/50",
                     )}

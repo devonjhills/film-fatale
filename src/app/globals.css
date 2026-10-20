@@ -3,24 +3,26 @@
 
 /*
  * Film Fatale — neo-noir night palette.
- * A blue-black city night lit by sodium streetlight. Sodium amber is the one
- * interface accent (primary actions, selection, progress); magenta and cyan
- * neon only ever appear as light — through the blinds and in hero haze.
- * Red is reserved for destructive actions.
+ * A violet-black city night under neon signs, after Aura Dark and Tokyo
+ * Night. Neon violet is the interface accent (primary actions, selection,
+ * focus); mint green marks progress — watched episodes, new-episode badges,
+ * progress bars. Blue and pink neon only ever appear as light, through the
+ * blinds and in hero haze. Red is reserved for destructive actions.
  */
 :root {
   color-scheme: dark;
 
-  --night: #04060b;
-  --graphite: #0b0f16;
-  --graphite-raised: #111722;
-  --smoke: #1d2532;
-  --ash: #8f99aa;
-  --paper: #e9ecf1;
-  --sodium: #ff9d42;
-  --neon-magenta: #ff3f8e;
-  --neon-cyan: #3fd8f2;
-  --blood: #e0334a;
+  --night: #0c0b12;
+  --graphite: #13121b;
+  --graphite-raised: #1a1825;
+  --smoke: #2a2738;
+  --ash: #9b97b3;
+  --paper: #e8e6f0;
+  --violet: #a277ff;
+  --mint: #61ffca;
+  --neon-blue: #7aa2f7;
+  --neon-pink: #f694ff;
+  --blood: #f7768e;
 
   --background: var(--night);
   --foreground: var(--paper);
@@ -28,19 +30,19 @@
   --card-foreground: var(--paper);
   --popover: var(--graphite-raised);
   --popover-foreground: var(--paper);
-  --primary: var(--sodium);
+  --primary: var(--violet);
   --primary-foreground: var(--night);
   --secondary: var(--graphite-raised);
   --secondary-foreground: var(--paper);
   --muted: var(--graphite);
   --muted-foreground: var(--ash);
-  --accent: #18202c;
+  --accent: #201d2e;
   --accent-foreground: var(--paper);
   --destructive: var(--blood);
   --destructive-foreground: #ffffff;
   --border: var(--smoke);
-  --input: #2c3646;
-  --ring: var(--sodium);
+  --input: #34304a;
+  --ring: var(--violet);
   --radius: 0.25rem;
 }
 
@@ -64,9 +66,10 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-sodium: var(--sodium);
-  --color-neon-magenta: var(--neon-magenta);
-  --color-neon-cyan: var(--neon-cyan);
+  --color-violet: var(--violet);
+  --color-mint: var(--mint);
+  --color-neon-blue: var(--neon-blue);
+  --color-neon-pink: var(--neon-pink);
   --font-sans: var(--font-ui);
   --font-serif: var(--font-display);
   --radius-sm: var(--radius);
@@ -101,8 +104,8 @@
 
   /*
    * Neon through venetian blinds: a city sign outside the window, cast over
-   * the whole page. The light is sodium amber nearest the window, shading
-   * into magenta and a little cyan as it falls across the room; the slats
+   * the whole page. The light is violet nearest the window, shading into
+   * blue and a little mint as it falls across the room; the slats
    * cut it into bands. Sits above content but below the header, menus and
    * dialogs (z-50).
    */
@@ -114,9 +117,9 @@
     content: "";
     background: linear-gradient(
       to bottom left,
-      rgb(255 157 66 / 0.11) 0%,
-      rgb(255 63 142 / 0.075) 30%,
-      rgb(63 216 242 / 0.04) 50%,
+      rgb(162 119 255 / 0.12) 0%,
+      rgb(122 162 247 / 0.07) 30%,
+      rgb(97 255 202 / 0.04) 50%,
       transparent 62%
     );
     mask-image: repeating-linear-gradient(-24deg, #000 0 1.75rem, transparent 1.75rem 3.25rem);
@@ -171,7 +174,7 @@
   }
 
   ::selection {
-    background: var(--sodium);
+    background: var(--violet);
     color: var(--night);
   }
 }
@@ -184,7 +187,7 @@
     z-index: 100;
     translate: 0 -200%;
     border-radius: var(--radius);
-    background: var(--sodium);
+    background: var(--violet);
     color: var(--night);
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
@@ -220,24 +223,24 @@
   }
 
   /*
-   * Backdrop grade: a teal-and-sodium wash in overlay blend, so stills pick
+   * Backdrop grade: a mint-and-violet wash in overlay blend, so stills pick
    * up the city's light without losing their own color.
    */
   .art-grade {
     background: linear-gradient(
       100deg,
-      rgb(63 216 242 / 0.3) 0%,
-      rgb(17 23 34 / 0) 50%,
-      rgb(255 157 66 / 0.32) 100%
+      rgb(97 255 202 / 0.22) 0%,
+      rgb(26 24 37 / 0) 50%,
+      rgb(162 119 255 / 0.34) 100%
     );
     mix-blend-mode: overlay;
   }
 
   .art-scrim {
     background:
-      radial-gradient(60% 50% at 0% 100%, rgb(255 63 142 / 0.14), transparent 70%),
-      linear-gradient(to top, var(--background) 0%, rgb(4 6 11 / 0.75) 35%, transparent 75%),
-      linear-gradient(to right, rgb(4 6 11 / 0.88), transparent 70%);
+      radial-gradient(60% 50% at 0% 100%, rgb(162 119 255 / 0.16), transparent 70%),
+      linear-gradient(to top, var(--background) 0%, rgb(12 11 18 / 0.75) 35%, transparent 75%),
+      linear-gradient(to right, rgb(12 11 18 / 0.88), transparent 70%);
   }
 
   /* The header's lower edge: a single neon tube. */
@@ -245,11 +248,11 @@
     background: linear-gradient(
       to right,
       transparent,
-      rgb(255 63 142 / 0.95) 30%,
-      rgb(255 157 66 / 1) 70%,
+      rgb(162 119 255 / 0.95) 30%,
+      rgb(97 255 202 / 0.9) 70%,
       transparent
     );
-    box-shadow: 0 0 14px 1px rgb(255 63 142 / 0.5);
+    box-shadow: 0 0 14px 1px rgb(162 119 255 / 0.5);
   }
 
   .display-title {
@@ -274,7 +277,7 @@
     font-family: var(--font-display), ui-serif, Georgia, serif;
     font-size: 1.125rem;
     line-height: 1.7;
-    color: rgb(233 236 241 / 0.9);
+    color: rgb(232 230 240 / 0.9);
   }
 
   @media (min-width: 768px) {
@@ -378,8 +381,8 @@
   }
 
   .poster-card:hover {
-    border-color: rgb(255 157 66 / 0.6);
-    box-shadow: 0 0 22px rgb(255 157 66 / 0.14);
+    border-color: rgb(162 119 255 / 0.6);
+    box-shadow: 0 0 22px rgb(162 119 255 / 0.16);
   }
 
   .poster-card-art {
@@ -401,7 +404,7 @@
   .poster-frame {
     border-radius: var(--radius);
     background: var(--muted);
-    outline: 1px solid rgb(233 236 241 / 0.1);
+    outline: 1px solid rgb(232 230 240 / 0.1);
     outline-offset: -1px;
   }
 
@@ -453,7 +456,7 @@
   .text-shadow-cinematic {
     text-shadow:
       0 2px 16px rgb(0 0 0 / 0.85),
-      0 0 42px rgb(255 63 142 / 0.28);
+      0 0 42px rgb(162 119 255 / 0.3);
   }
 
   .divider {
