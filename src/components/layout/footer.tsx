@@ -5,7 +5,7 @@ const links = [
   { href: "/about", label: "About" },
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
-  { href: "/admin", label: "Owner", nofollow: true },
+  { href: "/library", label: "Owner", nofollow: true },
 ];
 
 export function Footer() {

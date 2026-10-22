@@ -1,10 +1,10 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import type { AccessUser } from "@/lib/access-auth";
+import type { SessionUser } from "@/lib/auth";
 
 type AuthContextType = {
-  user: AccessUser | null;
+  user: SessionUser | null;
   loading: boolean;
   signOut: () => void;
 };
@@ -12,7 +12,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AccessUser | null>(null);
+  const [user, setUser] = useState<SessionUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,10 +21,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     fetch("/api/me", { cache: "no-store", signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) return null;
-        const data = (await response.json()) as { user: AccessUser | null };
+        const data = (await response.json()) as { user: SessionUser | null };
         return data.user;
       })
-      .then((accessUser) => setUser(accessUser))
+      .then((sessionUser) => setUser(sessionUser))
       .catch((error: unknown) => {
         if (error instanceof Error && error.name !== "AbortError") {
           setUser(null);
@@ -36,7 +36,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = () => {
-    window.location.assign("/cdn-cgi/access/logout");
+    void fetch("/api/auth/signout", { method: "POST" })
+      .catch(() => undefined)
+      .finally(() => window.location.assign("/"));
   };
 
   return (

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/access-auth";
+import { getSession } from "@/lib/auth";
 import type { ViewingHistoryItem, WatchStatus } from "@/lib/types";
 import { hasDatabase, sql } from "@/lib/db";
 import {

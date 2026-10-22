@@ -8,13 +8,14 @@ Cloudflare Workers.
 
 - Next.js 15 and React 19
 - Cloudflare Workers via the OpenNext adapter
-- Cloudflare Access for single-owner authentication
+- Sign in with Google for a single owner
 - Cloudflare D1 for viewing and episode history
 - Server-side TMDB proxy so the API key never reaches the browser
 
-The entire production hostname should be protected by Cloudflare Access. The
-application validates the Access JWT again and only accepts the email configured
-in `CLOUDFLARE_ACCESS_ALLOWED_EMAIL`.
+Browsing is public. The library and every write need the owner to sign in with
+Google, and the callback only accepts the verified email in `ALLOWED_EMAIL`.
+After that, requests are checked against a signed session cookie, with no
+database query or outside request.
 
 ## Local development
 
@@ -28,7 +29,8 @@ npm run dev
 ```
 
 Add `TMDB_API_KEY` and your development email to `.env.local`. Local development
-uses the stable `APP_OWNER_ID` identity without requiring a Cloudflare login.
+uses the stable `APP_OWNER_ID` identity without signing in; set
+`DEV_AUTH_DISABLED=true` to see the signed-out site.
 
 ## Commands
 
@@ -46,9 +48,10 @@ npm run cf-typegen          # Regenerate Cloudflare binding types
 | Variable | Purpose |
 | --- | --- |
 | `TMDB_API_KEY` | Server-only TMDB API key |
-| `CLOUDFLARE_ACCESS_TEAM_DOMAIN` | Access team domain, such as `team.cloudflareaccess.com` |
-| `CLOUDFLARE_ACCESS_AUD` | Audience tag for the Access application |
-| `CLOUDFLARE_ACCESS_ALLOWED_EMAIL` | The only email the app accepts |
+| `GOOGLE_CLIENT_ID` | OAuth client ID from Google Cloud Console |
+| `GOOGLE_CLIENT_SECRET` | OAuth client secret |
+| `ALLOWED_EMAIL` | The only Google account allowed to sign in |
+| `AUTH_SECRET` | 32+ random characters that sign session cookies |
 | `APP_OWNER_ID` | Stable database owner key; keep it unchanged |
 
 The D1 binding is named `DB` in `wrangler.jsonc`. Do not commit secrets; use
@@ -57,7 +60,7 @@ Wrangler secrets for production values.
 ## Deployment
 
 See [CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md) for the external Cloudflare steps,
-database setup, Access configuration, and deployment verification.
+database setup, Google sign-in, and deployment verification.
 
 The production Worker is connected to the GitHub `main` branch through
 Cloudflare Workers Builds. A successful build from `main` automatically updates

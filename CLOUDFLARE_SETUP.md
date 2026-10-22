@@ -24,9 +24,10 @@ Run each command and type the value only into Wrangler's hidden prompt:
 
 ```bash
 npx wrangler secret put TMDB_API_KEY
-npx wrangler secret put CLOUDFLARE_ACCESS_TEAM_DOMAIN
-npx wrangler secret put CLOUDFLARE_ACCESS_AUD
-npx wrangler secret put CLOUDFLARE_ACCESS_ALLOWED_EMAIL
+npx wrangler secret put GOOGLE_CLIENT_ID
+npx wrangler secret put GOOGLE_CLIENT_SECRET
+npx wrangler secret put ALLOWED_EMAIL
+npx wrangler secret put AUTH_SECRET     # openssl rand -base64 32
 npx wrangler secret put APP_OWNER_ID
 ```
 
@@ -41,23 +42,24 @@ npm run deploy:cloudflare
 The default `*.workers.dev` hostname and branch preview URLs are disabled.
 Production is served only from the custom domains declared in `wrangler.jsonc`.
 
-## 4. Protect the whole hostname with Access
+## 4. Set up Google sign-in
 
-In the Cloudflare dashboard:
+1. In Google Cloud Console, go to **APIs & Services > OAuth consent screen**
+   and create an **External** app. Add your email as a test user; the app can
+   stay in Testing mode.
+2. Under **Credentials**, create an **OAuth client ID** of type **Web
+   application**.
+3. Add both authorized redirect URIs:
+   - `https://filmfatale.app/api/auth/callback`
+   - `https://www.filmfatale.app/api/auth/callback`
+4. Put the client ID and secret into the `GOOGLE_CLIENT_ID` and
+   `GOOGLE_CLIENT_SECRET` Worker secrets, and your exact address into
+   `ALLOWED_EMAIL`.
+5. Redeploy, then sign in from the footer's Owner link.
 
-1. Go to **Zero Trust > Access controls > Applications**.
-2. Add a **Self-hosted** application.
-3. Add both `filmfatale.app` and `www.filmfatale.app`, with no path
-   restriction.
-4. Create an **Allow** policy whose Include selector is **Emails** and whose
-   value is only your exact email address. Do not use Everyone, an email domain,
-   or all valid emails.
-5. Use the One-time PIN identity provider unless you prefer to connect Google.
-6. Copy the application's **AUD tag** into the
-   `CLOUDFLARE_ACCESS_AUD` Worker secret.
-7. Set `CLOUDFLARE_ACCESS_TEAM_DOMAIN` to the team domain shown under Zero Trust
-   settings, such as `your-team.cloudflareaccess.com`.
-8. Redeploy after changing either secret.
+Cloudflare Access is no longer used. Delete the Access application for these
+hostnames, or it will keep intercepting visitors before they reach the Worker,
+and remove the old `CLOUDFLARE_ACCESS_*` secrets with `npx wrangler secret delete`.
 
 ## 5. Verify the production data — complete
 
@@ -78,7 +80,8 @@ The production deployment is fully hosted on Cloudflare:
 
 1. `filmfatale.app` and `www.filmfatale.app` are attached as Worker Custom
    Domains with valid TLS.
-2. The Access application covers both hostnames and uses the owner-only policy.
+2. Browsing is public; the library and all writes require the owner's Google
+   sign-in.
 3. D1 data and authenticated writes have been verified.
 4. TMDB browsing, ratings, watch history, and episode tracking run through the
-   protected Worker.
+   Worker.

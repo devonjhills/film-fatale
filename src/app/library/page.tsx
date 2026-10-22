@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { mutate as seed } from "swr";
-import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { ViewingHistoryItem } from "@/lib/types";
 import { useAuth } from "@/hooks/useAuth";
 import { libraryItemKey, useLibrary } from "@/lib/hooks/use-library";
@@ -89,7 +89,7 @@ export default function LibraryPage() {
   const [panelOpen, setPanelOpen] = useState(false);
 
   if (!authLoading && !user) {
-    redirect("/admin");
+    return <SignIn error={searchParams.get("auth")} />;
   }
 
   const selectTab = (next: Tab) => {
@@ -233,6 +233,30 @@ export default function LibraryPage() {
           pageLink
         />
       )}
+    </div>
+  );
+}
+
+const SIGN_IN_ERRORS: Record<string, string> = {
+  denied: "That Google account doesn't have access.",
+  failed: "Sign-in didn't finish. Try again.",
+};
+
+function SignIn({ error }: { error: string | null }) {
+  const message = error ? SIGN_IN_ERRORS[error] : null;
+  return (
+    <div className="site-container flex min-h-[60vh] flex-col items-center justify-center py-16 text-center">
+      <h1 className="page-title">Library</h1>
+      <p className="page-lede mt-4">Sign in to see your library.</p>
+      {message && (
+        <p role="alert" className="mt-4 text-sm text-destructive">
+          {message}
+        </p>
+      )}
+      <Button asChild size="lg" className="mt-8">
+        {/* A plain link: the sign-in is a full-page redirect to Google. */}
+        <a href="/api/auth/google">Sign in with Google</a>
+      </Button>
     </div>
   );
 }

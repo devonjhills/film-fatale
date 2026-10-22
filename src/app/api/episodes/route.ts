@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/access-auth";
+import { getSession } from "@/lib/auth";
 import { hasDatabase } from "@/lib/db";
 import {
   airedSeasons,
