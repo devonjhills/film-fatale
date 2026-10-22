@@ -42,7 +42,7 @@ export function getShowInfo(tmdbId: number) {
   });
 }
 
-/** Aired episode count per regular season, in order. */
+/** Episode and aired-episode counts per regular season, in order. */
 export function airedSeasons(show: ShowInfo) {
   const last = show.last_episode_to_air;
   return show.seasons
@@ -50,6 +50,7 @@ export function airedSeasons(show: ShowInfo) {
     .sort((a, b) => a.season_number - b.season_number)
     .map((season) => ({
       season_number: season.season_number,
+      episode_count: season.episode_count,
       aired: !last
         ? 0
         : season.season_number < last.season_number

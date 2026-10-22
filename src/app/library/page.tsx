@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { mutate as seed } from "swr";
 import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { ViewingHistoryItem } from "@/lib/types";
 import { useAuth } from "@/hooks/useAuth";
-import { useLibrary } from "@/lib/hooks/use-library";
+import { libraryItemKey, useLibrary } from "@/lib/hooks/use-library";
 import { UpNextList } from "@/components/library/up-next-list";
 import { LibraryTile } from "@/components/library/library-tile";
+import { LibraryPanel } from "@/components/library/library-panel";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,6 +85,8 @@ export default function LibraryPage() {
   const [media, setMedia] = useState<MediaFilter>("all");
   const [query, setQuery] = useState("");
   const { items, error, isLoading, mutate } = useLibrary(!!user);
+  const [active, setActive] = useState<ViewingHistoryItem | null>(null);
+  const [panelOpen, setPanelOpen] = useState(false);
 
   if (!authLoading && !user) {
     redirect("/admin");
@@ -96,6 +100,13 @@ export default function LibraryPage() {
   };
 
   const refresh = () => void mutate();
+
+  const openPanel = (item: ViewingHistoryItem) => {
+    // The list row is current, so the panel can open without a request.
+    void seed(libraryItemKey(item), { items: [item] }, { revalidate: false });
+    setActive(item);
+    setPanelOpen(true);
+  };
   const all = items || [];
   const counts = { watching: 0, plan_to_watch: 0, completed: 0 } as Record<Tab, number>;
   for (const item of all) counts[tabOf(item)]++;
@@ -203,15 +214,25 @@ export default function LibraryPage() {
         ) : shown.length === 0 ? (
           <p className="py-16 text-center text-muted-foreground">Nothing matches these filters.</p>
         ) : tab === "watching" ? (
-          <UpNextList items={shown} onChange={refresh} />
+          <UpNextList items={shown} onChange={refresh} onOpen={openPanel} />
         ) : (
           <div className="poster-grid">
             {shown.map((item) => (
-              <LibraryTile key={item.id} item={item} onChange={refresh} />
+              <LibraryTile key={item.id} item={item} onOpen={openPanel} />
             ))}
           </div>
         )}
       </div>
+
+      {active && (
+        <LibraryPanel
+          meta={active}
+          initial={active}
+          open={panelOpen}
+          onOpenChange={setPanelOpen}
+          pageLink
+        />
+      )}
     </div>
   );
 }

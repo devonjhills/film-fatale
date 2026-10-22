@@ -1,25 +1,28 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { ViewingHistoryItem } from "@/lib/types";
 import { getImageUrl } from "@/lib/api";
 import { Film, Star } from "@/components/ui/icons";
-import { ItemMenu } from "./item-menu";
 import { newEpisodesLabel } from "./progress";
 
 interface LibraryTileProps {
   item: ViewingHistoryItem;
-  onChange: () => void;
+  onOpen: (item: ViewingHistoryItem) => void;
 }
 
-/** A poster tile with your rating and a menu for moving it between lists. */
-export function LibraryTile({ item, onChange }: LibraryTileProps) {
+/** A poster tile with your rating. Opens the library panel. */
+export function LibraryTile({ item, onOpen }: LibraryTileProps) {
   const poster = getImageUrl(item.poster_path, "poster", "w342");
   const year = item.release_date ? new Date(item.release_date).getUTCFullYear() : null;
   const badge = item.progress ? newEpisodesLabel(item.progress) : null;
 
   return (
     <article className="group relative min-w-0">
-      <Link href={`/${item.media_type}/${item.tmdb_id}`} className="poster-card">
+      <button
+        type="button"
+        onClick={() => onOpen(item)}
+        aria-haspopup="dialog"
+        className="poster-card w-full text-left"
+      >
         <div className="poster-card-art">
           {poster ? (
             <Image src={poster} alt="" fill sizes="(max-width: 639px) 33vw, 180px" className="object-cover" />
@@ -52,12 +55,7 @@ export function LibraryTile({ item, onChange }: LibraryTileProps) {
             )}
           </p>
         </div>
-      </Link>
-      <ItemMenu
-        item={item}
-        onChange={onChange}
-        className="absolute right-1.5 top-1.5 bg-black/70 text-white hover:bg-black/85 hover:text-white"
-      />
+      </button>
     </article>
   );
 }

@@ -569,7 +569,7 @@ export interface ShowProgress {
   last_aired: EpisodeRef | null;
   next_air_date: string | null;
   ended: boolean;
-  seasons: { season_number: number; aired: number; watched: number }[];
+  seasons: { season_number: number; episode_count: number; aired: number; watched: number }[];
 }
 
 // Watch Sessions (for tracking multiple viewings)

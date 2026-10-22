@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Film, MonitorPlay, Star } from "@/components/ui/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getImageUrl } from "@/lib/api";
-import { WatchStatusButton } from "@/components/shared/watch-status-button";
+import { LibraryButton } from "@/components/library/library-panel";
 import { ShareButton } from "@/components/ui/share-button";
 import { TrailerModal } from "@/components/ui/trailer-modal";
 import { StreamingOn } from "@/components/shared/watch-providers";
@@ -140,14 +140,16 @@ export function DetailsHero({
 
             <div className="mt-7 flex flex-wrap gap-3">
               {trailer && <TrailerModal trailer={trailer} title={title} size="lg" />}
-              <WatchStatusButton
-                tmdb_id={item.id}
-                media_type={mediaType}
-                title={title}
-                poster_path={item.poster_path}
-                overview={item.overview}
-                release_date={rawReleaseDate}
-                vote_average={item.vote_average}
+              <LibraryButton
+                meta={{
+                  tmdb_id: item.id,
+                  media_type: mediaType,
+                  title,
+                  poster_path: item.poster_path,
+                  overview: item.overview,
+                  release_date: rawReleaseDate,
+                  vote_average: item.vote_average,
+                }}
                 size="lg"
               />
               <ShareButton />

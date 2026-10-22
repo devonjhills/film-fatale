@@ -2,35 +2,34 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import type { ViewingHistoryItem } from "@/lib/types";
 import { getImageUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Check, Film } from "@/components/ui/icons";
 import { saveLibraryItem, setEpisodeWatched } from "@/lib/hooks/use-library";
 import { formatDate } from "@/lib/utils";
-import { ItemMenu } from "./item-menu";
 import { ProgressBar, episodeLabel, newEpisodesLabel, progressSummary } from "./progress";
 
 interface UpNextListProps {
   items: ViewingHistoryItem[];
   onChange: () => void;
+  onOpen: (item: ViewingHistoryItem) => void;
 }
 
 /** In-progress shows and films, each with its next step one tap away. */
-export function UpNextList({ items, onChange }: UpNextListProps) {
+export function UpNextList({ items, onChange, onOpen }: UpNextListProps) {
   return (
     <ol className="divide-y divide-border border-y border-border">
       {items.map((item) => (
-        <UpNextRow key={item.id} item={item} onChange={onChange} />
+        <UpNextRow key={item.id} item={item} onChange={onChange} onOpen={onOpen} />
       ))}
     </ol>
   );
 }
 
-function UpNextRow({ item, onChange }: { item: ViewingHistoryItem; onChange: () => void }) {
+function UpNextRow({ item, onChange, onOpen }: { item: ViewingHistoryItem } & Omit<UpNextListProps, "items">) {
   const [saving, setSaving] = useState(false);
-  const href = `/${item.media_type}/${item.tmdb_id}`;
+  const open = () => onOpen(item);
   const poster = getImageUrl(item.poster_path, "poster", "w185");
   const progress = item.progress;
   const next = progress?.next_episode;
@@ -69,7 +68,7 @@ function UpNextRow({ item, onChange }: { item: ViewingHistoryItem; onChange: () 
 
   return (
     <li className="grid grid-cols-[4rem_minmax(0,1fr)] gap-x-4 gap-y-3 py-4 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-center sm:gap-x-6">
-      <Link href={href} className="poster-frame relative row-span-2 aspect-[2/3] overflow-hidden sm:row-span-1" tabIndex={-1}>
+      <button type="button" onClick={open} className="poster-frame relative row-span-2 aspect-[2/3] overflow-hidden sm:row-span-1" tabIndex={-1} aria-hidden="true">
         {poster ? (
           <Image src={poster} alt="" fill sizes="72px" className="object-cover" />
         ) : (
@@ -77,13 +76,18 @@ function UpNextRow({ item, onChange }: { item: ViewingHistoryItem; onChange: () 
             <Film className="size-5 text-muted-foreground/50" aria-hidden="true" />
           </span>
         )}
-      </Link>
+      </button>
 
       <div className="min-w-0 self-center">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <Link href={href} className="font-medium hover:underline hover:underline-offset-4">
+          <button
+            type="button"
+            onClick={open}
+            aria-haspopup="dialog"
+            className="text-left font-medium hover:underline hover:underline-offset-4"
+          >
             {item.title}
-          </Link>
+          </button>
           {badge && (
             <span className="rounded-sm bg-mint px-1.5 py-0.5 text-xs font-semibold tabular-nums text-background">
               {badge}
@@ -119,7 +123,9 @@ function UpNextRow({ item, onChange }: { item: ViewingHistoryItem; onChange: () 
             Mark watched
           </Button>
         )}
-        <ItemMenu item={item} onChange={onChange} />
+        <Button size="sm" variant="ghost" onClick={open} aria-haspopup="dialog">
+          {item.media_type === "tv" ? "Episodes" : "Details"}
+        </Button>
       </div>
     </li>
   );

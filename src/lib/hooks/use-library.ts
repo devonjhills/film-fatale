@@ -93,3 +93,27 @@ export function useEpisodeState(tmdbId: number, enabled: boolean) {
     { revalidateOnFocus: false },
   );
 }
+
+export const libraryItemKey = (item: Pick<LibraryMeta, "tmdb_id" | "media_type">) =>
+  `${LIBRARY_KEY}?tmdb_id=${item.tmdb_id}&media_type=${item.media_type}`;
+
+/**
+ * One title's library row, or null when it isn't in the library. Pass the
+ * row you already have (from the library list) to skip the request.
+ */
+export function useLibraryItem(
+  meta: Pick<LibraryMeta, "tmdb_id" | "media_type">,
+  enabled: boolean,
+  initial?: ViewingHistoryItem,
+) {
+  const { data, isLoading, mutate } = useSWR<{ items: ViewingHistoryItem[] }>(
+    enabled ? libraryItemKey(meta) : null,
+    (url: string) => request(url),
+    {
+      fallbackData: initial ? { items: [initial] } : undefined,
+      revalidateOnMount: !initial,
+      revalidateOnFocus: false,
+    },
+  );
+  return { item: data ? (data.items[0] ?? null) : undefined, isLoading, mutate };
+}

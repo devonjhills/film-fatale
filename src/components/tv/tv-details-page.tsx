@@ -11,10 +11,8 @@ import { CastGrid, CrewList } from "@/components/person/cast-grid";
 import { MediaGrid } from "@/components/shared/media-grid";
 import { Section, FactList } from "@/components/shared/section";
 import { ExternalLinks } from "@/components/ui/external-links";
-import { EpisodeTracker } from "@/components/tv/episode-tracker";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
-import { useAuth } from "@/components/providers/auth-provider";
 import type { TVShowDetails } from "@/lib/types";
 
 interface TVDetailsPageProps {
@@ -28,7 +26,6 @@ export function TVDetailsPage({
 }: TVDetailsPageProps) {
   const { tvShow, isLoading, isError } = useTVDetails(tvId, initialTVShow);
   const { watchProviders } = useTVWatchProviders(tvId);
-  const { user } = useAuth();
 
   if (isLoading) {
     return <DetailsPageSkeleton />;
@@ -185,21 +182,6 @@ export function TVDetailsPage({
               })}
             </div>
           </Section>
-        )}
-
-        {user && tvShow.seasons && tvShow.seasons.length > 0 && (
-          <EpisodeTracker
-            show={{
-              tmdb_id: tvShow.id,
-              media_type: "tv",
-              title: tvShow.name,
-              poster_path: tvShow.poster_path,
-              overview: tvShow.overview,
-              release_date: tvShow.first_air_date,
-              vote_average: tvShow.vote_average,
-            }}
-            seasons={tvShow.seasons}
-          />
         )}
 
         {mainCast.length > 0 && (
