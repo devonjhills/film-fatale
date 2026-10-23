@@ -131,8 +131,12 @@ export default function LibraryPage() {
                 : `${newCount} shows you follow have new episodes.`}
             </p>
           )}
-          <nav aria-label="Library lists" className="mt-8">
-            <ul className="flex flex-wrap gap-2">
+          {/* One row on phones too; it scrolls sideways rather than wrapping. */}
+          <nav
+            aria-label="Library lists"
+            className="-mx-4 mt-8 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:px-0"
+          >
+            <ul className="flex w-max gap-1.5 sm:gap-2">
               {TABS.map(({ value, label }) => {
                 const current = value === tab;
                 return (
@@ -142,7 +146,7 @@ export default function LibraryPage() {
                       onClick={() => selectTab(value)}
                       aria-current={current ? "page" : undefined}
                       className={cn(
-                        "flex min-h-10 items-center gap-2 rounded-sm border px-4 text-sm font-medium transition-colors",
+                        "flex min-h-10 items-center gap-1.5 whitespace-nowrap rounded-sm border px-3 text-[0.8125rem] font-medium transition-colors sm:gap-2 sm:px-4 sm:text-sm",
                         current
                           ? "border-primary bg-primary text-primary-foreground"
                           : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",

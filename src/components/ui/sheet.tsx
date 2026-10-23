@@ -11,7 +11,11 @@ const SheetTitle = DialogPrimitive.Title;
 
 const SheetDescription = DialogPrimitive.Description;
 
-/** A panel that rises from the bottom on phones and slides in from the right on larger screens. */
+/**
+ * A panel that rises from the bottom on phones and slides in from the right on
+ * larger screens. The panel itself doesn't scroll, so the close button stays put;
+ * give the scrolling part of its children `min-h-0 flex-1 overflow-y-auto`.
+ */
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
@@ -21,8 +25,8 @@ const SheetContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 flex max-h-[88dvh] flex-col overflow-y-auto overscroll-contain border-t border-border bg-popover duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
-        "sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[28rem] sm:border-l sm:border-t-0 sm:data-[state=closed]:slide-out-to-right sm:data-[state=open]:slide-in-from-right",
+        "fixed inset-x-0 bottom-0 z-50 flex max-h-[90dvh] flex-col overflow-hidden rounded-t-md border-t border-border bg-popover shadow-[0_-24px_60px_rgb(0_0_0/0.5)] duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        "sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[28rem] sm:rounded-none sm:border-l sm:shadow-[-24px_0_60px_rgb(0_0_0/0.5)] sm:border-t-0 sm:data-[state=closed]:slide-out-to-right sm:data-[state=open]:slide-in-from-right",
         className,
       )}
       {...props}

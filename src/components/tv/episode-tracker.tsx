@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { mutate as revalidate } from "swr";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Check } from "@/components/ui/icons";
 import {
   libraryItemKey,
@@ -12,6 +13,9 @@ import {
 } from "@/lib/hooks/use-library";
 import { formatDate, cn } from "@/lib/utils";
 import { ProgressBar, progressSummary } from "@/components/library/progress";
+
+// Long-running shows pick their season from a menu instead of a wall of buttons.
+const SEASON_BUTTON_LIMIT = 12;
 
 interface EpisodeTrackerProps {
   show: LibraryMeta;
@@ -86,8 +90,12 @@ export function EpisodeTracker({ show, onChange }: EpisodeTrackerProps) {
       </div>
       <ProgressBar value={percent} className="mt-3" />
 
-      {seasons.length > 1 && (
-        <div className="mt-5 flex flex-wrap gap-1.5" role="group" aria-label="Season">
+      {seasons.length > 1 && seasons.length <= SEASON_BUTTON_LIMIT && (
+        <div
+          className="mt-5 grid grid-cols-[repeat(auto-fill,minmax(3.5rem,1fr))] gap-1.5"
+          role="group"
+          aria-label="Season"
+        >
           {seasons.map((s) => {
             const isSelected = season.season_number === s.season_number;
             const done = s.aired > 0 && s.watched >= s.aired;
@@ -98,7 +106,7 @@ export function EpisodeTracker({ show, onChange }: EpisodeTrackerProps) {
                 aria-pressed={isSelected}
                 onClick={() => setSelected(s.season_number)}
                 className={cn(
-                  "flex min-h-10 min-w-12 items-center justify-center gap-1 rounded-sm border px-2.5 text-sm font-medium tabular-nums transition-colors",
+                  "flex h-10 items-center justify-center gap-1 rounded-sm border px-1 text-sm font-medium tabular-nums transition-colors",
                   isSelected
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-input text-foreground hover:border-foreground/60",
@@ -106,23 +114,47 @@ export function EpisodeTracker({ show, onChange }: EpisodeTrackerProps) {
                 )}
               >
                 S{s.season_number}
-                {done && <Check className="size-3.5" weight="bold" aria-label="watched" />}
+                {done && (
+                  <Check
+                    className={cn("size-3.5", !isSelected && "text-mint")}
+                    weight="bold"
+                    aria-label="watched"
+                  />
+                )}
               </button>
             );
           })}
         </div>
       )}
 
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-2">
-        <p className="flex items-baseline gap-2 text-sm">
-          <span className="font-medium">Season {season.season_number}</span>
-          <span className="text-muted-foreground/50" aria-hidden="true">
-            ·
-          </span>
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+        <div className="flex min-w-0 items-center gap-3 text-sm">
+          {seasons.length > SEASON_BUTTON_LIMIT ? (
+            <Select
+              value={String(season.season_number)}
+              onValueChange={(value) => setSelected(Number(value))}
+            >
+              <SelectTrigger aria-label="Season" className="min-h-9 w-auto gap-2 font-medium">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                {seasons.map((s) => (
+                  <SelectItem key={s.season_number} value={String(s.season_number)}>
+                    Season {s.season_number}
+                    {s.aired > 0 && s.watched >= s.aired && (
+                      <span className="text-mint"> · watched</span>
+                    )}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <span className="font-medium">Season {season.season_number}</span>
+          )}
           <span className="tabular-nums text-muted-foreground">
             {season.aired > 0 ? `${season.watched} of ${season.aired} watched` : "Not aired yet"}
           </span>
-        </p>
+        </div>
         {season.aired > 0 && (
           <div className="flex gap-1">
             {season.watched < season.aired && (

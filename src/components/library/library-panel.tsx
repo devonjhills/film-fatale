@@ -64,7 +64,7 @@ export function LibraryPanel({ meta, open, onOpenChange, initial, pageLink }: Li
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent>
-        <header className="flex gap-4 border-b border-border p-5 pr-14">
+        <header className="flex shrink-0 gap-4 border-b border-border p-5 pr-14">
           <div className="poster-frame relative aspect-[2/3] w-14 shrink-0 overflow-hidden">
             {poster ? (
               <Image src={poster} alt="" fill sizes="56px" className="object-cover" />
@@ -75,7 +75,7 @@ export function LibraryPanel({ meta, open, onOpenChange, initial, pageLink }: Li
             )}
           </div>
           <div className="min-w-0 self-center">
-            <SheetTitle className="font-serif text-2xl font-medium leading-tight">
+            <SheetTitle className="line-clamp-2 font-serif text-2xl font-medium leading-tight">
               {meta.title}
             </SheetTitle>
             <SheetDescription className="mt-1 text-sm text-muted-foreground">
@@ -150,7 +150,7 @@ function PanelBody({
   };
 
   return (
-    <div className="space-y-8 p-5">
+    <div className="min-h-0 flex-1 space-y-8 overflow-y-auto overscroll-contain p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
       <section>
         <h3 className="text-sm font-medium">List</h3>
         <div className="mt-3 grid grid-cols-3 gap-1.5" role="group" aria-label="List">
@@ -164,7 +164,7 @@ function PanelBody({
                 disabled={saving || item === undefined}
                 onClick={() => !current && save({ status })}
                 className={cn(
-                  "flex min-h-11 items-center justify-center whitespace-nowrap rounded-sm border px-2 text-sm font-medium transition-colors disabled:opacity-60",
+                  "flex min-h-11 items-center justify-center whitespace-nowrap rounded-sm border px-1.5 text-[0.8125rem] font-medium transition-colors disabled:opacity-60 sm:text-sm",
                   current
                     ? "border-primary bg-primary text-primary-foreground disabled:opacity-100"
                     : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",
@@ -186,14 +186,11 @@ function PanelBody({
 
       {item && (
         <>
-          <section>
-            <h3 className="text-sm font-medium">Your rating</h3>
-            <RatingStars
-              value={item.rating || 0}
-              disabled={saving}
-              onChange={(rating) => save({ status: item.status, rating: rating || null })}
-            />
-          </section>
+          <RatingStars
+            value={item.rating || 0}
+            disabled={saving}
+            onChange={(rating) => save({ status: item.status, rating: rating || null })}
+          />
 
           <NotesField
             key={item.id}
@@ -208,7 +205,7 @@ function PanelBody({
               size="sm"
               disabled={saving}
               onClick={remove}
-              className="-ml-3 text-destructive hover:text-destructive"
+              className="-ml-3.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
             >
               Remove from library
             </Button>
@@ -228,33 +225,51 @@ function RatingStars({
   disabled: boolean;
   onChange: (value: number) => void;
 }) {
+  // Hovering previews a rating before you pick it.
+  const [hover, setHover] = useState(0);
+  const shown = hover || value;
+
   return (
-    <div className="mt-2 flex items-center">
-      {Array.from({ length: 10 }, (_, i) => {
-        const star = i + 1;
-        const filled = star <= value;
-        return (
-          <button
-            key={star}
-            type="button"
-            disabled={disabled}
-            onClick={() => onChange(value === star ? 0 : star)}
-            aria-label={`${star} out of 10`}
-            aria-pressed={value === star}
-            className="flex size-8 items-center justify-center rounded-sm hover:bg-muted"
-          >
-            <Star
-              weight={filled ? "fill" : "regular"}
-              className={cn("size-5", filled ? "text-foreground" : "text-muted-foreground")}
-              aria-hidden="true"
-            />
-          </button>
-        );
-      })}
-      <span className="ml-2 text-sm tabular-nums text-muted-foreground">
-        {value > 0 ? `${value}/10` : "None"}
-      </span>
-    </div>
+    <section>
+      <div className="flex items-baseline justify-between gap-4">
+        <h3 className="text-sm font-medium">Your rating</h3>
+        <span className="text-sm tabular-nums text-muted-foreground">
+          {shown > 0 ? `${shown}/10` : "Not rated"}
+        </span>
+      </div>
+      <div
+        className="mt-3 grid grid-cols-10"
+        role="group"
+        aria-label="Your rating"
+        onMouseLeave={() => setHover(0)}
+      >
+        {Array.from({ length: 10 }, (_, i) => {
+          const star = i + 1;
+          const filled = star <= shown;
+          return (
+            <button
+              key={star}
+              type="button"
+              disabled={disabled}
+              onClick={() => onChange(value === star ? 0 : star)}
+              onMouseEnter={() => setHover(star)}
+              aria-label={`${star} out of 10`}
+              aria-pressed={value === star}
+              className="flex h-10 items-center justify-center rounded-sm transition-colors disabled:opacity-60"
+            >
+              <Star
+                weight={filled ? "fill" : "regular"}
+                className={cn(
+                  "size-5 transition-colors",
+                  filled ? "text-foreground" : "text-muted-foreground/70",
+                )}
+                aria-hidden="true"
+              />
+            </button>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
@@ -287,8 +302,10 @@ function NotesField({
         onChange={(event) => setNotes(event.target.value)}
         onBlur={commit}
         rows={3}
-        className="mt-2"
+        placeholder="Anything to remember"
+        className="mt-3"
       />
+      <p className="mt-2 text-xs text-muted-foreground">Saves when you leave the field.</p>
     </section>
   );
 }
