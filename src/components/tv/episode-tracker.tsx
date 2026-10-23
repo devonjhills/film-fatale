@@ -76,11 +76,11 @@ export function EpisodeTracker({ show, onChange }: EpisodeTrackerProps) {
   return (
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-sm">
-        <p>
-          <span className="font-medium tabular-nums">
-            {progress.watched_episodes} of {progress.aired_episodes}
-          </span>{" "}
-          <span className="text-muted-foreground">aired episodes</span>
+        <p className="text-muted-foreground">
+          <span className="font-medium tabular-nums text-foreground">{progress.watched_episodes}</span>
+          {" of "}
+          <span className="font-medium tabular-nums text-foreground">{progress.aired_episodes}</span>
+          {" aired episodes watched"}
         </p>
         <p className="text-muted-foreground">{progressSummary(progress)}</p>
       </div>
@@ -114,10 +114,12 @@ export function EpisodeTracker({ show, onChange }: EpisodeTrackerProps) {
       )}
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm">
+        <p className="flex items-baseline gap-2 text-sm">
           <span className="font-medium">Season {season.season_number}</span>
+          <span className="text-muted-foreground/50" aria-hidden="true">
+            ·
+          </span>
           <span className="tabular-nums text-muted-foreground">
-            {" "}
             {season.aired > 0 ? `${season.watched} of ${season.aired} watched` : "Not aired yet"}
           </span>
         </p>
