@@ -19,6 +19,8 @@ export interface RelatedItem {
   vote_average: number;
   release_date?: string;
   first_air_date?: string;
+  /** The title the page is about, kept in a series so it shows in order. */
+  current?: boolean;
 }
 
 export interface RelatedShelf {
@@ -122,13 +124,13 @@ export async function fetchMovieRelated(movie: MovieDetails): Promise<RelatedShe
   const shelves: (RelatedShelf | null)[] = [];
 
   if (collection?.parts?.length) {
-    // In release order, so the series reads start to finish.
+    // In release order, this movie included, so the series reads start to finish.
     const parts = collection.parts
-      .filter((part) => part.id !== movie.id && part.poster_path)
+      .filter((part) => part.id === movie.id || part.poster_path)
       .sort((a, b) => (a.release_date || "9999").localeCompare(b.release_date || "9999"))
-      .map((part) => toItem({ ...part, media_type: "movie" }));
+      .map((part) => ({ ...toItem({ ...part, media_type: "movie" }), current: part.id === movie.id }));
     for (const part of parts) exclude.add(`movie-${part.id}`);
-    shelves.push(parts.length ? { key: "collection", title: collection.name, items: parts } : null);
+    shelves.push(parts.length > 1 ? { key: "collection", title: collection.name, items: parts } : null);
   }
 
   if (director && directorCredits) {

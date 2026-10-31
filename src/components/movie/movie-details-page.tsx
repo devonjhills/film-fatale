@@ -6,13 +6,14 @@ import { useMovieDetails, useMovieWatchProviders } from "@/lib/hooks/api-hooks";
 import { DetailsHero, DetailsPageSkeleton } from "@/components/ui/details-hero";
 import { CastGrid, CrewList } from "@/components/person/cast-grid";
 import { MediaSection } from "@/components/shared/media-section";
+import { SeriesStrip } from "@/components/shared/series-strip";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useWatchedTitles } from "@/lib/hooks/use-library";
 import { similarListLink } from "@/lib/browse-link";
 import type { RelatedShelf } from "@/lib/related";
 import { Section, FactList } from "@/components/shared/section";
 import { ExternalLinks } from "@/components/ui/external-links";
-import { formatDate, formatRuntime, formatCurrency } from "@/lib/utils";
+import { formatDate, formatRuntime, formatCurrency, formatYear } from "@/lib/utils";
 import type { MovieDetails } from "@/lib/types";
 
 interface MovieDetailsPageProps {
@@ -55,6 +56,7 @@ export function MovieDetailsPage({
     .slice(0, 16);
   const similarList = similarListLink("movie", movie.genres, movie.release_date);
   const shelf = (key: string) => related.find((entry) => entry.key === key);
+  const collection = shelf("collection");
   const relatedSection = (entry: RelatedShelf | undefined) =>
     entry && (
       <MediaSection
@@ -79,13 +81,22 @@ export function MovieDetailsPage({
       />
 
       <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
-        {cast.length > 0 && (
-          <Section title="Cast">
-            <CastGrid cast={cast} mediaType="movie" />
+        {collection && (
+          <Section title={collection.title}>
+            <SeriesStrip
+              label={collection.title}
+              items={collection.items.map((item) => ({
+                key: String(item.id),
+                href: `/movie/${item.id}`,
+                title: item.title ?? "",
+                detail: formatYear(item.release_date) || "TBA",
+                posterPath: item.poster_path,
+                current: item.current,
+                watched: watched.has(`movie-${item.id}`),
+              }))}
+            />
           </Section>
         )}
-
-        {relatedSection(shelf("collection"))}
 
         <MediaSection
           title={`If you like ${movie.title}`}
@@ -99,6 +110,12 @@ export function MovieDetailsPage({
 
         {relatedSection(shelf("director"))}
         {relatedSection(shelf("star"))}
+
+        {cast.length > 0 && (
+          <Section title="Cast">
+            <CastGrid cast={cast} mediaType="movie" />
+          </Section>
+        )}
 
         <Section title="Details">
           <FactList
