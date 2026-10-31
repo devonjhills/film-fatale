@@ -12,12 +12,15 @@ export type Credit = CombinedCredits["cast"][number] & {
   episode_count?: number;
   /** For TV, when this person first appeared (not when the show began). */
   first_credit_air_date?: string;
+  /** Playing themselves, archive footage, talk and award shows: not a role. */
+  appearance?: boolean;
 };
 
 // Talk shows and news: appearances, not roles.
 const APPEARANCE_GENRES = new Set([10763, 10767]);
 const DOCUMENTARY = 99;
-const SELF_ROLE = /\b(self|himself|herself|themselves)\b/i;
+const SELF_ROLE = /\b(self|himself|herself|themselves)\b|\barchive footage\b/i;
+const UNCREDITED = /\(uncredited\)/i;
 // Documentaries are only roles when someone plays a character in them.
 const DOCUMENTARY_APPEARANCE = /^$|\bnarrator\b|\bhost\b|\binterviewee\b/i;
 
@@ -70,8 +73,9 @@ export const creditYear = (credit: Pick<Credit, "release_date" | "first_air_date
 
 export const creditLabel = (credit: Credit) => credit.title || credit.name || "Untitled";
 
-export const isAppearance = (credit: Credit) =>
+const isAppearance = (credit: Credit, name: string) =>
   SELF_ROLE.test(credit.role) ||
+  credit.role.trim() === name ||
   Boolean(credit.genre_ids?.some((genre) => APPEARANCE_GENRES.has(genre))) ||
   Boolean(credit.genre_ids?.includes(DOCUMENTARY) && DOCUMENTARY_APPEARANCE.test(credit.role.trim()));
 
@@ -86,6 +90,7 @@ const isReleased = (credit: Credit, now: number) => {
  */
 function billingWeight(credit: Credit, isActor: boolean) {
   if (!isActor) return 1;
+  if (UNCREDITED.test(credit.role)) return 0.15;
   if (credit.media_type === "tv") {
     const episodes = credit.episode_count ?? 0;
     return episodes >= 10 ? 1 : episodes >= 3 ? 0.5 : 0.15;
@@ -93,6 +98,12 @@ function billingWeight(credit: Credit, isActor: boolean) {
   if (credit.order === undefined) return 0.5;
   return credit.order <= 3 ? 1 : credit.order <= 10 ? 0.6 : 0.3;
 }
+
+/**
+ * How much a credit says about someone's career: its billing, scaled by how
+ * widely seen the title is, so a lead in an unseen short counts for little.
+ */
+const notability = (credit: Credit) => 1 + Math.log1p(credit.vote_count || 0);
 
 const plural = (count: number, one: string, many = `${one}s`) =>
   `${count} ${count === 1 ? one : many}`;
@@ -156,16 +167,19 @@ export function analyzeCareer(person: PersonDetails, now = Date.now()): CareerIn
       existing.episode_count = Math.max(existing.episode_count ?? 0, credit.episode_count ?? 0) || undefined;
     }
   }
-  const titles = [...byTitle.values()];
+  const titles = [...byTitle.values()].map((credit) => ({
+    ...credit,
+    appearance: isAppearance(credit, person.name),
+  }));
 
-  // Newest first; titles without a date are upcoming, so they lead.
+  // Newest first; undated titles are unconfirmed projects, so they go last.
   const filmography = [...titles].sort((a, b) => {
-    const yearA = creditYear(a) ?? Infinity;
-    const yearB = creditYear(b) ?? Infinity;
+    const yearA = creditYear(a) ?? -Infinity;
+    const yearB = creditYear(b) ?? -Infinity;
     return yearB - yearA || (b.popularity || 0) - (a.popularity || 0);
   });
 
-  const work = titles.filter((credit) => !isAppearance(credit));
+  const work = titles.filter((credit) => !credit.appearance);
   const released = work.filter((credit) => isReleased(credit, now));
   const score = (credit: Credit) => ((credit.vote_count || 0) + 1) * billingWeight(credit, isActor);
   const byScore = (a: Credit, b: Credit) => score(b) - score(a);
@@ -195,8 +209,8 @@ export function analyzeCareer(person: PersonDetails, now = Date.now()): CareerIn
         .slice(0, 4),
     }));
 
-  // Genres, counted once per title. Minor roles count less, so a career of
-  // lead dramas isn't outweighed by cameos in comedies.
+  // Genres, counted once per title. Minor roles and little-seen titles count
+  // less, so a career of lead dramas isn't outweighed by cameos in comedies.
   const genreWeights = new Map<string, number>();
   const genreCounts = new Map<string, number>();
   let weightedTitles = 0;
@@ -205,7 +219,7 @@ export function analyzeCareer(person: PersonDetails, now = Date.now()): CareerIn
       (credit.genre_ids ?? []).map((id) => GENRE_LABELS[id]).filter(Boolean),
     );
     if (!labels.size) continue;
-    const weight = billingWeight(credit, isActor);
+    const weight = billingWeight(credit, isActor) * notability(credit);
     weightedTitles += weight;
     for (const label of labels) {
       genreWeights.set(label, (genreWeights.get(label) ?? 0) + weight);
@@ -277,8 +291,12 @@ function summarize(
   if (isActor) {
     const voiced = released.filter((credit) => /\(voice\)/i.test(credit.role)).length;
     const billed = released.filter((credit) => credit.media_type === "movie" && credit.order !== undefined);
-    const leads = billed.filter((credit) => (credit.order ?? 99) <= 2).length;
-    const leadShare = billed.length ? leads / billed.length : 0;
+    // Weighted by notability: leads in films nobody saw don't make a lead actor.
+    const total = billed.reduce((sum, credit) => sum + notability(credit), 0);
+    const leads = billed
+      .filter((credit) => (credit.order ?? 99) <= 2 && !UNCREDITED.test(credit.role))
+      .reduce((sum, credit) => sum + notability(credit), 0);
+    const leadShare = total ? leads / total : 0;
     style =
       voiced / released.length >= 0.4
         ? "often as a voice actor"
@@ -287,7 +305,7 @@ function summarize(
           : leadShare >= 0.25
             ? "often in the lead"
             : billed.length >= 5
-              ? "mostly in supporting roles"
+              ? "usually in supporting roles"
               : "";
   }
   if (leading.length && style) sentences.push(`Mostly ${listJoin(leading)}, ${style}.`);

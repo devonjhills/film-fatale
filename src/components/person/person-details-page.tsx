@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Check, User } from "@/components/ui/icons";
+import { Check, Film, User } from "@/components/ui/icons";
 import { usePersonDetails } from "@/lib/hooks/api-hooks";
 import { useWatchedTitles } from "@/lib/hooks/use-library";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -159,11 +159,12 @@ export function PersonDetailsPage({ personId, initialPerson }: PersonDetailsPage
         </div>
       )}
 
-      {career.filmography.length > 0 && (
-        <Filmography credits={career.filmography} watched={watched} />
-      )}
-
-      <Biography person={person} />
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-14">
+        {career.filmography.length > 0 && (
+          <Filmography credits={career.filmography} watched={watched} />
+        )}
+        <About person={person} />
+      </div>
     </div>
   );
 }
@@ -310,108 +311,166 @@ function CareerFacts({ career }: { career: ReturnType<typeof analyzeCareer> }) {
   );
 }
 
-type FilmographyFilter = "all" | "movie" | "tv";
+type FilmographyFilter = "all" | "movie" | "tv" | "self";
+
+/** Credits in year groups, newest first; undated titles come last. */
+function groupByYear(credits: Credit[]) {
+  const groups: { year: number | null; credits: Credit[] }[] = [];
+  for (const credit of credits) {
+    const year = creditYear(credit);
+    const last = groups[groups.length - 1];
+    if (last && last.year === year) last.credits.push(credit);
+    else groups.push({ year, credits: [credit] });
+  }
+  return groups;
+}
 
 function Filmography({ credits, watched }: { credits: Credit[]; watched: Set<string> }) {
   const [filter, setFilter] = useState<FilmographyFilter>("all");
   const [expanded, setExpanded] = useState(false);
-  const movies = credits.filter((credit) => credit.media_type === "movie").length;
-  const shows = credits.length - movies;
-  const filtered = filter === "all" ? credits : credits.filter((credit) => credit.media_type === filter);
+  // Award shows, talk shows and playing themselves sit apart from the roles.
+  const roles = credits.filter((credit) => !credit.appearance);
+  const appearances = credits.filter((credit) => credit.appearance);
+  const movies = roles.filter((credit) => credit.media_type === "movie");
+  const shows = roles.filter((credit) => credit.media_type === "tv");
+  const lists: Record<FilmographyFilter, Credit[]> = {
+    all: roles.length ? roles : appearances,
+    movie: movies,
+    tv: shows,
+    self: appearances,
+  };
+  const filtered = lists[filter];
   const shown = expanded ? filtered : filtered.slice(0, FILMOGRAPHY_PREVIEW);
 
   const options: { value: FilmographyFilter; label: string }[] = [
-    { value: "all", label: `All ${credits.length}` },
-    ...(movies && shows
+    { value: "all", label: `All ${lists.all.length}` },
+    ...(movies.length && shows.length
       ? ([
-          { value: "movie", label: `Movies ${movies}` },
-          { value: "tv", label: `TV ${shows}` },
+          { value: "movie", label: `Movies ${movies.length}` },
+          { value: "tv", label: `TV ${shows.length}` },
         ] as const)
+      : []),
+    ...(roles.length && appearances.length
+      ? ([{ value: "self", label: `Appearances ${appearances.length}` }] as const)
       : []),
   ];
 
   return (
-    <Section
-      title="Filmography"
-      action={
-        options.length > 1 && (
-          <div className="-my-2 flex gap-1" role="group" aria-label="Filter filmography">
-            {options.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => {
-                  setFilter(option.value);
-                  setExpanded(false);
-                }}
-                aria-pressed={filter === option.value}
-                className={cn(
-                  "min-h-9 rounded-sm px-2.5 text-sm tabular-nums transition-colors",
-                  filter === option.value
-                    ? "bg-accent text-foreground"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        )
-      }
-    >
-      <ol className="divide-y divide-border">
-        {shown.map((credit) => (
-          <li key={titleKey(credit)}>
-            <Link
-              href={`/${credit.media_type}/${credit.id}`}
-              className="group grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-4 py-3 sm:grid-cols-[4rem_minmax(0,1fr)_auto]"
+    <Section title="Filmography">
+      {options.length > 1 && (
+        <div
+          className="-mx-4 mb-4 flex gap-1 overflow-x-auto px-4 sm:mx-0 sm:px-0"
+          role="group"
+          aria-label="Filter filmography"
+        >
+          {options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => {
+                setFilter(option.value);
+                setExpanded(false);
+              }}
+              aria-pressed={filter === option.value}
+              className={cn(
+                "min-h-9 shrink-0 rounded-sm px-3 text-sm tabular-nums transition-colors",
+                filter === option.value
+                  ? "bg-accent text-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
             >
-              <span className="text-sm tabular-nums text-muted-foreground">
-                {creditYear(credit) ?? "TBA"}
-              </span>
-              <span className="min-w-0">
-                <span className="font-medium group-hover:underline group-hover:underline-offset-4">
-                  {creditLabel(credit)}
-                </span>
-                {watched.has(titleKey(credit)) && (
-                  <span className="ml-2 inline-flex items-center gap-1 text-xs text-mint">
-                    <Check className="size-3" weight="bold" aria-hidden="true" />
-                    Watched
-                  </span>
-                )}
-                {credit.role && (
-                  <span className="block truncate text-sm text-muted-foreground">{credit.role}</span>
-                )}
-              </span>
-              <span className="hidden text-sm tabular-nums text-muted-foreground sm:block">
-                {credit.media_type === "tv"
-                  ? credit.episode_count
-                    ? `TV, ${credit.episode_count} ep${credit.episode_count === 1 ? "" : "s"}`
-                    : "TV"
-                  : "Movie"}
-              </span>
-            </Link>
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <ol className="divide-y divide-border">
+        {groupByYear(shown).map((group) => (
+          <li
+            key={group.year ?? "tba"}
+            className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-x-3 py-3 first:pt-0 sm:grid-cols-[4.5rem_minmax(0,1fr)]"
+          >
+            <p className="pt-3.5 font-serif text-lg font-medium leading-none tabular-nums text-muted-foreground">
+              {group.year ?? "TBA"}
+            </p>
+            <ul className="space-y-1">
+              {group.credits.map((credit) => (
+                <li key={titleKey(credit)}>
+                  <FilmographyRow credit={credit} watched={watched.has(titleKey(credit))} />
+                </li>
+              ))}
+            </ul>
           </li>
         ))}
       </ol>
 
       {filtered.length > FILMOGRAPHY_PREVIEW && (
-        <div className="mt-6 flex justify-center">
-          <Button variant="outline" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
-            {expanded ? "Show less" : `Show all ${filtered.length}`}
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          className="mt-6"
+          onClick={() => setExpanded(!expanded)}
+          aria-expanded={expanded}
+        >
+          {expanded ? "Show less" : `Show all ${filtered.length}`}
+        </Button>
       )}
     </Section>
   );
 }
 
-function Biography({ person }: { person: PersonDetails }) {
+function FilmographyRow({ credit, watched }: { credit: Credit; watched: boolean }) {
+  const posterUrl = getImageUrl(credit.poster_path, "poster", "w92");
+  const episodes = credit.episode_count;
+  const kind =
+    credit.media_type === "tv"
+      ? episodes
+        ? `TV, ${episodes} ${episodes === 1 ? "episode" : "episodes"}`
+        : "TV"
+      : null;
+
+  return (
+    <Link
+      href={`/${credit.media_type}/${credit.id}`}
+      className="group -mx-2 grid grid-cols-[2.25rem_minmax(0,1fr)] items-center gap-x-3 rounded-sm px-2 py-1.5 transition-colors hover:bg-accent/60"
+    >
+      <span className="poster-frame relative flex aspect-[2/3] items-center justify-center overflow-hidden">
+        {posterUrl ? (
+          <Image src={posterUrl} alt="" fill sizes="36px" className="object-cover" />
+        ) : (
+          <Film className="size-4 text-muted-foreground/40" aria-hidden="true" />
+        )}
+      </span>
+      <span className="min-w-0">
+        <span className="flex items-baseline gap-2">
+          <span className="truncate font-medium">{creditLabel(credit)}</span>
+          {watched && (
+            <span className="inline-flex shrink-0 items-center gap-1 text-xs text-mint">
+              <Check className="size-3" weight="bold" aria-hidden="true" />
+              Watched
+            </span>
+          )}
+        </span>
+        {(credit.role || kind) && (
+          <span className="flex gap-x-3 text-sm text-muted-foreground">
+            {credit.role && <span className="truncate">{credit.role}</span>}
+            {kind && <span className="shrink-0 tabular-nums">{kind}</span>}
+          </span>
+        )}
+      </span>
+    </Link>
+  );
+}
+
+function About({ person }: { person: PersonDetails }) {
   const [expanded, setExpanded] = useState(false);
   const paragraphs = person.biography
     ? person.biography.split(/\n+/).filter((paragraph) => paragraph.trim())
     : [];
   const shown = expanded ? paragraphs : paragraphs.slice(0, 2);
+  const otherNames = (person.also_known_as ?? [])
+    .filter((name) => name !== person.name && /^[\p{Script=Latin}\s.'-]+$/u.test(name))
+    .slice(0, 3);
 
   const links = [
     person.external_ids?.imdb_id && {
@@ -425,12 +484,12 @@ function Biography({ person }: { person: PersonDetails }) {
     person.homepage && { label: "Website", href: person.homepage },
   ].filter(Boolean) as { label: string; href: string }[];
 
-  if (!paragraphs.length && !links.length) return null;
+  if (!paragraphs.length && !otherNames.length && !links.length) return null;
 
   return (
-    <Section title="Biography">
+    <Section title="About">
       {shown.length > 0 && (
-        <div className="reading-text max-w-[62ch] space-y-4">
+        <div className="reading-text max-w-[62ch] space-y-4 lg:text-[1.0625rem]">
           {shown.map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}
@@ -445,6 +504,12 @@ function Biography({ person }: { person: PersonDetails }) {
             </button>
           )}
         </div>
+      )}
+
+      {otherNames.length > 0 && (
+        <p className="mt-6 text-sm text-muted-foreground">
+          Also known as <span className="text-foreground">{otherNames.join(", ")}</span>
+        </p>
       )}
 
       {links.length > 0 && (
