@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Film, Star } from "@/components/ui/icons";
+import { Check, Film, Star } from "@/components/ui/icons";
 import { cn, formatVoteAverage } from "@/lib/utils";
 import { getImageUrl } from "@/lib/api";
 
@@ -22,6 +22,10 @@ interface MediaCardProps {
   mediaType: "movie" | "tv";
   className?: string;
   priority?: boolean;
+  /** A short line under the title, e.g. the character someone played. */
+  note?: string;
+  /** Marks a title the owner has watched (from their library). */
+  watched?: boolean;
 }
 
 export function MediaCard({
@@ -29,6 +33,8 @@ export function MediaCard({
   mediaType,
   className,
   priority = false,
+  note,
+  watched = false,
 }: MediaCardProps) {
   // w342 keeps posters sharp on 2x screens at the grid's ~150–180px width.
   const imageUrl = getImageUrl(item.poster_path || null, "poster", "w342");
@@ -59,23 +65,38 @@ export function MediaCard({
               />
             </div>
           )}
+          {watched && (
+            <span className="absolute left-1.5 top-1.5 inline-flex items-center gap-1 rounded-sm bg-background/85 px-1.5 py-0.5 text-[0.6875rem] font-medium text-mint">
+              <Check className="size-3" weight="bold" aria-hidden="true" />
+              Watched
+            </span>
+          )}
         </div>
 
         <div className="poster-card-body">
           <h3 className="line-clamp-2 min-h-[2.75em] text-[0.8125rem] font-medium leading-snug text-foreground">
             {title}
           </h3>
-          {(year || rating) && (
-            <p className="mt-auto flex items-center justify-between gap-2 text-xs tabular-nums text-muted-foreground">
-              <span>{year}</span>
-              {rating && (
-                <span className="inline-flex items-center gap-1">
-                  <Star className="size-3" weight="fill" aria-hidden="true" />
-                  <span className="sr-only">Rated </span>
-                  {rating}
-                </span>
+          {(note || year || rating) && (
+            <div className="mt-auto space-y-0.5">
+              {note && (
+                <p className="line-clamp-1 text-xs text-muted-foreground" title={note}>
+                  {note}
+                </p>
               )}
-            </p>
+              {(year || rating) && (
+                <p className="flex items-center justify-between gap-2 text-xs tabular-nums text-muted-foreground">
+                  <span>{year}</span>
+                  {rating && (
+                    <span className="inline-flex items-center gap-1">
+                      <Star className="size-3" weight="fill" aria-hidden="true" />
+                      <span className="sr-only">Rated </span>
+                      {rating}
+                    </span>
+                  )}
+                </p>
+              )}
+            </div>
           )}
         </div>
       </Link>

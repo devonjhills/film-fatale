@@ -8,7 +8,11 @@ import { useTVDetails, useTVWatchProviders } from "@/lib/hooks/api-hooks";
 import { getImageUrl } from "@/lib/api";
 import { DetailsHero, DetailsPageSkeleton } from "@/components/ui/details-hero";
 import { CastGrid, CrewList } from "@/components/person/cast-grid";
-import { MediaGrid } from "@/components/shared/media-grid";
+import { MediaSection } from "@/components/shared/media-section";
+import { useAuth } from "@/components/providers/auth-provider";
+import { useWatchedTitles } from "@/lib/hooks/use-library";
+import { similarListLink } from "@/lib/browse-link";
+import type { RelatedShelf } from "@/lib/related";
 import { Section, FactList } from "@/components/shared/section";
 import { ExternalLinks } from "@/components/ui/external-links";
 import { formatDate } from "@/lib/utils";
@@ -17,16 +21,21 @@ import type { TVShowDetails } from "@/lib/types";
 interface TVDetailsPageProps {
   tvId: number;
   initialTVShow?: TVShowDetails;
+  /** Creator and lead-actor shelves, fetched on the server. */
+  related?: RelatedShelf[];
 }
 
 export function TVDetailsPage({
   tvId,
   initialTVShow,
+  related = [],
 }: TVDetailsPageProps) {
   const { tvShow, isLoading, isError } = useTVDetails(tvId, initialTVShow);
   const { watchProviders } = useTVWatchProviders(tvId);
+  const { user } = useAuth();
+  const watched = useWatchedTitles(Boolean(user));
 
-  if (isLoading) {
+  if (isLoading && !tvShow) {
     return <DetailsPageSkeleton />;
   }
 
@@ -66,11 +75,28 @@ export function TVDetailsPage({
   const creators = tvShow.created_by || [];
 
   // Get TV recommendations
-  const recommendations = tvShow.recommendations?.results?.slice(0, 8) || [];
+  // Titles in the series, director or star shelves aren't repeated here.
+  const shownElsewhere = new Set(
+    related.flatMap((entry) => entry.items.map((item) => `${item.media_type}-${item.id}`)),
+  );
+  const recommendations = (tvShow.recommendations?.results || [])
+    .filter((item) => !shownElsewhere.has(`tv-${item.id}`))
+    .slice(0, 16);
+  const similarList = similarListLink("tv", tvShow.genres, tvShow.first_air_date);
+  const relatedSections = related.map((entry) => (
+    <MediaSection
+      key={entry.key}
+      title={entry.title}
+      items={entry.items}
+      mediaType="tv"
+      href={entry.href}
+      hrefLabel={entry.href ? "See their work" : undefined}
+      watched={watched}
+    />
+  ));
 
   return (
     <div className="detail-page">
-      {/* Hero Section */}
       <DetailsHero
         item={tvShow}
         mediaType="tv"
@@ -80,39 +106,6 @@ export function TVDetailsPage({
       />
 
       <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
-        <Section title="Details">
-          <FactList
-            facts={[
-              { label: "First aired", value: tvShow.first_air_date ? firstAirDate : null },
-              {
-                label: tvShow.in_production ? "Latest episode" : "Last aired",
-                value: tvShow.last_air_date ? lastAirDate : null,
-              },
-              { label: "Status", value: tvShow.status || null },
-              { label: "Seasons", value: tvShow.number_of_seasons || null },
-              { label: "Episodes", value: tvShow.number_of_episodes || null },
-              {
-                label: "Network",
-                value: tvShow.networks?.length
-                  ? tvShow.networks.slice(0, 2).map((network) => network.name).join(", ")
-                  : null,
-              },
-              {
-                label: "Language",
-                value: tvShow.spoken_languages?.[0]?.english_name || null,
-              },
-            ]}
-          />
-
-          <ExternalLinks
-            className="mt-8"
-            externalIds={tvShow.external_ids}
-            homepage={tvShow.homepage}
-            title={tvShow.name}
-            releaseDate={tvShow.first_air_date}
-          />
-        </Section>
-
         {tvShow.seasons && tvShow.seasons.length > 0 && (
           <Section title="Seasons">
             <div className="poster-grid">
@@ -164,21 +157,56 @@ export function TVDetailsPage({
           </Section>
         )}
 
+        <MediaSection
+          title={`If you like ${tvShow.name}`}
+          items={recommendations}
+          mediaType="tv"
+          href={similarList?.href}
+          hrefLabel={similarList?.label}
+          tall
+          watched={watched}
+        />
+
+        {relatedSections}
+
+        <Section title="Details">
+          <FactList
+            facts={[
+              { label: "First aired", value: tvShow.first_air_date ? firstAirDate : null },
+              {
+                label: tvShow.in_production ? "Latest episode" : "Last aired",
+                value: tvShow.last_air_date ? lastAirDate : null,
+              },
+              { label: "Status", value: tvShow.status || null },
+              { label: "Seasons", value: tvShow.number_of_seasons || null },
+              { label: "Episodes", value: tvShow.number_of_episodes || null },
+              {
+                label: "Network",
+                value: tvShow.networks?.length
+                  ? tvShow.networks.slice(0, 2).map((network) => network.name).join(", ")
+                  : null,
+              },
+              {
+                label: "Language",
+                value: tvShow.spoken_languages?.[0]?.english_name || null,
+              },
+            ]}
+          />
+
+          <ExternalLinks
+            className="mt-8"
+            externalIds={tvShow.external_ids}
+            homepage={tvShow.homepage}
+            title={tvShow.name}
+            releaseDate={tvShow.first_air_date}
+          />
+        </Section>
+
         {tvShow.credits?.crew?.length ? (
           <Section title="Crew">
             <CrewList crew={tvShow.credits.crew} />
           </Section>
         ) : null}
-
-        {recommendations.length > 0 && (
-          <Section title="More like this">
-            <MediaGrid
-              items={recommendations}
-              mediaType="tv"
-              className="poster-grid-shelf"
-            />
-          </Section>
-        )}
       </div>
     </div>
   );

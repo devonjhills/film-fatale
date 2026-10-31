@@ -59,7 +59,7 @@ export function TVSeasonDetailsPage({
   );
   const { tvShow } = useTVDetails(tvId, initialTVShow);
 
-  if (isLoading) {
+  if (isLoading && !season) {
     return <SeasonDetailsSkeleton />;
   }
 

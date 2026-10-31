@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import useSWR from "swr";
 import type {
   ShowProgress,
@@ -116,4 +117,21 @@ export function useLibraryItem(
     },
   );
   return { item: data ? (data.items[0] ?? null) : undefined, isLoading, mutate };
+}
+
+/**
+ * Keys ("movie-123", "tv-456") of titles the owner has watched or is
+ * watching, for marking posters. Empty for visitors.
+ */
+export function useWatchedTitles(signedIn: boolean) {
+  const { items } = useLibrary(signedIn);
+  return useMemo(
+    () =>
+      new Set(
+        (items ?? [])
+          .filter((item) => item.status === "completed" || item.status === "watching")
+          .map((item) => `${item.media_type}-${item.tmdb_id}`),
+      ),
+    [items],
+  );
 }

@@ -4,6 +4,7 @@ import { cache } from "react";
 import { MovieDetailsPage } from "@/components/movie/movie-details-page";
 import { JsonLd } from "@/components/seo/json-ld";
 import { fetchTMDBServer } from "@/lib/tmdb-server";
+import { fetchMovieRelated } from "@/lib/related";
 import type { MovieDetails } from "@/lib/types";
 import { API_CONFIG } from "@/lib/constants";
 import {
@@ -99,6 +100,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
   }
 
   const movie = await getMovieDetails(movieId);
+  const related = movie ? await fetchMovieRelated(movie) : [];
   const canonical = absoluteUrl(`/movie/${movieId}`);
   const directors =
     movie?.credits?.crew
@@ -171,7 +173,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
   return (
     <>
       {structuredData && <JsonLd data={structuredData} />}
-      <MovieDetailsPage movieId={movieId} initialMovie={movie || undefined} />
+      <MovieDetailsPage movieId={movieId} initialMovie={movie || undefined} related={related} />
     </>
   );
 }

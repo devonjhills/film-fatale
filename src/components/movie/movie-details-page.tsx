@@ -5,7 +5,11 @@ import { notFound } from "next/navigation";
 import { useMovieDetails, useMovieWatchProviders } from "@/lib/hooks/api-hooks";
 import { DetailsHero, DetailsPageSkeleton } from "@/components/ui/details-hero";
 import { CastGrid, CrewList } from "@/components/person/cast-grid";
-import { MediaGrid } from "@/components/shared/media-grid";
+import { MediaSection } from "@/components/shared/media-section";
+import { useAuth } from "@/components/providers/auth-provider";
+import { useWatchedTitles } from "@/lib/hooks/use-library";
+import { similarListLink } from "@/lib/browse-link";
+import type { RelatedShelf } from "@/lib/related";
 import { Section, FactList } from "@/components/shared/section";
 import { ExternalLinks } from "@/components/ui/external-links";
 import { formatDate, formatRuntime, formatCurrency } from "@/lib/utils";
@@ -14,16 +18,21 @@ import type { MovieDetails } from "@/lib/types";
 interface MovieDetailsPageProps {
   movieId: number;
   initialMovie?: MovieDetails;
+  /** Series, director and lead-actor shelves, fetched on the server. */
+  related?: RelatedShelf[];
 }
 
 export function MovieDetailsPage({
   movieId,
   initialMovie,
+  related = [],
 }: MovieDetailsPageProps) {
   const { movie, isLoading, isError } = useMovieDetails(movieId, initialMovie);
   const { watchProviders } = useMovieWatchProviders(movieId);
+  const { user } = useAuth();
+  const watched = useWatchedTitles(Boolean(user));
 
-  if (isLoading) {
+  if (isLoading && !movie) {
     return <DetailsPageSkeleton />;
   }
 
@@ -37,7 +46,27 @@ export function MovieDetailsPage({
   const cast = movie.credits?.cast || [];
   const crew = movie.credits?.crew || [];
   const directors = crew.filter((person) => person.job === "Director");
-  const recommendations = movie.recommendations?.results?.slice(0, 8) || [];
+  // Titles in the series, director or star shelves aren't repeated here.
+  const shownElsewhere = new Set(
+    related.flatMap((entry) => entry.items.map((item) => `${item.media_type}-${item.id}`)),
+  );
+  const recommendations = (movie.recommendations?.results || [])
+    .filter((item) => !shownElsewhere.has(`movie-${item.id}`))
+    .slice(0, 16);
+  const similarList = similarListLink("movie", movie.genres, movie.release_date);
+  const shelf = (key: string) => related.find((entry) => entry.key === key);
+  const relatedSection = (entry: RelatedShelf | undefined) =>
+    entry && (
+      <MediaSection
+        key={entry.key}
+        title={entry.title}
+        items={entry.items}
+        mediaType="movie"
+        href={entry.href}
+        hrefLabel={entry.href ? "See their work" : undefined}
+        watched={watched}
+      />
+    );
 
   return (
     <div className="detail-page">
@@ -50,6 +79,27 @@ export function MovieDetailsPage({
       />
 
       <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
+        {cast.length > 0 && (
+          <Section title="Cast">
+            <CastGrid cast={cast} mediaType="movie" />
+          </Section>
+        )}
+
+        {relatedSection(shelf("collection"))}
+
+        <MediaSection
+          title={`If you like ${movie.title}`}
+          items={recommendations}
+          mediaType="movie"
+          href={similarList?.href}
+          hrefLabel={similarList?.label}
+          tall
+          watched={watched}
+        />
+
+        {relatedSection(shelf("director"))}
+        {relatedSection(shelf("star"))}
+
         <Section title="Details">
           <FactList
             facts={[
@@ -80,25 +130,9 @@ export function MovieDetailsPage({
           />
         </Section>
 
-        {cast.length > 0 && (
-          <Section title="Cast">
-            <CastGrid cast={cast} mediaType="movie" />
-          </Section>
-        )}
-
         {crew.length > 0 && (
           <Section title="Crew">
             <CrewList crew={crew} />
-          </Section>
-        )}
-
-        {recommendations.length > 0 && (
-          <Section title="More like this">
-            <MediaGrid
-              items={recommendations}
-              mediaType="movie"
-              className="poster-grid-shelf"
-            />
           </Section>
         )}
       </div>

@@ -7,19 +7,25 @@ interface MediaGridProps {
   mediaType: "movie" | "tv";
   className?: string;
   priorityCount?: number;
+  /** Owner's watched titles ("movie-123"), marked on their posters. */
+  watched?: Set<string>;
 }
 
-export function MediaGrid({ items, mediaType, className, priorityCount = 0 }: MediaGridProps) {
+export function MediaGrid({ items, mediaType, className, priorityCount = 0, watched }: MediaGridProps) {
   return (
     <div className={cn("poster-grid", className)}>
-      {items.map((item, index) => (
-        <MediaCard
-          key={`${item.media_type ?? mediaType}-${item.id}`}
-          item={item}
-          mediaType={item.media_type ?? mediaType}
-          priority={index < priorityCount}
-        />
-      ))}
+      {items.map((item, index) => {
+        const key = `${item.media_type ?? mediaType}-${item.id}`;
+        return (
+          <MediaCard
+            key={key}
+            item={item}
+            mediaType={item.media_type ?? mediaType}
+            priority={index < priorityCount}
+            watched={watched?.has(key)}
+          />
+        );
+      })}
     </div>
   );
 }

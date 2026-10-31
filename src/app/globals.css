@@ -339,6 +339,25 @@
     }
   }
 
+  /* Tall shelves: two full rows at every width, from 16 items. */
+  @media (max-width: 639.98px) {
+    .poster-grid-two-rows > :nth-child(n + 7) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 899.98px) {
+    .poster-grid-two-rows > :nth-child(n + 9) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 900px) and (max-width: 1279.98px) {
+    .poster-grid-two-rows > :nth-child(n + 13) {
+      display: none;
+    }
+  }
+
   /*
    * A poster wall tile: a graphite print with a hairline edge, so dark
    * posters in noir still read as separate cards against the black page.

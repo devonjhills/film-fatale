@@ -4,6 +4,7 @@ import { cache } from "react";
 import { TVDetailsPage } from "@/components/tv/tv-details-page";
 import { JsonLd } from "@/components/seo/json-ld";
 import { fetchTMDBServer } from "@/lib/tmdb-server";
+import { fetchTVRelated } from "@/lib/related";
 import type { TVShowDetails } from "@/lib/types";
 import { API_CONFIG } from "@/lib/constants";
 import {
@@ -99,6 +100,7 @@ export default async function TVPage({ params }: TVPageProps) {
   }
 
   const tvShow = await getTVDetails(tvId);
+  const related = tvShow ? await fetchTVRelated(tvShow) : [];
   const canonical = absoluteUrl(`/tv/${tvId}`);
 
   const structuredData = tvShow
@@ -168,7 +170,7 @@ export default async function TVPage({ params }: TVPageProps) {
   return (
     <>
       {structuredData && <JsonLd data={structuredData} />}
-      <TVDetailsPage tvId={tvId} initialTVShow={tvShow || undefined} />
+      <TVDetailsPage tvId={tvId} initialTVShow={tvShow || undefined} related={related} />
     </>
   );
 }
