@@ -11,7 +11,6 @@ import { CastGrid, CrewList } from "@/components/person/cast-grid";
 import { MediaGrid } from "@/components/shared/media-grid";
 import { Section, FactList } from "@/components/shared/section";
 import { ExternalLinks } from "@/components/ui/external-links";
-import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import type { TVShowDetails } from "@/lib/types";
 
@@ -66,11 +65,8 @@ export function TVDetailsPage({
   // Get creators
   const creators = tvShow.created_by || [];
 
-  // Get keywords
-  const keywords = tvShow.keywords?.results?.slice(0, 12) || [];
-
   // Get TV recommendations
-  const recommendations = tvShow.recommendations?.results?.slice(0, 16) || [];
+  const recommendations = tvShow.recommendations?.results?.slice(0, 8) || [];
 
   return (
     <div className="detail-page">
@@ -80,25 +76,13 @@ export function TVDetailsPage({
         mediaType="tv"
         trailer={trailer}
         watchProviders={watchProviders?.results?.US}
+        credit={{ label: "Created by", people: creators.slice(0, 3) }}
       />
 
-      <div className="site-container space-y-16 py-14 md:space-y-20 md:py-20">
+      <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
         <Section title="Details">
           <FactList
             facts={[
-              {
-                label: creators.length > 1 ? "Created by" : "Creator",
-                value: creators.length
-                  ? creators.slice(0, 3).map((creator, index) => (
-                      <span key={creator.id}>
-                        {index > 0 && ", "}
-                        <Link href={`/person/${creator.id}`} className="hover:underline">
-                          {creator.name}
-                        </Link>
-                      </span>
-                    ))
-                  : null,
-              },
               { label: "First aired", value: tvShow.first_air_date ? firstAirDate : null },
               {
                 label: tvShow.in_production ? "Latest episode" : "Last aired",
@@ -120,16 +104,6 @@ export function TVDetailsPage({
             ]}
           />
 
-          {keywords.length > 0 && (
-            <div className="mt-8 flex flex-wrap gap-2">
-              {keywords.map((keyword) => (
-                <Badge key={keyword.id} variant="secondary">
-                  {keyword.name}
-                </Badge>
-              ))}
-            </div>
-          )}
-
           <ExternalLinks
             className="mt-8"
             externalIds={tvShow.external_ids}
@@ -145,7 +119,7 @@ export function TVDetailsPage({
               {tvShow.seasons.map((season) => {
                 const posterUrl = getImageUrl(season.poster_path, "poster", "w342");
                 return (
-                  <article key={season.id} className="group min-w-0">
+                  <article key={season.id} className="min-w-0">
                     <Link
                       href={`/tv/${tvId}/season/${season.season_number}`}
                       className="poster-card"
@@ -166,7 +140,7 @@ export function TVDetailsPage({
                         )}
                       </div>
                       <div className="poster-card-body">
-                        <h3 className="line-clamp-2 text-[0.8125rem] font-medium leading-snug text-foreground group-hover:underline group-hover:underline-offset-4">
+                        <h3 className="line-clamp-2 text-[0.8125rem] font-medium leading-snug text-foreground">
                           {season.name}
                         </h3>
                         <p className="mt-auto flex justify-between gap-2 text-xs tabular-nums text-muted-foreground">
@@ -201,7 +175,7 @@ export function TVDetailsPage({
             <MediaGrid
               items={recommendations}
               mediaType="tv"
-              className="poster-grid-two-rows"
+              className="poster-grid-shelf"
             />
           </Section>
         )}

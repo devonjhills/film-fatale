@@ -13,16 +13,14 @@ export interface MediaItem {
   overview?: string;
   release_date?: string;
   first_air_date?: string;
+  /** Present on mixed lists such as trending and search results. */
+  media_type?: "movie" | "tv";
 }
 
 interface MediaCardProps {
   item: MediaItem;
   mediaType: "movie" | "tv";
   className?: string;
-  /** Kept for API compatibility; cards size themselves from the grid. */
-  size?: "sm" | "md" | "lg";
-  showYear?: boolean;
-  showRating?: boolean;
   priority?: boolean;
 }
 
@@ -30,8 +28,6 @@ export function MediaCard({
   item,
   mediaType,
   className,
-  showYear = true,
-  showRating = true,
   priority = false,
 }: MediaCardProps) {
   // w342 keeps posters sharp on 2x screens at the grid's ~150–180px width.
@@ -39,13 +35,10 @@ export function MediaCard({
   const title = item.title || item.name || "Untitled";
   const releaseDate = item.release_date || item.first_air_date;
   const year = releaseDate ? new Date(releaseDate).getUTCFullYear() : null;
-  const rating =
-    showRating && item.vote_average > 0
-      ? formatVoteAverage(item.vote_average)
-      : null;
+  const rating = item.vote_average > 0 ? formatVoteAverage(item.vote_average) : null;
 
   return (
-    <article className={cn("group min-w-0", className)}>
+    <article className={cn("min-w-0", className)}>
       <Link href={`/${mediaType}/${item.id}`} className="poster-card">
         <div className="poster-card-art">
           {imageUrl ? (
@@ -69,12 +62,12 @@ export function MediaCard({
         </div>
 
         <div className="poster-card-body">
-          <h3 className="line-clamp-2 min-h-[2.75em] text-[0.8125rem] font-medium leading-snug text-foreground group-hover:underline group-hover:underline-offset-4">
+          <h3 className="line-clamp-2 min-h-[2.75em] text-[0.8125rem] font-medium leading-snug text-foreground">
             {title}
           </h3>
-          {((showYear && year) || rating) && (
+          {(year || rating) && (
             <p className="mt-auto flex items-center justify-between gap-2 text-xs tabular-nums text-muted-foreground">
-              <span>{showYear && year}</span>
+              <span>{year}</span>
               {rating && (
                 <span className="inline-flex items-center gap-1">
                   <Star className="size-3" weight="fill" aria-hidden="true" />

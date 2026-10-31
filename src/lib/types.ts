@@ -438,18 +438,6 @@ export interface SearchResultItem
   media_type: "movie" | "tv" | "person";
 }
 
-// Formatted movie result
-export interface FormattedMovie {
-  id: number;
-  release_date: string;
-  title: string;
-  vote_average: number;
-  poster_path: string | null;
-  backdrop_path: string | null;
-  overview: string;
-  poster: string;
-}
-
 // Image URL helpers type
 export type ImageSize =
   | "w92"

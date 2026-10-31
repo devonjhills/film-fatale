@@ -18,7 +18,7 @@ export function PersonTile({ person, subtitle, detail, className }: PersonTilePr
   const profileUrl = getImageUrl(person.profile_path, "profile", "h632");
 
   return (
-    <article className={cn("group min-w-0", className)}>
+    <article className={cn("min-w-0", className)}>
       <Link href={`/person/${person.id}`} className="poster-card">
         <div className="poster-card-art">
           {profileUrl ? (
@@ -37,7 +37,7 @@ export function PersonTile({ person, subtitle, detail, className }: PersonTilePr
         </div>
 
         <div className="poster-card-body">
-          <h3 className="line-clamp-2 text-[0.8125rem] font-medium leading-snug text-foreground group-hover:underline group-hover:underline-offset-4">
+          <h3 className="line-clamp-2 text-[0.8125rem] font-medium leading-snug text-foreground">
             {person.name}
           </h3>
           {subtitle && (

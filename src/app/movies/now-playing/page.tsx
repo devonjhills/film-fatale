@@ -1,26 +1,11 @@
-"use client";
+import { CategoryPage, categoryMetadata } from "@/components/category/category-page";
 
-import { CategoryPage } from "@/components/category/category-page";
-import { useNowPlayingMovies } from "@/lib/hooks/api-hooks";
-import { usePaginatedData } from "@/hooks/usePaginatedData";
+export const metadata = categoryMetadata("movie", "now-playing");
 
-export default function NowPlayingMoviesPage() {
-  const { currentPage, handlePageChange } = usePaginatedData();
-  const { movies, isLoading, isError, totalPages, totalResults } =
-    useNowPlayingMovies(currentPage);
-
-  return (
-    <CategoryPage
-      title="Now playing"
-      description="In theaters now."
-      mediaType="movie"
-      data={movies}
-      isLoading={isLoading}
-      error={isError}
-      totalPages={totalPages}
-      totalResults={totalResults}
-      currentPage={currentPage}
-      onPageChange={handlePageChange}
-    />
-  );
+export default function NowPlayingMoviesPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  return <CategoryPage media="movie" slug="now-playing" searchParams={searchParams} />;
 }

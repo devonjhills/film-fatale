@@ -90,7 +90,7 @@ export function TVSeasonDetailsPage({
     : undefined;
 
   return (
-    <div className="site-container space-y-16 py-14 md:space-y-20 md:py-20">
+    <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
       <header className="flex flex-col gap-8 md:flex-row md:items-end md:gap-12">
         <div className="poster-frame relative mx-auto aspect-[2/3] w-36 shrink-0 overflow-hidden md:mx-0 md:w-48">
           {posterUrl ? (

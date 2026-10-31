@@ -5,7 +5,7 @@ import Link from "next/link";
 import { mutate as seed } from "swr";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { ViewingHistoryItem } from "@/lib/types";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/components/providers/auth-provider";
 import { libraryItemKey, useLibrary } from "@/lib/hooks/use-library";
 import { UpNextList } from "@/components/library/up-next-list";
 import { LibraryTile } from "@/components/library/library-tile";

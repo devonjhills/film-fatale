@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { RotatingHeroSection } from "@/components/ui/rotating-hero-section";
+import { FeaturedHero } from "@/components/shared/featured-hero";
 import { MediaSection } from "@/components/shared/media-section";
-import { fetchFeaturedTVShows } from "@/lib/data-fetching";
+import { fetchTVShelves } from "@/lib/data-fetching";
 
 export const metadata: Metadata = {
   title: "TV Shows",
@@ -19,33 +19,16 @@ export const metadata: Metadata = {
 };
 
 export default async function TVPage() {
-  const { onTheAir, topRated } = await fetchFeaturedTVShows();
+  const { onTheAir, popular, topRated } = await fetchTVShelves();
 
   return (
     <div className="min-h-screen">
-      {onTheAir.length > 0 && (
-        <RotatingHeroSection
-          items={onTheAir.slice(0, 5)}
-          mediaType="tv"
-        />
-      )}
+      <FeaturedHero items={onTheAir.slice(0, 5)} mediaType="tv" />
 
-      <div className="site-container space-y-16 py-14 md:space-y-20 md:py-20">
-        <MediaSection
-          title="On the air"
-          items={onTheAir}
-          mediaType="tv"
-          href="/tv/on-the-air"
-          limit={16}
-        />
-
-        <MediaSection
-          title="Top rated"
-          items={topRated}
-          mediaType="tv"
-          href="/tv/top-rated"
-          limit={16}
-        />
+      <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
+        <MediaSection title="On the air" items={onTheAir} mediaType="tv" href="/tv/on-the-air" />
+        <MediaSection title="Popular shows" items={popular} mediaType="tv" href="/tv/popular" />
+        <MediaSection title="Top rated shows" items={topRated} mediaType="tv" href="/tv/top-rated" />
       </div>
     </div>
   );

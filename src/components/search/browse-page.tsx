@@ -1,17 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  AlertTriangle,
-  Clapperboard,
-  Search,
-  X,
-  type Icon,
-} from "@/components/ui/icons";
+import { Search, X } from "@/components/ui/icons";
 import { useMultiSearch } from "@/lib/hooks/api-hooks";
 import { SearchResults } from "./search-results";
 import { Button } from "@/components/ui/button";
-import { MediaCardSkeleton } from "@/components/ui/optimized-skeleton";
+import { MediaCardSkeleton } from "@/components/ui/poster-skeleton";
 
 interface BrowsePageProps {
   initialQuery?: string;
@@ -19,11 +13,11 @@ interface BrowsePageProps {
 
 type MediaTypeFilter = "all" | "movie" | "tv" | "person";
 
-const mediaTypeOptions: { value: MediaTypeFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "movie", label: "Movies" },
-  { value: "tv", label: "TV" },
-  { value: "person", label: "People" },
+const mediaTypeOptions: { value: MediaTypeFilter; label: string; noun: string }[] = [
+  { value: "all", label: "All", noun: "results" },
+  { value: "movie", label: "Movies", noun: "movies" },
+  { value: "tv", label: "TV", noun: "TV shows" },
+  { value: "person", label: "People", noun: "people" },
 ];
 
 export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
@@ -78,15 +72,10 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
   return (
     <div className="min-h-screen">
       <header className="page-header">
-        <div className="site-container relative z-10 py-12 md:py-18">
-          <h1 className="page-title max-w-4xl">
-            Find your next obsession
-          </h1>
-          <p className="page-lede mt-6">
-            Search films, television, and the people behind them.
-          </p>
+        <div className="site-container py-8 md:py-10">
+          <h1 className="page-title">Search</h1>
 
-          <div className="relative mt-9 max-w-4xl">
+          <div className="relative mt-5 max-w-3xl">
             <Search
               className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
@@ -96,9 +85,9 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
               autoFocus
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="A title, actor, or director…"
-              aria-label="Search films, TV shows, and people"
-              className="custom-search-clear min-h-16 w-full rounded-sm border border-input bg-card py-3 pl-12 pr-14 font-serif text-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none md:text-2xl"
+              placeholder="Movies, shows and people"
+              aria-label="Search movies, TV shows and people"
+              className="custom-search-clear min-h-14 w-full rounded-sm border border-input bg-card py-3 pl-12 pr-14 text-lg text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
             />
             {query && (
               <button
@@ -114,14 +103,13 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
         </div>
       </header>
 
-      <div className="site-container py-12 md:py-16">
+      <div className="site-container py-8 md:py-10">
         {debouncedQuery ? (
           <>
-            <div className="mb-10 flex flex-col gap-5 border-b border-border/75 pb-7 sm:flex-row sm:items-end sm:justify-between">
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Results for</p>
-                <h2 className="mt-1 font-serif text-4xl font-medium tracking-[-0.03em]">
-                  “{debouncedQuery}”
+                <h2 className="text-sm text-muted-foreground">
+                  Results for <span className="font-medium text-foreground">“{debouncedQuery}”</span>
                 </h2>
                 <p className="sr-only" aria-live="polite">
                   {isLoading
@@ -145,55 +133,29 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
             </div>
 
             {isLoading ? (
-              <div className="poster-grid poster-grid-two-rows" aria-busy="true" aria-label="Loading search results">
-                {Array.from({ length: 16 }).map((_, index) => (
+              <div className="poster-grid" aria-busy="true" aria-label="Loading search results">
+                {Array.from({ length: 8 }).map((_, index) => (
                   <MediaCardSkeleton key={index} />
                 ))}
               </div>
             ) : isError ? (
-              <SearchState
-                icon={AlertTriangle}
-                title="The search went cold"
-                description="Something interrupted the search. Try again in a moment."
-              />
-            ) : resultCount === 0 ? (
-              <SearchState
-                icon={Search}
-                title="No trace found"
-                description="Try another title, a broader name, or a different result type."
-              />
+              <SearchMessage>Search isn&apos;t responding. Check your connection and try again.</SearchMessage>
+            ) : resultCount === 0 || !filteredResults ? (
+              <SearchMessage>
+                No {mediaTypeOptions.find((option) => option.value === mediaTypeFilter)?.noun} for “{debouncedQuery}”. Check the spelling, or try fewer words.
+              </SearchMessage>
             ) : (
               <SearchResults results={filteredResults} />
             )}
           </>
         ) : (
-          <SearchState
-            icon={Clapperboard}
-            title="The archive is waiting"
-            description="Start with a title, performer, or filmmaker."
-          />
+          <SearchMessage>Type a title or a person&apos;s name.</SearchMessage>
         )}
       </div>
     </div>
   );
 }
 
-function SearchState({
-  icon: Icon,
-  title,
-  description,
-}: {
-  icon: Icon;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="mx-auto max-w-xl py-16 text-center">
-      <Icon className="mx-auto size-10 text-muted-foreground" aria-hidden="true" />
-      <h2 className="mt-5 font-serif text-4xl font-medium tracking-[-0.03em]">{title}</h2>
-      <p className="mx-auto mt-3 max-w-md leading-7 text-muted-foreground">
-        {description}
-      </p>
-    </div>
-  );
+function SearchMessage({ children }: { children: React.ReactNode }) {
+  return <p className="py-12 text-center text-muted-foreground">{children}</p>;
 }

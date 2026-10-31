@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { RotatingHeroSection } from "@/components/ui/rotating-hero-section";
+import { FeaturedHero } from "@/components/shared/featured-hero";
 import { MediaSection } from "@/components/shared/media-section";
-import { fetchFeaturedMovies } from "@/lib/data-fetching";
+import { fetchHomeShelves } from "@/lib/data-fetching";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const { nowPlaying, topRated } = await fetchFeaturedMovies();
+  const { trending, nowPlaying, popularTV, topRated } = await fetchHomeShelves();
 
   return (
     <div className="min-h-screen">
@@ -28,28 +28,22 @@ export default async function Home() {
           inLanguage: "en-US",
         }}
       />
-      {nowPlaying.length > 0 && (
-        <RotatingHeroSection
-          items={nowPlaying.slice(0, 5)}
-          mediaType="movie"
-        />
-      )}
+      <FeaturedHero items={nowPlaying.slice(0, 5)} mediaType="movie" />
 
-      <div className="site-container space-y-16 py-14 md:space-y-20 md:py-20">
+      <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
+        <MediaSection title="Trending this week" items={trending} mediaType="movie" />
         <MediaSection
-          title="Now playing"
+          title="In theaters"
           items={nowPlaying}
           mediaType="movie"
           href="/movies/now-playing"
-          limit={16}
         />
-
+        <MediaSection title="Popular on TV" items={popularTV} mediaType="tv" href="/tv/popular" />
         <MediaSection
-          title="Top rated"
+          title="Top rated movies"
           items={topRated}
           mediaType="movie"
           href="/movies/top-rated"
-          limit={16}
         />
       </div>
     </div>

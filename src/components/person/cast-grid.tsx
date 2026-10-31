@@ -19,9 +19,9 @@ interface CastGridProps {
   mediaType?: "movie" | "tv";
 }
 
-// Two full rows at the widest grid (8 columns); the grid hides the rest
-// per breakpoint so the collapsed view always ends on a complete row.
-const COLLAPSED_COUNT = 16;
+// Collapsed, the cast is a shelf: one full row on wide screens, two on small
+// ones (see .poster-grid-shelf), so it always ends on a complete row.
+const COLLAPSED_COUNT = 8;
 
 export function CastGrid({ cast, mediaType = "movie" }: CastGridProps) {
   const [expanded, setExpanded] = useState(false);
@@ -30,7 +30,7 @@ export function CastGrid({ cast, mediaType = "movie" }: CastGridProps) {
 
   return (
     <div>
-      <div className={cn("poster-grid", !expanded && "poster-grid-two-rows")}>
+      <div className={cn("poster-grid", !expanded && "poster-grid-shelf")}>
         {shown.map((person) => (
           <PersonTile
             key={person.id}
@@ -46,7 +46,7 @@ export function CastGrid({ cast, mediaType = "movie" }: CastGridProps) {
       </div>
 
       {canExpand && (
-        <div className="mt-8 flex justify-center">
+        <div className="mt-6 flex justify-center">
           <Button variant="outline" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
             {expanded ? "Show less" : `Show full cast (${cast.length})`}
           </Button>

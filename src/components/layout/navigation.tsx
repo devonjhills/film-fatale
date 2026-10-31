@@ -46,7 +46,6 @@ export function Navigation() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background">
-      <div className="neon-rule absolute inset-x-0 -bottom-px h-px" aria-hidden="true" />
       <div className="site-container flex h-16 items-center gap-6">
         <Link
           href="/"
@@ -103,7 +102,7 @@ export function Navigation() {
           <form
             onSubmit={handleSearch}
             role="search"
-            className="relative hidden w-[clamp(12rem,22vw,20rem)] lg:block"
+            className="relative hidden w-[clamp(12rem,24vw,20rem)] md:block"
           >
             <Search
               className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -113,13 +112,13 @@ export function Navigation() {
               type="search"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Search films, shows, people"
-              aria-label="Search films, shows, and people"
+              placeholder="Search movies, shows, people"
+              aria-label="Search movies, TV shows and people"
               className="h-10 bg-card pl-10"
             />
           </form>
 
-          <Button variant="ghost" size="icon" asChild className="lg:hidden">
+          <Button variant="ghost" size="icon" asChild className="md:hidden">
             <Link href="/search" aria-label="Search">
               <Search aria-hidden="true" />
             </Link>

@@ -1,26 +1,11 @@
-"use client";
+import { CategoryPage, categoryMetadata } from "@/components/category/category-page";
 
-import { CategoryPage } from "@/components/category/category-page";
-import { useOnTheAirTVShows } from "@/lib/hooks/api-hooks";
-import { usePaginatedData } from "@/hooks/usePaginatedData";
+export const metadata = categoryMetadata("tv", "on-the-air");
 
-export default function OnTheAirTVShowsPage() {
-  const { currentPage, handlePageChange } = usePaginatedData();
-  const { tvShows, isLoading, isError, totalPages, totalResults } =
-    useOnTheAirTVShows(currentPage);
-
-  return (
-    <CategoryPage
-      title="On the air"
-      description="Shows with new episodes airing now."
-      mediaType="tv"
-      data={tvShows}
-      isLoading={isLoading}
-      error={isError}
-      totalPages={totalPages}
-      totalResults={totalResults}
-      currentPage={currentPage}
-      onPageChange={handlePageChange}
-    />
-  );
+export default function OnTheAirTVPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  return <CategoryPage media="tv" slug="on-the-air" searchParams={searchParams} />;
 }

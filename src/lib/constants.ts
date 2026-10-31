@@ -19,6 +19,7 @@ export const TMDB_PATHS = {
   tvWatchProviders: (id: number) => `/tv/${id}/watch/providers`,
   personDetails: (id: number) => `/person/${id}`,
   searchMulti: "/search/multi",
+  trendingWeek: "/trending/all/week",
 } as const;
 
 // API Endpoints
@@ -88,39 +89,6 @@ export const IMAGE_URLS = {
   },
 } as const;
 
-// Responsive image size mappings
-export const RESPONSIVE_SIZES = {
-  card: {
-    // Media cards in grids
-    sizes:
-      "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1536px) 25vw, 20vw",
-    mobile: "w154",
-    tablet: "w185",
-    desktop: "w342",
-  },
-  hero: {
-    // Hero section posters
-    sizes: "(max-width: 768px) 40vw, 30vw",
-    mobile: "w185",
-    tablet: "w342",
-    desktop: "w500",
-  },
-  backdrop: {
-    // Background images
-    sizes: "100vw",
-    mobile: "w780",
-    tablet: "w1280",
-    desktop: "original",
-  },
-  detail: {
-    // Detail page posters
-    sizes: "(max-width: 768px) 50vw, 25vw",
-    mobile: "w342",
-    tablet: "w500",
-    desktop: "w780",
-  },
-} as const;
-
 // API Configuration
 export const API_CONFIG = {
   language: "en-US",
@@ -128,8 +96,8 @@ export const API_CONFIG = {
   include_adult: false,
   append_to_response: {
     movie:
-      "videos,credits,external_ids,recommendations,release_dates,reviews,keywords",
-    tv: "videos,credits,aggregate_credits,external_ids,recommendations,reviews,keywords",
+      "videos,credits,external_ids,recommendations,release_dates,reviews",
+    tv: "videos,credits,aggregate_credits,external_ids,recommendations,reviews",
     tvSeason: "credits,external_ids,images,videos",
     person: "combined_credits,external_ids,images",
   },
@@ -143,47 +111,6 @@ export const SWR_CONFIG = {
   dedupingInterval: 60000, // 1 minute
   errorRetryCount: 3,
   errorRetryInterval: 5000, // 5 seconds
-} as const;
-
-// Genre mappings (commonly used ones)
-export const MOVIE_GENRES = {
-  ACTION: 28,
-  ADVENTURE: 12,
-  ANIMATION: 16,
-  COMEDY: 35,
-  CRIME: 80,
-  DOCUMENTARY: 99,
-  DRAMA: 18,
-  FAMILY: 10751,
-  FANTASY: 14,
-  HISTORY: 36,
-  HORROR: 27,
-  MUSIC: 10402,
-  MYSTERY: 9648,
-  ROMANCE: 10749,
-  SCIENCE_FICTION: 878,
-  THRILLER: 53,
-  WAR: 10752,
-  WESTERN: 37,
-} as const;
-
-export const TV_GENRES = {
-  ACTION_ADVENTURE: 10759,
-  ANIMATION: 16,
-  COMEDY: 35,
-  CRIME: 80,
-  DOCUMENTARY: 99,
-  DRAMA: 18,
-  FAMILY: 10751,
-  KIDS: 10762,
-  MYSTERY: 9648,
-  NEWS: 10763,
-  REALITY: 10764,
-  SCIENCE_FICTION: 10765,
-  SOAP: 10766,
-  TALK: 10767,
-  WAR_POLITICS: 10768,
-  WESTERN: 37,
 } as const;
 
 // Genre ID to name mappings

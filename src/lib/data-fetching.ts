@@ -3,16 +3,11 @@ import { createOptimizedCache, CACHE_TAGS } from "./cache-utils";
 import type { Movie, TVShow, TMDBResponse } from "./types";
 import { fetchTMDBServer } from "./tmdb-server";
 
-/**
- * Generic TMDB API fetcher with enhanced caching and error handling
- */
+/** One TMDB list page; an empty list if TMDB fails, so pages still render. */
 async function fetchFromTMDB<T>(endpoint: string): Promise<T[]> {
   try {
     const data = await fetchTMDBServer<TMDBResponse<T>>(endpoint, {
-      next: {
-        revalidate: 3600, // Cache for 1 hour
-        tags: [CACHE_TAGS.MOVIES, CACHE_TAGS.TV_SHOWS], // Tag for invalidation
-      },
+      next: { revalidate: 3600 },
     });
     return data.results || [];
   } catch (error) {
@@ -21,80 +16,51 @@ async function fetchFromTMDB<T>(endpoint: string): Promise<T[]> {
   }
 }
 
-/**
- * Fetch movies from a specific endpoint with optimized caching
- */
 export const fetchMovies = createOptimizedCache(
-  async (endpoint: string): Promise<Movie[]> => {
-    return fetchFromTMDB<Movie>(endpoint);
-  },
+  (endpoint: string) => fetchFromTMDB<Movie>(endpoint),
   ["fetch-movies"],
-  {
-    revalidate: 3600,
-    tags: [CACHE_TAGS.MOVIES],
-  },
+  { tags: [CACHE_TAGS.MOVIES] },
 );
 
-/**
- * Fetch TV shows from a specific endpoint with optimized caching
- */
 export const fetchTVShows = createOptimizedCache(
-  async (endpoint: string): Promise<TVShow[]> => {
-    return fetchFromTMDB<TVShow>(endpoint);
-  },
+  (endpoint: string) => fetchFromTMDB<TVShow>(endpoint),
   ["fetch-tv-shows"],
-  {
-    revalidate: 3600,
-    tags: [CACHE_TAGS.TV_SHOWS],
-  },
+  { tags: [CACHE_TAGS.TV_SHOWS] },
 );
 
-/**
- * Fetch featured movies for homepage with optimized caching
- */
-export const fetchFeaturedMovies = createOptimizedCache(
+type TrendingItem = (Movie & { media_type: "movie" }) | (TVShow & { media_type: "tv" });
+
+/** Home page shelves: trending across movies and TV, then one list of each. */
+export const fetchHomeShelves = createOptimizedCache(
   async () => {
-    const [nowPlaying, popular, topRated] = await Promise.all([
+    const [trending, nowPlaying, popularTV, topRated] = await Promise.all([
+      fetchFromTMDB<TrendingItem | { media_type: "person" }>(TMDB_PATHS.trendingWeek),
       fetchFromTMDB<Movie>(TMDB_PATHS.moviesNowPlaying),
-      fetchFromTMDB<Movie>(TMDB_PATHS.moviesPopular),
+      fetchFromTMDB<TVShow>(TMDB_PATHS.tvPopular),
       fetchFromTMDB<Movie>(TMDB_PATHS.moviesTopRated),
     ]);
 
     return {
+      trending: trending.filter((item): item is TrendingItem => item.media_type !== "person"),
       nowPlaying,
-      popular,
+      popularTV,
       topRated,
-      featured: popular.slice(0, 5), // Use popular for featured for better variety
     };
   },
-  ["featured-movies"],
-  {
-    revalidate: 1800, // 30 minutes for homepage
-    tags: [CACHE_TAGS.FEATURED, CACHE_TAGS.MOVIES],
-  },
+  ["home-shelves"],
+  { revalidate: 1800, tags: [CACHE_TAGS.FEATURED] },
 );
 
-/**
- * Fetch featured TV shows for TV page with optimized caching
- */
-export const fetchFeaturedTVShows = createOptimizedCache(
+/** TV page shelves. */
+export const fetchTVShelves = createOptimizedCache(
   async () => {
     const [onTheAir, popular, topRated] = await Promise.all([
       fetchFromTMDB<TVShow>(TMDB_PATHS.tvOnTheAir),
       fetchFromTMDB<TVShow>(TMDB_PATHS.tvPopular),
       fetchFromTMDB<TVShow>(TMDB_PATHS.tvTopRated),
     ]);
-
-    return {
-      onTheAir,
-      popular,
-      topRated,
-      featured: popular.slice(0, 5), // Use popular for featured for better variety
-    };
+    return { onTheAir, popular, topRated };
   },
-  ["featured-tv-shows"],
-  {
-    revalidate: 1800, // 30 minutes for homepage
-    tags: [CACHE_TAGS.FEATURED, CACHE_TAGS.TV_SHOWS],
-  },
+  ["tv-shelves"],
+  { revalidate: 1800, tags: [CACHE_TAGS.FEATURED, CACHE_TAGS.TV_SHOWS] },
 );

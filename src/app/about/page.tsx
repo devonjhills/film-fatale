@@ -1,108 +1,57 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Bookmark,
-  Clapperboard,
-  ExternalLink,
-  Search,
-} from "@/components/ui/icons";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Film Fatale is a sharply edited movie and television discovery companion powered by data from TMDB.",
+    "Film Fatale is a place to browse movies and TV shows, see who made them and find where to watch, using data from TMDB.",
   alternates: {
     canonical: "/about",
   },
 };
 
-const features = [
-  {
-    title: "Find the next one",
-    copy: "Browse what is playing, what critics love, and the titles hiding in plain sight.",
-    icon: Search,
-  },
-  {
-    title: "Keep your dossier",
-    copy: "Save a watchlist, record what you finished, and track episodic progress.",
-    icon: Bookmark,
-  },
-  {
-    title: "Know the whole story",
-    copy: "Cast, trailers, providers, ratings, seasons, and the details that make a title click.",
-    icon: Clapperboard,
-  },
-];
-
 export default function AboutPage() {
   return (
-    <div className="site-container py-14 md:py-24">
-      <div className="grid gap-14 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)] lg:items-start">
-        <article>
-          <h1 className="display-title max-w-4xl">
-            Every great night starts with the right film.
-          </h1>
-          <p className="page-lede mt-8 md:text-xl">
-            Film Fatale is a private cinema companion built for discovery,
-            memory, and the pleasure of choosing well. It keeps movies and
-            television in one sharply edited place without turning the
-            experience into a noisy streaming storefront.
+    <div className="site-container py-10 md:py-14">
+      <article className="max-w-2xl">
+        <h1 className="page-title">About Film Fatale</h1>
+        <div className="reading-text mt-6 space-y-5">
+          <p>
+            Film Fatale is a place to browse movies and TV shows: what&apos;s in
+            theaters, what&apos;s on this week and what people rate highest. Each
+            title shows its cast and crew, trailer, seasons and the services
+            streaming it in the US.
           </p>
+          <p>
+            Browse by list on the{" "}
+            <Link href="/movies/popular" className="underline underline-offset-4 hover:text-muted-foreground">
+              Movies
+            </Link>{" "}
+            and{" "}
+            <Link href="/tv" className="underline underline-offset-4 hover:text-muted-foreground">
+              TV
+            </Link>{" "}
+            pages, narrow a list by genre or decade, or{" "}
+            <Link href="/search" className="underline underline-offset-4 hover:text-muted-foreground">
+              search
+            </Link>{" "}
+            for a title or person.
+          </p>
+        </div>
 
-          <div className="mt-14 grid gap-px overflow-hidden rounded-sm border border-border bg-border md:grid-cols-3">
-            {features.map(({ title, copy, icon: Icon }) => (
-              <section key={title} className="bg-background p-7">
-                <Icon
-                  className="size-5 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <h2 className="mt-5 font-serif text-2xl font-medium">{title}</h2>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  {copy}
-                </p>
-              </section>
-            ))}
-          </div>
-
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Button asChild size="lg">
-              <Link href="/">
-                Start discovering
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/library">Open the library</Link>
-            </Button>
-          </div>
-        </article>
-
-        <aside className="surface-panel p-8">
-          <Image
-            src="/logo.png"
-            alt="Film Fatale emblem"
-            width={180}
-            height={180}
-            className="mx-auto size-40 rounded-full bg-foreground sm:size-44"
-          />
-          <div className="mt-7 border-t border-border pt-6">
-            <p className="text-sm leading-6 text-muted-foreground">
-              Film and television data is supplied by The Movie Database.
-              Film Fatale is not endorsed or certified by TMDB.
-            </p>
-            <Link
-              href="https://www.themoviedb.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground underline underline-offset-4 hover:text-muted-foreground"
-            >
-              Visit TMDB
-              <ExternalLink aria-hidden="true" />
-            </Link>
-          </div>
-        </aside>
-      </div>
+        <p className="mt-10 border-t border-border pt-6 text-sm leading-6 text-muted-foreground">
+          Movie and TV data comes from{" "}
+          <a
+            href="https://www.themoviedb.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground underline underline-offset-4 hover:text-muted-foreground"
+          >
+            The Movie Database (TMDB)
+          </a>
+          . Film Fatale uses the TMDB API but is not endorsed or certified by TMDB.
+        </p>
+      </article>
     </div>
   );
 }

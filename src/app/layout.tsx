@@ -4,7 +4,6 @@ import "./globals.css";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { Navigation } from "@/components/layout/navigation";
 import { Footer } from "@/components/layout/footer";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 // Interface text: open, even letterforms that stay clear at small sizes.
@@ -94,13 +93,11 @@ export default function RootLayout({
           Skip to content
         </a>
         <AuthProvider>
-          <TooltipProvider>
-            <Navigation />
-            <main id="main-content" className="flex flex-1 flex-col pt-16">
-              {children}
-            </main>
-            <Footer />
-          </TooltipProvider>
+          <Navigation />
+          <main id="main-content" className="flex flex-1 flex-col pt-16">
+            {children}
+          </main>
+          <Footer />
         </AuthProvider>
       </body>
     </html>

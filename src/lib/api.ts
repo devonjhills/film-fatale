@@ -1,19 +1,4 @@
-import type { Movie, FormattedMovie, TMDBError } from "./types";
 import { IMAGE_URLS } from "./constants";
-
-// Format movie results (preserving original functionality)
-export const formatMovieResults = (movie: Movie): FormattedMovie => {
-  return {
-    id: movie.id,
-    release_date: movie.release_date,
-    title: movie.title,
-    vote_average: movie.vote_average,
-    poster_path: movie.poster_path,
-    backdrop_path: movie.backdrop_path,
-    overview: movie.overview,
-    poster: movie.poster_path ? IMAGE_URLS.poster.w500(movie.poster_path) : "",
-  };
-};
 
 // Utility functions for images
 export const getImageUrl = (
@@ -45,19 +30,4 @@ export const getImageUrl = (
     default:
       return "";
   }
-};
-
-// Error boundary helper
-export const isAPIError = (error: unknown): error is TMDBError => {
-  if (!error || typeof error !== "object" || error === null) {
-    return false;
-  }
-
-  const errorObj = error as Record<string, unknown>;
-  return (
-    "status_code" in errorObj &&
-    "status_message" in errorObj &&
-    typeof errorObj.status_code === "number" &&
-    typeof errorObj.status_message === "string"
-  );
 };

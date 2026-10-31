@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { useMovieDetails, useMovieWatchProviders } from "@/lib/hooks/api-hooks";
@@ -9,7 +8,6 @@ import { CastGrid, CrewList } from "@/components/person/cast-grid";
 import { MediaGrid } from "@/components/shared/media-grid";
 import { Section, FactList } from "@/components/shared/section";
 import { ExternalLinks } from "@/components/ui/external-links";
-import { Badge } from "@/components/ui/badge";
 import { formatDate, formatRuntime, formatCurrency } from "@/lib/utils";
 import type { MovieDetails } from "@/lib/types";
 
@@ -39,8 +37,7 @@ export function MovieDetailsPage({
   const cast = movie.credits?.cast || [];
   const crew = movie.credits?.crew || [];
   const directors = crew.filter((person) => person.job === "Director");
-  const keywords = movie.keywords?.keywords?.slice(0, 12) || [];
-  const recommendations = movie.recommendations?.results?.slice(0, 16) || [];
+  const recommendations = movie.recommendations?.results?.slice(0, 8) || [];
 
   return (
     <div className="detail-page">
@@ -49,25 +46,13 @@ export function MovieDetailsPage({
         mediaType="movie"
         trailer={trailer}
         watchProviders={watchProviders?.results?.US}
+        credit={{ label: "Directed by", people: directors }}
       />
 
-      <div className="site-container space-y-16 py-14 md:space-y-20 md:py-20">
+      <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
         <Section title="Details">
           <FactList
             facts={[
-              {
-                label: directors.length > 1 ? "Directors" : "Director",
-                value: directors.length
-                  ? directors.map((director, index) => (
-                      <span key={director.id}>
-                        {index > 0 && ", "}
-                        <Link href={`/person/${director.id}`} className="hover:underline">
-                          {director.name}
-                        </Link>
-                      </span>
-                    ))
-                  : null,
-              },
               { label: "Released", value: movie.release_date ? formatDate(movie.release_date) : null },
               { label: "Runtime", value: formatRuntime(movie.runtime) || null },
               { label: "Status", value: movie.status !== "Released" ? movie.status : null },
@@ -85,16 +70,6 @@ export function MovieDetailsPage({
               },
             ]}
           />
-
-          {keywords.length > 0 && (
-            <div className="mt-8 flex flex-wrap gap-2">
-              {keywords.map((keyword) => (
-                <Badge key={keyword.id} variant="secondary">
-                  {keyword.name}
-                </Badge>
-              ))}
-            </div>
-          )}
 
           <ExternalLinks
             className="mt-8"
@@ -122,7 +97,7 @@ export function MovieDetailsPage({
             <MediaGrid
               items={recommendations}
               mediaType="movie"
-              className="poster-grid-two-rows"
+              className="poster-grid-shelf"
             />
           </Section>
         )}

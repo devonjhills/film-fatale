@@ -6,8 +6,8 @@
  * A violet-black city night under neon signs, after Aura Dark and Tokyo
  * Night. Neon violet is the interface accent (primary actions, selection,
  * focus); mint green marks progress — watched episodes, new-episode badges,
- * progress bars. Blue and pink neon only ever appear as light, through the
- * blinds and in hero haze. Red is reserved for destructive actions.
+ * progress bars. Blue neon only appears as light through the blinds on
+ * backdrop heroes. Red is reserved for destructive actions.
  */
 :root {
   color-scheme: dark;
@@ -102,44 +102,6 @@
     margin-right: 0 !important;
   }
 
-  /*
-   * Neon through venetian blinds: a city sign outside the window, cast over
-   * the whole page. The light is violet nearest the window, shading into
-   * blue and a little mint as it falls across the room; the slats
-   * cut it into bands. Sits above content but below the header, menus and
-   * dialogs (z-50).
-   */
-  body::after {
-    position: fixed;
-    inset: 0;
-    z-index: 45;
-    pointer-events: none;
-    content: "";
-    background: linear-gradient(
-      to bottom left,
-      rgb(162 119 255 / 0.08) 0%,
-      rgb(122 162 247 / 0.045) 30%,
-      rgb(97 255 202 / 0.025) 50%,
-      transparent 62%
-    );
-    mask-image: repeating-linear-gradient(-24deg, #000 0 1.75rem, transparent 1.75rem 3.25rem);
-  }
-
-  /* The slat shadows between the lit bands. */
-  body::before {
-    position: fixed;
-    inset: 0;
-    z-index: 45;
-    pointer-events: none;
-    content: "";
-    background: repeating-linear-gradient(
-      -24deg,
-      transparent 0 1.75rem,
-      rgb(0 0 0 / 0.065) 1.75rem 3.25rem
-    );
-    mask-image: linear-gradient(to bottom left, #000 0%, transparent 55%);
-  }
-
   h1,
   h2,
   h3 {
@@ -209,12 +171,6 @@
     }
   }
 
-  .surface-panel {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--card);
-  }
-
   .surface-float {
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -222,54 +178,64 @@
     box-shadow: 0 16px 48px rgb(0 0 0 / 0.6);
   }
 
-  /*
-   * Backdrop grade: a mint-and-violet wash in overlay blend, so stills pick
-   * up the city's light without losing their own color.
-   */
-  .art-grade {
-    background: linear-gradient(
-      100deg,
-      rgb(97 255 202 / 0.22) 0%,
-      rgb(26 24 37 / 0) 50%,
-      rgb(162 119 255 / 0.34) 100%
-    );
-    mix-blend-mode: overlay;
-  }
-
+  /* Darkens backdrops toward the page and the text side for legibility. */
   .art-scrim {
     background:
-      radial-gradient(60% 50% at 0% 100%, rgb(162 119 255 / 0.16), transparent 70%),
       linear-gradient(to top, var(--background) 0%, rgb(12 11 18 / 0.75) 35%, transparent 75%),
       linear-gradient(to right, rgb(12 11 18 / 0.88), transparent 70%);
   }
 
-  /* The header's lower edge: a single neon tube. */
-  .neon-rule {
+  /*
+   * Neon through venetian blinds: the site's one signature effect, cast
+   * over backdrop heroes only so posters and text elsewhere stay clean.
+   * ::after is the violet→blue→mint light cut into bands by the slats;
+   * ::before is the slat shadow between them. Sits above the backdrop and
+   * scrim (negative z inside the hero's isolated stack) but under the text.
+   */
+  .blinds::before,
+  .blinds::after {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    content: "";
+  }
+
+  .blinds::after {
     background: linear-gradient(
-      to right,
-      transparent,
-      rgb(162 119 255 / 0.95) 30%,
-      rgb(97 255 202 / 0.9) 70%,
-      transparent
+      to bottom left,
+      rgb(162 119 255 / 0.14) 0%,
+      rgb(122 162 247 / 0.08) 35%,
+      rgb(97 255 202 / 0.04) 60%,
+      transparent 80%
     );
-    box-shadow: 0 0 14px 1px rgb(162 119 255 / 0.5);
+    mask-image: repeating-linear-gradient(-24deg, #000 0 1.75rem, transparent 1.75rem 3.25rem);
+  }
+
+  .blinds::before {
+    background: repeating-linear-gradient(
+      -24deg,
+      transparent 0 1.75rem,
+      rgb(0 0 0 / 0.14) 1.75rem 3.25rem
+    );
+    mask-image: linear-gradient(to bottom left, #000 0%, transparent 75%);
   }
 
   .display-title {
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-size: clamp(2.75rem, 6.5vw, 6.5rem);
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
     font-weight: 500;
     letter-spacing: -0.02em;
-    line-height: 0.95;
+    line-height: 1;
   }
 
   /* Detail page titles: sized to sit beside a poster, not over it. */
   .hero-title {
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-size: clamp(1.875rem, 4.6vw, 4.5rem);
+    font-size: clamp(1.75rem, 3.6vw, 3.25rem);
     font-weight: 500;
     letter-spacing: -0.015em;
-    line-height: 1;
+    line-height: 1.05;
   }
 
   /* Overviews, biographies and other prose meant to be read. */
@@ -287,9 +253,9 @@
   }
 
   .page-title {
-    max-width: 18ch;
+    max-width: 24ch;
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-size: clamp(2rem, 3.5vw, 3rem);
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1;
@@ -297,17 +263,17 @@
 
   .section-title {
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-size: clamp(1.375rem, 2vw, 1.625rem);
     font-weight: 500;
-    letter-spacing: -0.015em;
-    line-height: 1.05;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
   }
 
   .page-lede {
     max-width: 38rem;
     color: var(--muted-foreground);
-    font-size: 1.0625rem;
-    line-height: 1.65;
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
   .page-header {
@@ -316,8 +282,8 @@
 
   /*
    * One grid for every poster wall. Column counts are fixed per breakpoint
-   * at 3, 4, 6 and 8 so cards stay ~125–190px wide and every row fills:
-   * shelves show two rows of 16, category pages show 24 per page.
+   * at 3, 4, 6 and 8 so cards stay ~125–190px wide and every row fills;
+   * category pages show 24 per page, which splits evenly into all four.
    */
   .poster-grid {
     display: grid;
@@ -344,21 +310,31 @@
     }
   }
 
-  /* Shelf sections: show exactly two full rows at every width. */
+  /*
+   * Shelves: a short, full preview of a longer list. Two rows on phones and
+   * tablets, where a single row is only three or four posters, and one row
+   * from 900px up. Render at least 8 items.
+   */
   @media (max-width: 639.98px) {
-    .poster-grid-two-rows > :nth-child(n + 7) {
+    .poster-grid-shelf > :nth-child(n + 7) {
       display: none;
     }
   }
 
   @media (min-width: 640px) and (max-width: 899.98px) {
-    .poster-grid-two-rows > :nth-child(n + 9) {
+    .poster-grid-shelf > :nth-child(n + 9) {
       display: none;
     }
   }
 
   @media (min-width: 900px) and (max-width: 1279.98px) {
-    .poster-grid-two-rows > :nth-child(n + 13) {
+    .poster-grid-shelf > :nth-child(n + 7) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .poster-grid-shelf > :nth-child(n + 9) {
       display: none;
     }
   }
@@ -375,14 +351,11 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--card);
-    transition:
-      border-color 150ms ease,
-      box-shadow 150ms ease;
+    transition: border-color 150ms ease;
   }
 
   .poster-card:hover {
     border-color: rgb(162 119 255 / 0.6);
-    box-shadow: 0 0 22px rgb(162 119 255 / 0.16);
   }
 
   .poster-card-art {
@@ -439,30 +412,9 @@
     font-family: var(--font-display), ui-serif, Georgia, serif;
   }
 
-  .layout-stable {
-    contain: layout style;
-  }
-
-  .text-shadow-sm {
-    text-shadow: 0 1px 4px rgb(0 0 0 / 0.7);
-  }
-
-  .text-shadow,
-  .text-shadow-strong {
+  /* Text over backdrops: a dark drop for legibility. */
+  .text-shadow {
     text-shadow: 0 2px 16px rgb(0 0 0 / 0.85);
-  }
-
-  /* Hero titles: a dark drop for legibility plus a faint neon halo. */
-  .text-shadow-cinematic {
-    text-shadow:
-      0 2px 16px rgb(0 0 0 / 0.85),
-      0 0 42px rgb(162 119 255 / 0.3);
-  }
-
-  .divider {
-    height: 1px;
-    width: 100%;
-    background: var(--border);
   }
 }
 

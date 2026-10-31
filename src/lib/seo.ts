@@ -1,7 +1,7 @@
 export const SITE_NAME = "Film Fatale";
 export const SITE_URL = "https://filmfatale.app";
 export const SITE_DESCRIPTION =
-  "Discover movies and TV shows, explore cast and crew, find where to watch, and keep a private personal library.";
+  "Browse movies and TV shows, explore cast and crew, and find where to watch.";
 
 export function absoluteUrl(path = "/"): string {
   return new URL(path, SITE_URL).toString();

@@ -107,7 +107,7 @@ export function PersonDetailsPage({
         !credit.genre_ids?.some((genre) => APPEARANCE_GENRES.has(genre)),
     )
     .sort((a, b) => (b.vote_count || 0) - (a.vote_count || 0))
-    .slice(0, 16);
+    .slice(0, 8);
 
   // Newest first; titles without a date are upcoming, so they lead.
   const filmography = titles.sort((a, b) => {
@@ -138,7 +138,7 @@ export function PersonDetailsPage({
   ].filter(Boolean) as { label: string; href: string }[];
 
   return (
-    <div className="site-container space-y-16 py-14 md:space-y-20 md:py-20">
+    <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
       <div className="grid gap-10 md:grid-cols-[minmax(12rem,17rem)_minmax(0,1fr)] md:gap-14">
         <div className="poster-frame relative mx-auto aspect-[2/3] w-48 overflow-hidden sm:w-56 md:w-full">
           {profileUrl ? (
@@ -216,7 +216,7 @@ export function PersonDetailsPage({
 
       {knownFor.length > 0 && (
         <Section title="Known for">
-          <div className="poster-grid poster-grid-two-rows">
+          <div className="poster-grid poster-grid-shelf">
             {knownFor.map((credit) => (
               <MediaCard
                 key={`${credit.media_type}-${credit.id}`}

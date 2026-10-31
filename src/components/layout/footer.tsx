@@ -20,12 +20,7 @@ export function Footer() {
             height={36}
             className="size-9 rounded-full bg-foreground"
           />
-          <div>
-            <p className="font-serif text-lg font-medium text-foreground">
-              Film Fatale
-            </p>
-            <p className="text-xs">A private cinema companion</p>
-          </div>
+          <p className="font-serif text-lg font-medium text-foreground">Film Fatale</p>
         </div>
 
         <div className="flex flex-col gap-4 md:items-end">

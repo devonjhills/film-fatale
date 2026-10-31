@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Film, MonitorPlay, Star } from "@/components/ui/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getImageUrl } from "@/lib/api";
@@ -28,6 +29,8 @@ interface DetailsHeroProps {
     type: string;
   };
   watchProviders?: WatchProviderRegion;
+  /** The people a title is credited to, e.g. its directors or creators. */
+  credit?: { label: string; people: { id: number; name: string }[] };
 }
 
 export function DetailsHero({
@@ -35,6 +38,7 @@ export function DetailsHero({
   mediaType,
   trailer,
   watchProviders,
+  credit,
 }: DetailsHeroProps) {
   const backdropUrl = getImageUrl(item.backdrop_path, "backdrop", "w1280");
   const posterUrl = getImageUrl(item.poster_path, "poster", "w500");
@@ -54,8 +58,8 @@ export function DetailsHero({
     isMovieDetails(item) || isTVShowDetails(item) ? item.genres : [];
 
   return (
-    <section className="relative isolate overflow-hidden border-b border-border">
-      <div className="absolute inset-x-0 top-0 -z-20 h-[32rem] [mask-image:linear-gradient(to_bottom,#000_55%,transparent)] md:h-[40rem]">
+    <section className="blinds relative isolate overflow-hidden border-b border-border">
+      <div className="absolute inset-x-0 top-0 -z-20 h-[30rem] [mask-image:linear-gradient(to_bottom,#000_55%,transparent)] md:h-[36rem]">
         {backdropUrl ? (
           <Image
             src={backdropUrl}
@@ -69,7 +73,6 @@ export function DetailsHero({
         ) : (
           <div className="size-full bg-muted" />
         )}
-        <div className="art-grade absolute inset-0" />
       </div>
       <div className="art-scrim absolute inset-0 -z-10" />
 
@@ -79,8 +82,8 @@ export function DetailsHero({
         difference); on phones a small poster sits beside the title and the
         rest runs full width beneath.
       */}
-      <div className="site-container pb-12 pt-16 md:pb-16 md:pt-28">
-        <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-5 gap-y-7 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-x-8 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:grid-rows-[1fr_auto_auto_1fr] lg:gap-x-14 lg:gap-y-0">
+      <div className="site-container pb-10 pt-12 md:pb-14 md:pt-20">
+        <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-5 gap-y-6 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-x-8 lg:grid-cols-[15rem_minmax(0,1fr)] lg:grid-rows-[1fr_auto_auto_1fr] lg:gap-x-12 lg:gap-y-0">
           <div className="poster-frame relative col-start-1 row-start-1 aspect-[2/3] w-full self-start overflow-hidden shadow-[0_24px_60px_rgb(0_0_0/0.55)] lg:row-span-4">
             {posterUrl ? (
               <Image
@@ -88,7 +91,7 @@ export function DetailsHero({
                 alt={`${title} poster`}
                 fill
                 loading="eager"
-                sizes="(max-width: 640px) 104px, (max-width: 1024px) 144px, 280px"
+                sizes="(max-width: 640px) 104px, (max-width: 1024px) 144px, 240px"
                 className="object-cover"
               />
             ) : (
@@ -103,13 +106,13 @@ export function DetailsHero({
           </div>
 
           <div className="col-start-2 row-start-1 min-w-0 self-end lg:row-start-2">
-            <h1 className="hero-title text-shadow-cinematic">{title}</h1>
+            <h1 className="hero-title text-shadow">{title}</h1>
             {tagline && (
-              <p className="mt-3 max-w-3xl font-serif text-lg italic leading-snug text-muted-foreground md:mt-4 md:text-2xl">
+              <p className="mt-2 max-w-3xl font-serif text-lg italic leading-snug text-muted-foreground md:mt-3 md:text-xl">
                 {tagline}
               </p>
             )}
-            <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm tabular-nums text-muted-foreground md:mt-5">
+            <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm tabular-nums text-muted-foreground md:mt-4">
               {item.vote_average > 0 && (
                 <span className="inline-flex items-center gap-1.5 font-medium text-foreground">
                   <Star className="size-3.5" weight="fill" aria-hidden="true" />
@@ -133,12 +136,28 @@ export function DetailsHero({
                 <span>{genres.map((genre: { id: number; name: string }) => genre.name).join(", ")}</span>
               )}
             </p>
+            {credit && credit.people.length > 0 && (
+              <p className="mt-2 text-sm text-muted-foreground">
+                {credit.label}{" "}
+                {credit.people.map((person, index) => (
+                  <span key={person.id}>
+                    {index > 0 && ", "}
+                    <Link
+                      href={`/person/${person.id}`}
+                      className="font-medium text-foreground hover:underline"
+                    >
+                      {person.name}
+                    </Link>
+                  </span>
+                ))}
+              </p>
+            )}
           </div>
 
-          <div className="col-span-2 row-start-2 min-w-0 lg:col-span-1 lg:col-start-2 lg:row-start-3 lg:mt-6">
+          <div className="col-span-2 row-start-2 min-w-0 lg:col-span-1 lg:col-start-2 lg:row-start-3 lg:mt-5">
             {item.overview && <p className="reading-text max-w-[62ch]">{item.overview}</p>}
 
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-3">
               {trailer && <TrailerModal trailer={trailer} title={title} size="lg" />}
               <LibraryButton
                 meta={{
@@ -152,10 +171,10 @@ export function DetailsHero({
                 }}
                 size="lg"
               />
-              <ShareButton />
+              <ShareButton title={title} />
             </div>
 
-            <StreamingOn providers={watchProviders} className="mt-7" />
+            <StreamingOn providers={watchProviders} className="mt-6" />
           </div>
         </div>
       </div>
@@ -168,11 +187,11 @@ export function DetailsPageSkeleton() {
   return (
     <div aria-busy="true">
       <div className="border-b border-border">
-        <div className="site-container pb-12 pt-16 md:pb-16 md:pt-28">
-          <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-x-5 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-x-8 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:gap-x-14">
+        <div className="site-container pb-10 pt-12 md:pb-14 md:pt-20">
+          <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-x-5 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-x-8 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-x-12">
             <Skeleton className="aspect-[2/3] w-full" />
             <div className="space-y-5">
-              <Skeleton className="h-16 w-3/4 max-w-2xl md:h-24" />
+              <Skeleton className="h-12 w-3/4 max-w-2xl md:h-16" />
               <Skeleton className="h-4 w-64 max-w-full" />
               <Skeleton className="h-24 w-full max-w-2xl" />
               <div className="flex gap-3">
@@ -183,7 +202,7 @@ export function DetailsPageSkeleton() {
           </div>
         </div>
       </div>
-      <div className="site-container space-y-16 py-14 md:py-20">
+      <div className="site-container space-y-12 py-10 md:py-14">
         {[0, 1].map((section) => (
           <div key={section}>
             <Skeleton className="mb-6 h-9 w-40" />

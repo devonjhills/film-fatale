@@ -1,26 +1,11 @@
-"use client";
+import { CategoryPage, categoryMetadata } from "@/components/category/category-page";
 
-import { CategoryPage } from "@/components/category/category-page";
-import { useTopRatedTVShows } from "@/lib/hooks/api-hooks";
-import { usePaginatedData } from "@/hooks/usePaginatedData";
+export const metadata = categoryMetadata("tv", "top-rated");
 
-export default function TopRatedTVShowsPage() {
-  const { currentPage, handlePageChange } = usePaginatedData();
-  const { tvShows, isLoading, isError, totalPages, totalResults } =
-    useTopRatedTVShows(currentPage);
-
-  return (
-    <CategoryPage
-      title="Top rated shows"
-      description="The highest-rated series, as voted by TMDB members."
-      mediaType="tv"
-      data={tvShows}
-      isLoading={isLoading}
-      error={isError}
-      totalPages={totalPages}
-      totalResults={totalResults}
-      currentPage={currentPage}
-      onPageChange={handlePageChange}
-    />
-  );
+export default function TopRatedTVPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  return <CategoryPage media="tv" slug="top-rated" searchParams={searchParams} />;
 }

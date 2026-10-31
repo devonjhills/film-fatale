@@ -15,7 +15,7 @@ export function Section({ title, action, className, children }: SectionProps) {
 
   return (
     <section aria-labelledby={headingId} className={className}>
-      <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-border pb-3">
+      <div className="mb-5 flex items-baseline justify-between gap-4 border-b border-border pb-2">
         <h2 id={headingId} className="section-title min-w-0">
           {title}
         </h2>
