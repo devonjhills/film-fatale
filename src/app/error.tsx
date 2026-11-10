@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { AlertTriangle, Home, RotateCcw } from "@/components/ui/icons";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { Button } from "@/components/ui/button";
 
 export default function Error({

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { Button } from "@/components/ui/button";
 import { Star } from "@/components/ui/icons";
 import { formatVoteAverage } from "@/lib/utils";

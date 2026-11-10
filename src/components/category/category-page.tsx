@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { notFound } from "next/navigation";
 import { MediaGrid } from "@/components/shared/media-grid";
 import { BrowseFilterControls } from "@/components/category/browse-filters";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { Film } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 

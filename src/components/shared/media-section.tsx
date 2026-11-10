@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { MediaGrid } from "./media-grid";
 import { Section } from "./section";
 import type { MediaItem } from "./media-card";

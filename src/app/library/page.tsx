@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { mutate as seed } from "swr";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { ViewingHistoryItem } from "@/lib/types";

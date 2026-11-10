@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { notFound } from "next/navigation";
 import { Check, Film, User } from "@/components/ui/icons";
 import { usePersonDetails } from "@/lib/hooks/api-hooks";

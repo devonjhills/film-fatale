@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { forwardRef } from "react";
-import NextLink from "next/link";
+import { AppLink } from "@/components/ui/app-link";
 import { type ClassValue } from "clsx";
 
 interface LinkProps
@@ -104,7 +104,7 @@ const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       );
     }
 
-    // Use NextLink for internal links, regular anchor for external
+    // Use AppLink (hover-prefetch next/link) for internal links, regular anchor for external
     if (isExternal) {
       return (
         <a href={href} {...commonProps}>
@@ -114,9 +114,9 @@ const Link = forwardRef<HTMLAnchorElement, LinkProps>(
     }
 
     return (
-      <NextLink href={href} prefetch={prefetch} {...commonProps}>
+      <AppLink href={href} prefetch={prefetch} {...commonProps}>
         {children}
-      </NextLink>
+      </AppLink>
     );
   },
 );

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { Button } from "@/components/ui/button";
 import { User } from "@/components/ui/icons";
 import { getImageUrl } from "@/lib/api";

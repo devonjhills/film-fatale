@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { mutate as revalidate } from "swr";
 import type { ViewingHistoryItem, WatchStatus } from "@/lib/types";
 import { getImageUrl } from "@/lib/api";

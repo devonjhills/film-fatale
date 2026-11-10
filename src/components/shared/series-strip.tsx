@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { Check, Film } from "@/components/ui/icons";
 import { getImageUrl } from "@/lib/api";
 import { cn } from "@/lib/utils";
