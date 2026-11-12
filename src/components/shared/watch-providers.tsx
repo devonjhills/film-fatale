@@ -23,14 +23,14 @@ export function StreamingOn({ providers, className }: StreamingOnProps) {
         {services.map((service) => (
           <li
             key={service.name}
-            className="flex h-7 items-center gap-1.5 rounded-md border border-line bg-surface-2 pl-1 pr-2 text-ui"
+            className="flex min-h-7 items-center gap-1.5 rounded-md border border-line bg-surface-2 py-0.5 pl-1 pr-2 text-ui leading-tight"
           >
             <Image
               src={getImageUrl(service.logo_path, "logo", "w92")}
               alt=""
               width={20}
               height={20}
-              className="size-5 rounded-[3px]"
+              className="size-5 shrink-0 rounded-[3px]"
             />
             {service.name}
           </li>

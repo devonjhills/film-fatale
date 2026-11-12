@@ -31,6 +31,7 @@ export function FeaturedPanel({ items, mediaType }: FeaturedPanelProps) {
   return (
     <Panel
       title="Featured"
+      titleAs="p"
       aside={
         <Link href={href} className={panelLinkClass}>
           See all<span className="sr-only"> {kicker.toLowerCase()}</span>

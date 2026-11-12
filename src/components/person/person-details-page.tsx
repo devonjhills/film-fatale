@@ -381,7 +381,6 @@ function Filmography({ credits, watched }: { credits: Credit[]; watched: Set<str
       {filtered.length > FILMOGRAPHY_PREVIEW && (
         <Button
           variant="outline"
-          size="sm"
           className="mt-4"
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}

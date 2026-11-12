@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 /** The shared look for text inputs, text areas and selects. */
 export const fieldClass =
-  "w-full rounded-md border border-line-strong bg-surface-1 px-3.5 text-sm text-ink transition-colors duration-150 placeholder:text-ink-muted focus:border-violet focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
+  "w-full rounded-md border border-line-strong bg-surface-1 px-3.5 text-sm text-ink transition-colors duration-150 placeholder:text-ink-muted focus:border-violet disabled:cursor-not-allowed disabled:opacity-50";
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   ({ className, type, ...props }, ref) => {

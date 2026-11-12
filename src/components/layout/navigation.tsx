@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 const navLinkClass = (active: boolean, mobile = false) =>
   cn(
     "flex items-center rounded-md px-3 text-sm font-medium transition-colors duration-150",
-    mobile ? "min-h-12 px-4 text-base" : "min-h-9",
+    mobile ? "min-h-12 px-4 text-base" : "min-h-11",
     active ? "bg-surface-2 text-ink" : "text-ink-muted hover:text-ink",
   );
 

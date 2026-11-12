@@ -9,6 +9,8 @@ interface PanelProps {
   className?: string;
   /** Padding and layout for the body; "p-3 sm:p-4" by default. */
   bodyClassName?: string;
+  /** "p" when the label shouldn't be a heading, e.g. above a page's own h1. */
+  titleAs?: "h2" | "p";
   children: ReactNode;
 }
 
@@ -16,7 +18,7 @@ interface PanelProps {
  * A page section: a surface one step above the page with a hairline edge,
  * topped by a slim title bar like an editor pane.
  */
-export function Panel({ title, aside, className, bodyClassName, children }: PanelProps) {
+export function Panel({ title, aside, className, bodyClassName, titleAs: Title = "h2", children }: PanelProps) {
   const headingId = useId();
 
   return (
@@ -25,10 +27,10 @@ export function Panel({ title, aside, className, bodyClassName, children }: Pane
       className={cn("min-w-0 overflow-hidden rounded-lg border border-line bg-surface-1", className)}
     >
       {title && (
-        <div className="flex min-h-11 items-center justify-between gap-4 border-b border-line bg-surface-2 px-3 py-2 sm:px-4">
-          <h2 id={headingId} className="min-w-0 truncate text-ui font-semibold text-ink">
+        <div className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-line bg-surface-2 px-3 py-2 sm:px-4">
+          <Title id={headingId} className="min-w-0 break-words text-ui font-semibold text-ink">
             {title}
-          </h2>
+          </Title>
           {aside && <div className="flex shrink-0 items-center gap-2">{aside}</div>}
         </div>
       )}

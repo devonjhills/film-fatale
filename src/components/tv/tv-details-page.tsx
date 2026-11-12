@@ -114,7 +114,13 @@ export function TVDetailsPage({
   const numbered = seasons.filter((season) => season.season_number > 0).length;
   const hasSpecials = seasons.some((season) => season.season_number === 0);
   const firstYear = formatYear(tvShow.first_air_date);
-  const lastYear = tvShow.in_production ? "present" : formatYear(tvShow.last_air_date);
+  // "– present" only once a show has started airing.
+  const started = Boolean(tvShow.first_air_date) && new Date(tvShow.first_air_date) <= new Date();
+  const lastYear = tvShow.in_production
+    ? started
+      ? "present"
+      : null
+    : formatYear(tvShow.last_air_date);
   const aired = firstYear && (lastYear && lastYear !== firstYear ? `${firstYear} – ${lastYear}` : firstYear);
   const status = STATUS_LABELS[tvShow.status] ?? tvShow.status;
   const plural = (count: number, noun: string) => `${count} ${noun}${count === 1 ? "" : "s"}`;

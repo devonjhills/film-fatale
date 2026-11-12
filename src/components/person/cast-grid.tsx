@@ -77,7 +77,6 @@ export function CastGrid({ cast, mediaType = "movie" }: CastGridProps) {
       {cast.length > 4 && (
         <Button
           variant="outline"
-          size="sm"
           className={cn("mt-3", cast.length <= COLLAPSED_COUNT && !expanded && "min-[480px]:hidden")}
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
