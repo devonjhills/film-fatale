@@ -2,13 +2,18 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/** The shared look for text inputs, text areas and selects. */
+export const fieldClass =
+  "w-full rounded-md border border-line-strong bg-surface-1 px-3.5 text-sm text-ink transition-colors duration-150 placeholder:text-ink-muted focus:border-violet focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
+
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   ({ className, type, ...props }, ref) => {
     return (
       <input
         type={type}
         className={cn(
-          "flex min-h-11 w-full rounded-sm border border-input bg-card px-3.5 py-2 text-base text-foreground transition-colors duration-150 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus:border-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          fieldClass,
+          "flex min-h-10 py-2 text-base md:text-sm",
           className,
         )}
         ref={ref}

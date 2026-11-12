@@ -4,6 +4,7 @@ import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { cn } from "@/lib/utils";
 import { Check, ChevronDown, ChevronUp } from "@/components/ui/icons";
+import { fieldClass } from "@/components/ui/input";
 
 const Select = SelectPrimitive.Root;
 
@@ -18,7 +19,8 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex min-h-11 w-full items-center justify-between whitespace-nowrap rounded-sm border border-input bg-card px-3.5 py-2 text-sm data-[placeholder]:text-muted-foreground focus:border-ring focus:outline-none focus:ring-3 focus:ring-primary/10 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      fieldClass,
+      "flex min-h-10 items-center justify-between whitespace-nowrap py-2 data-[placeholder]:text-ink-muted [&>span]:line-clamp-1",
       className,
     )}
     {...props}
@@ -138,7 +140,7 @@ const SelectSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 my-1 h-px bg-muted", className)}
+    className={cn("-mx-1 my-1 h-px bg-line", className)}
     {...props}
   />
 ));
