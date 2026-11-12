@@ -168,3 +168,11 @@ export function getUSCertification(
 }
 
 // Get MPAA rating color and styling
+
+/** The US TV rating (TV-MA, TV-14 …) from a show's content_ratings. */
+export function getUSContentRating(
+  ratings: { results?: Array<{ iso_3166_1: string; rating?: string }> } | null | undefined,
+): string | null {
+  const rating = ratings?.results?.find((result) => result.iso_3166_1 === "US")?.rating?.trim();
+  return rating || null;
+}

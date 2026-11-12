@@ -156,7 +156,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
                 "@type": "ListItem",
                 position: 2,
                 name: "Movies",
-                item: absoluteUrl("/movies/popular"),
+                item: absoluteUrl("/movies"),
               },
               {
                 "@type": "ListItem",

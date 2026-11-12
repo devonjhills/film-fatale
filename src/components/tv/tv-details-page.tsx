@@ -2,13 +2,8 @@
 
 import { notFound } from "next/navigation";
 import { useTVDetails, useTVWatchProviders } from "@/lib/hooks/api-hooks";
-import {
-  DetailHeader,
-  DetailsPageSkeleton,
-  PeopleLinks,
-  RatingValue,
-} from "@/components/ui/detail-header";
-import { StreamingOn } from "@/components/shared/watch-providers";
+import { DetailHeader, DetailsPageSkeleton, type HeaderCredit } from "@/components/ui/detail-header";
+import { WhereToWatch } from "@/components/shared/watch-providers";
 import { TrailerModal } from "@/components/ui/trailer-modal";
 import { LibraryButton } from "@/components/library/library-panel";
 import { ShareButton } from "@/components/ui/share-button";
@@ -16,16 +11,15 @@ import { Chip } from "@/components/ui/chip";
 import { Panel, PanelNote } from "@/components/ui/panel";
 import { FactGrid } from "@/components/ui/fact-card";
 import { getImageUrl } from "@/lib/api";
-import { streamingServices } from "@/lib/watch-providers";
 import { CastGrid, CrewList } from "@/components/person/cast-grid";
 import { MediaSection } from "@/components/shared/media-section";
 import { SeriesStrip } from "@/components/shared/series-strip";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useWatchedTitles } from "@/lib/hooks/use-library";
-import { similarListLink } from "@/lib/browse-link";
+import { genreLinks, similarListLink } from "@/lib/browse-link";
 import type { RelatedShelf } from "@/lib/related";
 import { ExternalLinks } from "@/components/ui/external-links";
-import { formatDate, formatYear } from "@/lib/utils";
+import { cn, formatDate, formatYear, getUSContentRating } from "@/lib/utils";
 import type { TVShowDetails } from "@/lib/types";
 
 interface TVDetailsPageProps {
@@ -41,7 +35,7 @@ export function TVDetailsPage({
   related = [],
 }: TVDetailsPageProps) {
   const { tvShow, isLoading, isError } = useTVDetails(tvId, initialTVShow);
-  const { watchProviders } = useTVWatchProviders(tvId);
+  const { watchProviders, isLoading: providersLoading } = useTVWatchProviders(tvId);
   const { user } = useAuth();
   const watched = useWatchedTitles(Boolean(user));
 
@@ -123,6 +117,13 @@ export function TVDetailsPage({
     : formatYear(tvShow.last_air_date);
   const aired = firstYear && (lastYear && lastYear !== firstYear ? `${firstYear} – ${lastYear}` : firstYear);
   const status = STATUS_LABELS[tvShow.status] ?? tvShow.status;
+  const nextEpisode = tvShow.next_episode_to_air?.air_date ? tvShow.next_episode_to_air : null;
+  const credits: HeaderCredit[] = creators.slice(0, 2).map((person) => ({ ...person, role: "Creator" }));
+  credits.push(
+    ...mainCast
+      .slice(0, 6 - credits.length)
+      .map((person) => ({ ...person, role: person.character || "Cast" })),
+  );
   const plural = (count: number, noun: string) => `${count} ${noun}${count === 1 ? "" : "s"}`;
 
   return (
@@ -134,8 +135,17 @@ export function TVDetailsPage({
           alt: `${tvShow.name} poster`,
           fallback: "tv",
         }}
+        meta={[
+          tvShow.type === "Miniseries" ? "Limited series" : "TV series",
+          aired,
+          getUSContentRating(tvShow.content_ratings) && (
+            <Chip>{getUSContentRating(tvShow.content_ratings)}</Chip>
+          ),
+          tvShow.number_of_seasons > 0 && plural(tvShow.number_of_seasons, "season"),
+        ]}
         title={tvShow.name}
         tagline={tvShow.tagline}
+        genres={genreLinks("tv", tvShow.genres)}
         overview={tvShow.overview && <p>{tvShow.overview}</p>}
         actions={
           <>
@@ -155,42 +165,44 @@ export function TVDetailsPage({
             <ShareButton title={tvShow.name} />
           </>
         }
+        credits={credits}
+        score={{ value: tvShow.vote_average, votes: tvShow.vote_count }}
         facts={[
-          { label: "Rating", value: tvShow.vote_average > 0 && <RatingValue value={tvShow.vote_average} /> },
           {
-            label: "Aired",
-            value: (aired || status) && (
-              <span className="flex flex-wrap items-center gap-2">
-                {aired && <span className="tabular-nums">{aired}</span>}
-                {status && <Chip tone="mint">{status}</Chip>}
+            label: "Status",
+            value: status && (
+              <span className="inline-flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className={cn("size-2 rounded-full", tvShow.in_production ? "bg-mint" : "bg-ink-muted/60")}
+                />
+                {status}
               </span>
             ),
           },
           {
-            label: "Seasons",
-            value:
-              tvShow.number_of_seasons > 0 &&
-              [
-                plural(tvShow.number_of_seasons, "season"),
-                tvShow.number_of_episodes > 0 && plural(tvShow.number_of_episodes, "episode"),
-              ]
-                .filter(Boolean)
-                .join(", "),
+            label: "Episodes",
+            value: tvShow.number_of_episodes > 0 && String(tvShow.number_of_episodes),
+            detail: tvShow.number_of_seasons > 0 && `across ${plural(tvShow.number_of_seasons, "season")}`,
           },
-          { label: "Genres", value: tvShow.genres.map((genre) => genre.name).join(", ") },
-          {
-            label: "Created by",
-            value: creators.length > 0 && <PeopleLinks people={creators.slice(0, 3)} />,
-          },
+          nextEpisode
+            ? {
+                label: "Next episode",
+                value: formatDate(nextEpisode.air_date),
+                detail: episodeName(nextEpisode),
+              }
+            : {
+                label: "Last aired",
+                value: tvShow.last_air_date && formatDate(tvShow.last_air_date),
+                detail: tvShow.last_episode_to_air && episodeName(tvShow.last_episode_to_air),
+              },
           {
             label: "Network",
-            value: tvShow.networks?.slice(0, 2).map((network) => network.name).join(", "),
-          },
-          {
-            label: "Stream on",
-            value: streamingServices(providers?.flatrate).length > 0 && <StreamingOn providers={providers} />,
+            value: tvShow.networks?.[0]?.name,
+            detail: tvShow.networks?.[1]?.name,
           },
         ]}
+        footer={<WhereToWatch providers={providers} loading={providersLoading} />}
       />
 
       <div className="site-container space-y-5 py-6 md:space-y-6 md:py-8">
@@ -277,6 +289,10 @@ export function TVDetailsPage({
     </div>
   );
 }
+
+/** "Season 3, episode 5", for a fact's second line. */
+const episodeName = (episode: { season_number: number; episode_number: number }) =>
+  `Season ${episode.season_number}, episode ${episode.episode_number}`;
 
 /** TMDB show statuses in the site's words. */
 const STATUS_LABELS: Record<string, string> = {

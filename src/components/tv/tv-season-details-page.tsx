@@ -7,13 +7,9 @@ import { useTVSeasonDetails, useTVDetails } from "@/lib/hooks/api-hooks";
 import { getImageUrl } from "@/lib/api";
 import { CastGrid, CrewList } from "@/components/person/cast-grid";
 import { Panel, PanelNote } from "@/components/ui/panel";
-import {
-  DetailHeader,
-  DetailsPageSkeleton,
-  RatingValue,
-} from "@/components/ui/detail-header";
+import { DetailHeader, DetailsPageSkeleton } from "@/components/ui/detail-header";
 import { Button } from "@/components/ui/button";
-import { formatDate, formatVoteAverage, formatRuntime } from "@/lib/utils";
+import { formatDate, formatVoteAverage, formatRuntime, formatYear } from "@/lib/utils";
 import type { TVSeasonDetails, TVShowDetails } from "@/lib/types";
 
 interface TVSeasonDetailsPageProps {
@@ -57,6 +53,8 @@ export function TVSeasonDetailsPage({
   const episodes = season.episodes || [];
   const seasonCast = season.credits?.cast || [];
   const seasonCrew = season.credits?.crew || [];
+  const finale = episodes.length > 1 ? episodes[episodes.length - 1] : undefined;
+  const totalRuntime = episodes.reduce((sum, episode) => sum + (episode.runtime || 0), 0);
 
   const seasonNumbers = (tvShow?.seasons || [])
     .map((s) => s.season_number)
@@ -97,23 +95,23 @@ export function TVSeasonDetailsPage({
         }
         title={season.name}
         overview={season.overview && <p>{season.overview}</p>}
+        meta={[
+          season.season_number > 0 ? `Season ${season.season_number}` : "Specials",
+          formatYear(season.air_date),
+          episodes.length > 0 && `${episodes.length} episode${episodes.length === 1 ? "" : "s"}`,
+        ]}
+        score={{ value: season.vote_average }}
         facts={[
+          { label: "Premiered", value: season.air_date && formatDate(season.air_date) },
           {
-            label: "Rating",
-            value: season.vote_average > 0 && (
-              <RatingValue value={season.vote_average} />
-            ),
+            label: "Finale",
+            value: finale?.air_date && formatDate(finale.air_date),
           },
           {
-            label: "Aired",
-            value: season.air_date && formatDate(season.air_date),
+            label: "Runtime",
+            value: totalRuntime > 0 && formatRuntime(totalRuntime),
           },
-          {
-            label: "Episodes",
-            value:
-              episodes.length > 0 &&
-              `${episodes.length} episode${episodes.length === 1 ? "" : "s"}`,
-          },
+          { label: "Network", value: tvShow?.networks?.[0]?.name },
         ]}
       />
 

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { FeaturedPanel } from "@/components/shared/featured-panel";
+import { TrendingSpotlight } from "@/components/discover/trending-spotlight";
+import { UpNextShelf } from "@/components/discover/up-next-shelf";
+import { NewReleases } from "@/components/discover/new-releases";
+import { ComingSoon } from "@/components/discover/coming-soon";
 import { MediaSection } from "@/components/shared/media-section";
-import { fetchHomeShelves } from "@/lib/data-fetching";
+import { fetchDiscoverShelves } from "@/lib/data-fetching";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 
@@ -11,8 +14,15 @@ export const metadata: Metadata = {
   },
 };
 
+const dateline = new Intl.DateTimeFormat("en-US", {
+  weekday: "long",
+  month: "long",
+  day: "numeric",
+  timeZone: "America/New_York",
+});
+
 export default async function Home() {
-  const { trending, nowPlaying, popularTV, topRated } = await fetchHomeShelves();
+  const { trending, nowPlaying, newStreaming, newShows, comingSoon } = await fetchDiscoverShelves();
 
   return (
     <div className="min-h-screen">
@@ -29,21 +39,23 @@ export default async function Home() {
         }}
       />
 
+      <header className="site-container pt-8 md:pt-10">
+        <p className="text-ui font-semibold text-violet">
+          <time dateTime={new Date().toISOString().slice(0, 10)}>{dateline.format(new Date())}</time>
+        </p>
+        <h1 className="page-title mt-1.5">Discover</h1>
+        <p className="page-lede mt-2">What&apos;s new in film and TV, and what&apos;s coming next.</p>
+      </header>
+
       <div className="site-container space-y-5 py-6 md:space-y-6 md:py-8">
-        <FeaturedPanel items={nowPlaying.slice(0, 5)} mediaType="movie" />
-        <MediaSection title="Trending this week" items={trending} mediaType="movie" />
+        <UpNextShelf />
+        <TrendingSpotlight items={trending.slice(0, 8)} />
+        <NewReleases theaters={nowPlaying} streaming={newStreaming} tv={newShows} />
+        <ComingSoon movies={comingSoon.movies} shows={comingSoon.shows} />
         <MediaSection
-          title="In theaters"
-          items={nowPlaying}
+          title="More trending today"
+          items={trending.slice(8)}
           mediaType="movie"
-          href="/movies/now-playing"
-        />
-        <MediaSection title="Popular on TV" items={popularTV} mediaType="tv" href="/tv/popular" />
-        <MediaSection
-          title="Top rated movies"
-          items={topRated}
-          mediaType="movie"
-          href="/movies/top-rated"
         />
       </div>
     </div>

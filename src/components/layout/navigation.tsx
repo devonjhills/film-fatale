@@ -29,7 +29,7 @@ const navLinkClass = (active: boolean, mobile = false) =>
 const navLinks = [
   { href: "/", label: "Discover", match: /^\/$/ },
   // Covers the movie lists (/movies/…) and movie pages (/movie/…).
-  { href: "/movies/popular", label: "Movies", match: /^\/movies?(\/|$)/ },
+  { href: "/movies", label: "Movies", match: /^\/movies?(\/|$)/ },
   { href: "/tv", label: "TV", match: /^\/tv(\/|$)/ },
 ];
 

@@ -96,6 +96,7 @@ export interface TVShow {
 }
 
 export interface TVShowDetails extends Omit<TVShow, "genre_ids"> {
+  content_ratings?: { results?: Array<{ iso_3166_1: string; rating?: string }> };
   created_by: {
     id: number;
     credit_id: string;

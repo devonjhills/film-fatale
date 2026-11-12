@@ -20,3 +20,13 @@ export function similarListLink(
     label: `More ${names[genre.id].toLowerCase()} from the ${decade}s`,
   };
 }
+
+/** A title's genres, each linked to the popular list filtered to it when the site has that filter. */
+export function genreLinks(media: "movie" | "tv", genres: { id: number; name: string }[] | undefined) {
+  const names: Record<number, string> = GENRE_NAMES[media];
+  const base = media === "movie" ? "/movies/popular" : "/tv/popular";
+  return (genres ?? []).map((genre) => ({
+    ...genre,
+    href: genre.id in names ? `${base}?genre=${genre.id}` : undefined,
+  }));
+}

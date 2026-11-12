@@ -20,11 +20,10 @@ import {
 } from "@/lib/person-insights";
 import type { PersonDetails } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { MediaCard } from "@/components/shared/media-card";
 import { Panel, PanelNote } from "@/components/ui/panel";
 import { FactCard } from "@/components/ui/fact-card";
-import { DetailHeader } from "@/components/ui/detail-header";
+import { DetailHeader, DetailsPageSkeleton } from "@/components/ui/detail-header";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 
 interface PersonDetailsPageProps {
@@ -47,40 +46,27 @@ const DEPARTMENT_ROLES: Record<string, string> = {
 const titleKey = (credit: { media_type: string; id: number }) => `${credit.media_type}-${credit.id}`;
 const sentenceCase = (text: string) => `${text[0].toUpperCase()}${text.slice(1)}`;
 
-function PersonDetailsSkeleton() {
-  return (
-    <div aria-busy="true">
-      <div className="site-container grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-4 gap-y-5 pt-8 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-x-7 md:pt-12 lg:grid-cols-[13rem_minmax(0,1fr)_20rem] lg:gap-x-9">
-        <Skeleton className="aspect-[2/3] w-full rounded-[9px]" />
-        <div className="space-y-4 self-center">
-          <Skeleton className="h-12 w-2/3 max-w-md" />
-          <Skeleton className="h-16 w-full max-w-2xl" />
-        </div>
-        <Skeleton className="col-span-2 h-48 lg:col-span-1" />
-      </div>
-      <div className="site-container py-6 md:py-8">
-        <Skeleton className="h-80 w-full rounded-lg" />
-      </div>
-    </div>
-  );
-}
-
 export function PersonDetailsPage({ personId, initialPerson }: PersonDetailsPageProps) {
   const { person, isLoading, isError } = usePersonDetails(personId, initialPerson);
   const { user } = useAuth();
   const watched = useWatchedTitles(Boolean(user));
   const career = useMemo(() => (person ? analyzeCareer(person) : null), [person]);
 
-  if (isLoading && !person) return <PersonDetailsSkeleton />;
+  if (isLoading && !person) return <DetailsPageSkeleton />;
   if (isError || !person || !career) return notFound();
 
   const age = calculateAge(person.birthday, person.deathday);
   const department = person.known_for_department || "Acting";
+  const filmCount = career.decades.reduce((sum, decade) => sum + decade.movies, 0);
+  const seriesCount = career.decades.reduce((sum, decade) => sum + decade.shows, 0);
+  // The scene behind their header: the first title they're known for that has one.
+  const knownForBackdrop = career.knownFor.find((credit) => credit.backdrop_path)?.backdrop_path ?? null;
   const seenIn = career.filmography.filter((credit) => watched.has(titleKey(credit)));
 
   return (
     <div>
       <DetailHeader
+        backdrop={knownForBackdrop ? getImageUrl(knownForBackdrop, "backdrop", "w1280") : null}
         poster={{
           src: person.profile_path ? getImageUrl(person.profile_path, "profile", "h632") : null,
           alt: person.name,
@@ -89,12 +75,15 @@ export function PersonDetailsPage({ personId, initialPerson }: PersonDetailsPage
         title={person.name}
         overview={career.summary && <p>{career.summary}</p>}
         afterOverview={seenIn.length > 0 && <SeenIn credits={seenIn} />}
+        meta={[DEPARTMENT_ROLES[department] ?? department]}
         facts={[
-          { label: "Known for", value: DEPARTMENT_ROLES[department] ?? department },
-          { label: "Born", value: person.birthday && formatDate(person.birthday) },
-          { label: "Birthplace", value: person.place_of_birth },
-          { label: "Died", value: person.deathday && formatDate(person.deathday) },
-          { label: "Age", value: age !== null && (person.deathday ? `${age} at death` : String(age)) },
+          { label: "Born", value: person.birthday && formatDate(person.birthday), detail: person.place_of_birth },
+          person.deathday
+            ? { label: "Died", value: formatDate(person.deathday), detail: age !== null && `aged ${age}` }
+            : { label: "Age", value: age !== null && String(age) },
+          // Same counts as the summary: released titles, not appearances.
+          { label: "Films", value: filmCount > 0 && String(filmCount) },
+          { label: "Series", value: seriesCount > 0 && String(seriesCount) },
         ]}
       />
 

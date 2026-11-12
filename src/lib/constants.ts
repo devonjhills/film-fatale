@@ -7,6 +7,7 @@ export const TMDB_PATHS = {
   moviesNowPlaying: "/movie/now_playing",
   moviesPopular: "/movie/popular",
   moviesTopRated: "/movie/top_rated",
+  moviesUpcoming: "/movie/upcoming",
   movieDiscover: "/discover/movie",
   movieWatchProviders: (id: number) => `/movie/${id}/watch/providers`,
   tvDetails: (id: number) => `/tv/${id}`,
@@ -20,6 +21,7 @@ export const TMDB_PATHS = {
   personDetails: (id: number) => `/person/${id}`,
   searchMulti: "/search/multi",
   trendingWeek: "/trending/all/week",
+  trendingDay: "/trending/all/day",
 } as const;
 
 // API Endpoints
@@ -97,7 +99,7 @@ export const API_CONFIG = {
   append_to_response: {
     movie:
       "videos,credits,external_ids,recommendations,release_dates,reviews",
-    tv: "videos,credits,aggregate_credits,external_ids,recommendations,reviews",
+    tv: "videos,credits,aggregate_credits,external_ids,recommendations,reviews,content_ratings",
     tvSeason: "credits,external_ids,images,videos",
     person: "combined_credits,external_ids,images",
   },
