@@ -2,14 +2,18 @@
 
 import Image from "next/image";
 import Link from "@/components/ui/app-link";
-import { ArrowLeft, ArrowRight, Film, Play, Star } from "@/components/ui/icons";
+import { ArrowLeft, ArrowRight, Play, Star } from "@/components/ui/icons";
 import { useTVSeasonDetails, useTVDetails } from "@/lib/hooks/api-hooks";
 import { getImageUrl } from "@/lib/api";
 import { CastGrid, CrewList } from "@/components/person/cast-grid";
-import { Section } from "@/components/shared/section";
+import { Panel, PanelNote } from "@/components/ui/panel";
+import {
+  DetailHeader,
+  DetailsPageSkeleton,
+  RatingValue,
+} from "@/components/ui/detail-header";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatVoteAverage, formatRuntime } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
 import type { TVSeasonDetails, TVShowDetails } from "@/lib/types";
 
 interface TVSeasonDetailsPageProps {
@@ -17,33 +21,6 @@ interface TVSeasonDetailsPageProps {
   seasonNumber: number;
   initialSeason?: TVSeasonDetails;
   initialTVShow?: TVShowDetails;
-}
-
-function SeasonDetailsSkeleton() {
-  return (
-    <div className="site-container space-y-16 py-14 md:py-20" aria-busy="true">
-      <div className="flex flex-col gap-8 md:flex-row md:items-end">
-        <Skeleton className="mx-auto aspect-[2/3] w-36 md:mx-0 md:w-44" />
-        <div className="flex-1 space-y-4">
-          <Skeleton className="h-4 w-32" />
-          <Skeleton className="h-14 w-64" />
-          <Skeleton className="h-16 w-full max-w-2xl" />
-        </div>
-      </div>
-      <div className="space-y-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="flex gap-5">
-            <Skeleton className="aspect-video w-40 shrink-0" />
-            <div className="flex-1 space-y-2">
-              <Skeleton className="h-5 w-48" />
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 }
 
 export function TVSeasonDetailsPage({
@@ -60,14 +37,16 @@ export function TVSeasonDetailsPage({
   const { tvShow } = useTVDetails(tvId, initialTVShow);
 
   if (isLoading && !season) {
-    return <SeasonDetailsSkeleton />;
+    return <DetailsPageSkeleton />;
   }
 
   if (isError || !season) {
     return (
       <div className="site-container flex min-h-[60vh] flex-col items-center justify-center gap-4 py-20 text-center">
         <h1 className="page-title">Season not found</h1>
-        <p className="page-lede">This season isn&apos;t listed for this show.</p>
+        <p className="page-lede">
+          This season isn&apos;t listed for this show.
+        </p>
         <Button asChild>
           <Link href={`/tv/${tvId}`}>Back to the show</Link>
         </Button>
@@ -75,7 +54,6 @@ export function TVSeasonDetailsPage({
     );
   }
 
-  const posterUrl = getImageUrl(season.poster_path, "poster", "w342");
   const episodes = season.episodes || [];
   const seasonCast = season.credits?.cast || [];
   const seasonCrew = season.credits?.crew || [];
@@ -84,156 +62,176 @@ export function TVSeasonDetailsPage({
     .map((s) => s.season_number)
     .sort((a, b) => a - b);
   const index = seasonNumbers.indexOf(seasonNumber);
-  const previous = index > 0 ? tvShow?.seasons.find((s) => s.season_number === seasonNumbers[index - 1]) : undefined;
-  const next = index >= 0 && index < seasonNumbers.length - 1
-    ? tvShow?.seasons.find((s) => s.season_number === seasonNumbers[index + 1])
-    : undefined;
+  const previous =
+    index > 0
+      ? tvShow?.seasons.find(
+          (s) => s.season_number === seasonNumbers[index - 1],
+        )
+      : undefined;
+  const next =
+    index >= 0 && index < seasonNumbers.length - 1
+      ? tvShow?.seasons.find(
+          (s) => s.season_number === seasonNumbers[index + 1],
+        )
+      : undefined;
 
   return (
-    <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
-      <header className="flex flex-col gap-8 md:flex-row md:items-end md:gap-12">
-        <div className="poster-frame relative mx-auto aspect-[2/3] w-36 shrink-0 overflow-hidden md:mx-0 md:w-48">
-          {posterUrl ? (
-            <Image
-              src={posterUrl}
-              alt=""
-              fill
-              priority
-              className="object-cover"
-              sizes="192px"
-            />
-          ) : (
-            <div className="flex size-full items-center justify-center">
-              <Film className="size-8 text-muted-foreground/50" aria-hidden="true" />
-            </div>
-          )}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <Link
-            href={`/tv/${tvId}`}
-            className="text-sm text-muted-foreground hover:text-foreground hover:underline"
-          >
+    <div>
+      <DetailHeader
+        backdrop={
+          tvShow?.backdrop_path
+            ? getImageUrl(tvShow.backdrop_path, "backdrop", "w1280")
+            : null
+        }
+        poster={{
+          src: season.poster_path
+            ? getImageUrl(season.poster_path, "poster", "w500")
+            : null,
+          alt: `${season.name} poster`,
+          fallback: "tv",
+        }}
+        eyebrow={
+          <Link href={`/tv/${tvId}`} className="hover:text-ink hover:underline">
             {tvShow?.name || "Back to the show"}
           </Link>
-          <h1 className="page-title mt-2">{season.name}</h1>
-          <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm tabular-nums text-muted-foreground">
-            {season.vote_average > 0 && (
-              <span className="inline-flex items-center gap-1.5 font-medium text-foreground">
-                <Star className="size-3.5" weight="fill" aria-hidden="true" />
-                <span className="sr-only">Rated </span>
-                {formatVoteAverage(season.vote_average)}
-              </span>
-            )}
-            {season.air_date && <span>{formatDate(season.air_date)}</span>}
-            {episodes.length > 0 && (
-              <span>
-                {episodes.length} episode{episodes.length === 1 ? "" : "s"}
-              </span>
-            )}
-          </p>
-          {season.overview && (
-            <p className="reading-text mt-5 max-w-[62ch]">{season.overview}</p>
-          )}
-        </div>
-      </header>
+        }
+        title={season.name}
+        overview={season.overview && <p>{season.overview}</p>}
+        facts={[
+          {
+            label: "Rating",
+            value: season.vote_average > 0 && (
+              <RatingValue value={season.vote_average} />
+            ),
+          },
+          {
+            label: "Aired",
+            value: season.air_date && formatDate(season.air_date),
+          },
+          {
+            label: "Episodes",
+            value:
+              episodes.length > 0 &&
+              `${episodes.length} episode${episodes.length === 1 ? "" : "s"}`,
+          },
+        ]}
+      />
 
-      {episodes.length > 0 && (
-        <Section title="Episodes">
-          <ol className="divide-y divide-border">
-            {episodes.map((episode) => {
-              const stillUrl = getImageUrl(episode.still_path, "backdrop", "w300");
-              return (
-                <li key={episode.id} className="flex flex-col gap-4 py-5 first:pt-0 sm:flex-row sm:gap-6">
-                  <div className="poster-frame relative aspect-video w-full shrink-0 overflow-hidden sm:w-44">
-                    {stillUrl ? (
-                      <Image
-                        src={stillUrl}
-                        alt=""
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 176px"
-                      />
-                    ) : (
-                      <div className="flex size-full items-center justify-center">
-                        <Play className="size-6 text-muted-foreground/50" aria-hidden="true" />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                      <h3 className="font-medium">
-                        <span className="tabular-nums text-muted-foreground">
-                          {episode.episode_number}.
-                        </span>{" "}
-                        {episode.name}
-                      </h3>
-                      <p className="flex gap-4 text-sm tabular-nums text-muted-foreground">
-                        {episode.vote_average > 0 && (
-                          <span className="inline-flex items-center gap-1">
-                            <Star className="size-3" weight="fill" aria-hidden="true" />
-                            <span className="sr-only">Rated </span>
-                            {formatVoteAverage(episode.vote_average)}
-                          </span>
-                        )}
-                        {episode.runtime > 0 && <span>{formatRuntime(episode.runtime)}</span>}
-                      </p>
+      <div className="site-container space-y-5 py-6 md:space-y-6 md:py-8">
+        {episodes.length > 0 && (
+          <Panel
+            title="Episodes"
+            aside={<PanelNote>{episodes.length}</PanelNote>}
+          >
+            <ol className="divide-y divide-line">
+              {episodes.map((episode) => {
+                const stillUrl = getImageUrl(
+                  episode.still_path,
+                  "backdrop",
+                  "w300",
+                );
+                return (
+                  <li
+                    key={episode.id}
+                    className="flex flex-col gap-4 py-4 first:pt-0 last:pb-0 sm:flex-row sm:gap-5"
+                  >
+                    <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-md border border-line bg-surface-2 sm:w-44">
+                      {stillUrl ? (
+                        <Image
+                          src={stillUrl}
+                          alt=""
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 100vw, 176px"
+                        />
+                      ) : (
+                        <div className="flex size-full items-center justify-center">
+                          <Play
+                            className="size-6 text-muted-foreground/50"
+                            aria-hidden="true"
+                          />
+                        </div>
+                      )}
                     </div>
-                    {episode.air_date && (
-                      <p className="mt-0.5 text-sm text-muted-foreground">
-                        {formatDate(episode.air_date)}
-                      </p>
-                    )}
-                    {episode.overview && (
-                      <p className="mt-2 max-w-[75ch] text-sm leading-6 text-foreground/80">
-                        {episode.overview}
-                      </p>
-                    )}
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-        </Section>
-      )}
 
-      {seasonCast.length > 0 && (
-        <Section title="Cast">
-          <CastGrid cast={seasonCast} mediaType="movie" />
-        </Section>
-      )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                        <h3 className="font-medium">
+                          <span className="tabular-nums text-muted-foreground">
+                            {episode.episode_number}.
+                          </span>{" "}
+                          {episode.name}
+                        </h3>
+                        <p className="flex gap-4 text-sm tabular-nums text-muted-foreground">
+                          {episode.vote_average > 0 && (
+                            <span className="inline-flex items-center gap-1">
+                              <Star
+                                className="size-3"
+                                weight="fill"
+                                aria-hidden="true"
+                              />
+                              <span className="sr-only">Rated </span>
+                              {formatVoteAverage(episode.vote_average)}
+                            </span>
+                          )}
+                          {episode.runtime > 0 && (
+                            <span>{formatRuntime(episode.runtime)}</span>
+                          )}
+                        </p>
+                      </div>
+                      {episode.air_date && (
+                        <p className="mt-0.5 text-sm text-muted-foreground">
+                          {formatDate(episode.air_date)}
+                        </p>
+                      )}
+                      {episode.overview && (
+                        <p className="mt-2 max-w-[75ch] text-sm leading-6 text-foreground/80">
+                          {episode.overview}
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </Panel>
+        )}
 
-      {seasonCrew.length > 0 && (
-        <Section title="Crew">
-          <CrewList crew={seasonCrew} />
-        </Section>
-      )}
+        {seasonCast.length > 0 && (
+          <Panel title="Cast">
+            <CastGrid cast={seasonCast} mediaType="movie" />
+          </Panel>
+        )}
 
-      {(previous || next) && (
-        <nav aria-label="Seasons" className="flex justify-between gap-4 border-t border-border pt-6">
-          {previous ? (
-            <Link
-              href={`/tv/${tvId}/season/${previous.season_number}`}
-              className="group flex min-h-11 items-center gap-2 text-sm"
-            >
-              <ArrowLeft className="size-4" aria-hidden="true" />
-              <span className="group-hover:underline">{previous.name}</span>
-            </Link>
-          ) : (
-            <span />
-          )}
-          {next && (
-            <Link
-              href={`/tv/${tvId}/season/${next.season_number}`}
-              className="group flex min-h-11 items-center gap-2 text-sm"
-            >
-              <span className="group-hover:underline">{next.name}</span>
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
-          )}
-        </nav>
-      )}
+        {seasonCrew.length > 0 && (
+          <Panel title="Crew">
+            <CrewList crew={seasonCrew} />
+          </Panel>
+        )}
+
+        {(previous || next) && (
+          <nav aria-label="Seasons" className="flex justify-between gap-3">
+            {previous ? (
+              <Button variant="secondary" asChild>
+                <Link href={`/tv/${tvId}/season/${previous.season_number}`}>
+                  <ArrowLeft aria-hidden="true" />
+                  {previous.name}
+                </Link>
+              </Button>
+            ) : (
+              <span />
+            )}
+            {next && (
+              <Button variant="secondary" asChild>
+                <Link href={`/tv/${tvId}/season/${next.season_number}`}>
+                  {next.name}
+                  <ArrowRight aria-hidden="true" />
+                </Link>
+              </Button>
+            )}
+          </nav>
+        )}
+      </div>
     </div>
   );
 }
