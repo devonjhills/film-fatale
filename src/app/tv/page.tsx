@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FeaturedHero } from "@/components/shared/featured-hero";
+import { FeaturedPanel } from "@/components/shared/featured-panel";
 import { MediaSection } from "@/components/shared/media-section";
 import { fetchTVShelves } from "@/lib/data-fetching";
 
@@ -23,9 +23,9 @@ export default async function TVPage() {
 
   return (
     <div className="min-h-screen">
-      <FeaturedHero items={onTheAir.slice(0, 5)} mediaType="tv" />
 
-      <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
+      <div className="site-container space-y-5 py-6 md:space-y-6 md:py-8">
+        <FeaturedPanel items={onTheAir.slice(0, 5)} mediaType="tv" />
         <MediaSection title="On the air" items={onTheAir} mediaType="tv" href="/tv/on-the-air" />
         <MediaSection title="Popular shows" items={popular} mediaType="tv" href="/tv/popular" />
         <MediaSection title="Top rated shows" items={topRated} mediaType="tv" href="/tv/top-rated" />

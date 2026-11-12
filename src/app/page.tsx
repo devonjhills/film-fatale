@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FeaturedHero } from "@/components/shared/featured-hero";
+import { FeaturedPanel } from "@/components/shared/featured-panel";
 import { MediaSection } from "@/components/shared/media-section";
 import { fetchHomeShelves } from "@/lib/data-fetching";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -28,9 +28,9 @@ export default async function Home() {
           inLanguage: "en-US",
         }}
       />
-      <FeaturedHero items={nowPlaying.slice(0, 5)} mediaType="movie" />
 
-      <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
+      <div className="site-container space-y-5 py-6 md:space-y-6 md:py-8">
+        <FeaturedPanel items={nowPlaying.slice(0, 5)} mediaType="movie" />
         <MediaSection title="Trending this week" items={trending} mediaType="movie" />
         <MediaSection
           title="In theaters"
