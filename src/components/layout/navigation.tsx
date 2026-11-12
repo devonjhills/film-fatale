@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "@/components/ui/app-link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,8 +14,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Bookmark, LogOut, Menu, Search, X } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
+import { SiteLogo } from "@/components/layout/site-logo";
 import { useAuth } from "@/components/providers/auth-provider";
 import { cn } from "@/lib/utils";
+
+/** One link style for the desktop bar and the mobile menu. */
+const navLinkClass = (active: boolean, mobile = false) =>
+  cn(
+    "flex items-center rounded-md px-3 text-sm font-medium transition-colors duration-150",
+    mobile ? "min-h-12 px-4 text-base" : "min-h-9",
+    active ? "bg-surface-2 text-ink" : "text-ink-muted hover:text-ink",
+  );
 
 const navLinks = [
   { href: "/", label: "Discover", match: /^\/$/ },
@@ -45,24 +53,14 @@ export function Navigation() {
     match ? match.test(pathname) : pathname.startsWith(href);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-page">
       <div className="site-container flex h-16 items-center gap-6">
         <Link
           href="/"
-          className="group flex shrink-0 items-center gap-3 rounded-sm"
+          className="flex shrink-0 items-center rounded-md"
           aria-label="Film Fatale home"
         >
-          <Image
-            src="/logo.png"
-            alt=""
-            width={36}
-            height={36}
-            className="size-9 rounded-full bg-foreground"
-            priority
-          />
-          <span className="hidden font-serif text-xl font-medium text-foreground sm:block">
-            Film Fatale
-          </span>
+          <SiteLogo withName hideNameOnPhones />
         </Link>
 
         <nav
@@ -74,11 +72,7 @@ export function Navigation() {
               key={link.href}
               href={link.href}
               aria-current={isActive(link.href, link.match) ? "page" : undefined}
-              className={cn(
-                "relative flex min-h-11 items-center px-3 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground",
-                isActive(link.href, link.match) &&
-                  "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-px after:bg-primary",
-              )}
+              className={navLinkClass(isActive(link.href, link.match))}
             >
               {link.label}
             </Link>
@@ -87,11 +81,7 @@ export function Navigation() {
             <Link
               href="/library"
               aria-current={pathname.startsWith("/library") ? "page" : undefined}
-              className={cn(
-                "relative flex min-h-11 items-center px-3 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground",
-                pathname.startsWith("/library") &&
-                  "text-foreground after:absolute after:inset-x-3 after:-bottom-[11px] after:h-px after:bg-primary",
-              )}
+              className={navLinkClass(pathname.startsWith("/library"))}
             >
               Library
             </Link>
@@ -114,7 +104,7 @@ export function Navigation() {
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search movies, shows, people"
               aria-label="Search movies, TV shows and people"
-              className="h-10 bg-card pl-10"
+              className="h-10 pl-10"
             />
           </form>
 
@@ -132,7 +122,7 @@ export function Navigation() {
                   size="icon"
                   aria-label="Open account menu"
                 >
-                  <span className="flex size-8 items-center justify-center rounded-full border border-input text-sm font-semibold text-foreground">
+                  <span className="flex size-8 items-center justify-center rounded-full border border-line-strong bg-surface-2 text-sm font-semibold text-ink">
                     {(user.name || user.email || "U").charAt(0).toUpperCase()}
                   </span>
                 </Button>
@@ -184,7 +174,7 @@ export function Navigation() {
         <nav
           id="mobile-navigation"
           aria-label="Mobile navigation"
-          className="border-t border-border bg-background px-4 pb-6 pt-4 md:hidden"
+          className="border-t border-line bg-page px-4 pb-6 pt-4 md:hidden"
         >
           <div className="mx-auto flex max-w-lg flex-col gap-1">
             {navLinks.map((link) => (
@@ -192,10 +182,7 @@ export function Navigation() {
                 key={link.href}
                 href={link.href}
                 aria-current={isActive(link.href, link.match) ? "page" : undefined}
-                className={cn(
-                  "flex min-h-12 items-center border-l-2 border-transparent px-4 text-base font-medium text-muted-foreground",
-                  isActive(link.href, link.match) && "border-foreground text-foreground",
-                )}
+                className={navLinkClass(isActive(link.href, link.match), true)}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.label}
@@ -205,10 +192,8 @@ export function Navigation() {
               <Link
                 href="/library"
                 onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  "flex min-h-12 items-center border-l-2 border-transparent px-4 text-base font-medium text-muted-foreground",
-                  pathname.startsWith("/library") && "border-foreground text-foreground",
-                )}
+                aria-current={pathname.startsWith("/library") ? "page" : undefined}
+                className={navLinkClass(pathname.startsWith("/library"), true)}
               >
                 Library
               </Link>

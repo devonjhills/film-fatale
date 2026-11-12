@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export default function NotFound() {
   return (
     <div className="flex min-h-[70vh] items-center justify-center py-16">
-      <div className="mx-4 max-w-lg space-y-6 text-center">
+      <div className="mx-4 w-full max-w-lg space-y-6 rounded-lg border border-line bg-surface-1 px-6 py-12 text-center">
         <Film className="mx-auto size-10 text-muted-foreground" aria-hidden="true" />
 
         <div className="space-y-2">

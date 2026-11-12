@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SiteLogo } from "@/components/layout/site-logo";
 import Link from "@/components/ui/app-link";
 
 const links = [
@@ -10,18 +10,9 @@ const links = [
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-border">
-      <div className="site-container grid gap-8 py-10 text-sm text-muted-foreground md:grid-cols-[1fr_auto] md:items-end">
-        <div className="flex items-center gap-4">
-          <Image
-            src="/logo.png"
-            alt=""
-            width={36}
-            height={36}
-            className="size-9 rounded-full bg-foreground"
-          />
-          <p className="font-serif text-lg font-medium text-foreground">Film Fatale</p>
-        </div>
+    <footer className="mt-auto border-t border-line">
+      <div className="site-container grid gap-8 py-10 text-sm text-ink-muted md:grid-cols-[1fr_auto] md:items-end">
+        <SiteLogo withName />
 
         <div className="flex flex-col gap-4 md:items-end">
           <nav aria-label="Footer navigation" className="flex flex-wrap gap-x-5 gap-y-3">
@@ -30,7 +21,7 @@ export function Footer() {
                 key={link.href}
                 href={link.href}
                 rel={link.nofollow ? "nofollow" : undefined}
-                className="text-sm transition-colors duration-150 hover:text-foreground"
+                className="text-sm transition-colors duration-150 hover:text-ink"
               >
                 {link.label}
               </Link>
@@ -38,12 +29,12 @@ export function Footer() {
           </nav>
           <p className="text-xs">
             © {new Date().getFullYear()} Film Fatale
-            <span className="mx-2 text-border" aria-hidden="true">/</span>
+            <span className="mx-2 text-line-strong" aria-hidden="true">/</span>
             <Link
               href="https://www.themoviedb.org/"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors duration-150 hover:text-foreground"
+              className="transition-colors duration-150 hover:text-ink"
             >
               Data by TMDB
             </Link>

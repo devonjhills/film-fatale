@@ -19,7 +19,7 @@ export default function Error({
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center py-16">
-      <div className="mx-4 max-w-lg space-y-6 text-center">
+      <div className="mx-4 w-full max-w-lg space-y-6 rounded-lg border border-line bg-surface-1 px-6 py-12 text-center">
         <div className="space-y-4">
           <AlertTriangle className="mx-auto size-10 text-destructive" aria-hidden="true" />
           <h1 className="font-serif text-4xl font-medium md:text-5xl">
@@ -36,7 +36,7 @@ export default function Error({
               <summary className="cursor-pointer text-sm font-medium">
                 Error details (development only)
               </summary>
-              <pre className="mt-2 text-xs bg-muted p-3 rounded overflow-auto whitespace-pre-wrap">
+              <pre className="mt-2 overflow-auto whitespace-pre-wrap rounded-md bg-surface-2 p-3 text-xs">
                 {error.message}
                 {error.stack && "\n\n" + error.stack}
               </pre>

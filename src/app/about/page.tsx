@@ -39,7 +39,7 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <p className="mt-10 border-t border-border pt-6 text-sm leading-6 text-muted-foreground">
+        <p className="mt-10 border-t border-line pt-6 text-sm leading-6 text-muted-foreground">
           Movie and TV data comes from{" "}
           <a
             href="https://www.themoviedb.org/"

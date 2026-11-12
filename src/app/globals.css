@@ -234,10 +234,6 @@
     line-height: 1.6;
   }
 
-  .page-header {
-    border-bottom: 1px solid var(--line);
-  }
-
   /*
    * One grid for every poster wall. Column counts are fixed per breakpoint
    * at 3, 4, 6 and 8 so cards stay ~125–190px wide and every row fills;
@@ -348,13 +344,6 @@
     flex-direction: column;
     gap: 0.25rem;
     padding: 0.5rem 0.625rem 0.625rem;
-  }
-
-  .poster-frame {
-    border-radius: var(--radius-sm);
-    background: var(--surface-2);
-    outline: 1px solid var(--line);
-    outline-offset: -1px;
   }
 
   .custom-search-clear::-webkit-search-cancel-button,
