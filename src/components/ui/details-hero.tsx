@@ -58,8 +58,8 @@ export function DetailsHero({
     isMovieDetails(item) || isTVShowDetails(item) ? item.genres : [];
 
   return (
-    <section className="blinds relative isolate overflow-hidden border-b border-border">
-      <div className="absolute inset-x-0 top-0 -z-20 h-[30rem] [mask-image:linear-gradient(to_bottom,#000_55%,transparent)] md:h-[36rem]">
+    <section className="relative isolate overflow-hidden border-b border-border">
+      <div className="absolute inset-x-0 top-0 -z-20 h-[30rem] md:h-[36rem]">
         {backdropUrl ? (
           <Image
             src={backdropUrl}
@@ -74,7 +74,7 @@ export function DetailsHero({
           <div className="size-full bg-muted" />
         )}
       </div>
-      <div className="art-scrim absolute inset-0 -z-10" />
+      
 
       {/*
         Poster and text share one grid. On large screens the text block is
@@ -106,7 +106,7 @@ export function DetailsHero({
           </div>
 
           <div className="col-start-2 row-start-1 min-w-0 self-end lg:row-start-2">
-            <h1 className="hero-title text-shadow">{title}</h1>
+            <h1 className="hero-title">{title}</h1>
             {tagline && (
               <p className="mt-2 max-w-3xl font-serif text-lg italic leading-snug text-muted-foreground md:mt-3 md:text-xl">
                 {tagline}

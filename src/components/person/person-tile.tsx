@@ -19,8 +19,8 @@ export function PersonTile({ person, subtitle, detail, className }: PersonTilePr
 
   return (
     <article className={cn("min-w-0", className)}>
-      <Link href={`/person/${person.id}`} className="poster-card">
-        <div className="poster-card-art">
+      <Link href={`/person/${person.id}`} className="tile">
+        <div className="tile-art">
           {profileUrl ? (
             <Image
               src={profileUrl}
@@ -36,7 +36,7 @@ export function PersonTile({ person, subtitle, detail, className }: PersonTilePr
           )}
         </div>
 
-        <div className="poster-card-body">
+        <div className="tile-body">
           <h3 className="line-clamp-2 text-[0.8125rem] font-medium leading-snug text-foreground">
             {person.name}
           </h3>

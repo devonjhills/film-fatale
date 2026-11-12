@@ -45,8 +45,8 @@ export function MediaCard({
 
   return (
     <article className={cn("min-w-0", className)}>
-      <Link href={`/${mediaType}/${item.id}`} className="poster-card">
-        <div className="poster-card-art">
+      <Link href={`/${mediaType}/${item.id}`} className="tile">
+        <div className="tile-art">
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -73,7 +73,7 @@ export function MediaCard({
           )}
         </div>
 
-        <div className="poster-card-body">
+        <div className="tile-body">
           <h3 className="line-clamp-2 min-h-[2.75em] text-[0.8125rem] font-medium leading-snug text-foreground">
             {title}
           </h3>

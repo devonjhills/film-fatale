@@ -21,9 +21,9 @@ export function LibraryTile({ item, onOpen }: LibraryTileProps) {
         type="button"
         onClick={() => onOpen(item)}
         aria-haspopup="dialog"
-        className="poster-card w-full text-left"
+        className="tile w-full text-left"
       >
-        <div className="poster-card-art">
+        <div className="tile-art">
           {poster ? (
             <Image src={poster} alt="" fill sizes="(max-width: 639px) 33vw, 180px" className="object-cover" />
           ) : (
@@ -37,7 +37,7 @@ export function LibraryTile({ item, onOpen }: LibraryTileProps) {
             </span>
           )}
         </div>
-        <div className="poster-card-body">
+        <div className="tile-body">
           <h3 className="line-clamp-2 min-h-[2.75em] pr-1 text-[0.8125rem] font-medium leading-snug text-foreground group-hover:underline group-hover:underline-offset-4">
             {item.title}
           </h3>

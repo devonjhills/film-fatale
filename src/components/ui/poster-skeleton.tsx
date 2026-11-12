@@ -3,9 +3,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 // Mirrors MediaCard: 2:3 poster, title, then year and rating.
 function MediaCardSkeleton() {
   return (
-    <div className="poster-card">
+    <div className="tile">
       <Skeleton className="aspect-[2/3] w-full rounded-none" />
-      <div className="poster-card-body">
+      <div className="tile-body">
         <Skeleton className="h-3.5 w-4/5 rounded-sm" />
         <Skeleton className="mt-1 h-3 w-1/3 rounded-sm" />
       </div>

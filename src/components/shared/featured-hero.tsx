@@ -12,7 +12,7 @@ interface FeaturedHeroProps {
   mediaType: "movie" | "tv";
 }
 
-/** The landing pages' backdrop banner for one current title, under the blinds. */
+/** The landing pages' backdrop banner for one current title. */
 export function FeaturedHero({ items, mediaType }: FeaturedHeroProps) {
   const item = items.find((candidate) => candidate.backdrop_path) ?? items[0];
   if (!item) return null;
@@ -25,7 +25,7 @@ export function FeaturedHero({ items, mediaType }: FeaturedHeroProps) {
 
   return (
     <section
-      className="blinds relative isolate overflow-hidden border-b border-border"
+      className="relative isolate overflow-hidden border-b border-border"
       aria-labelledby="featured-title"
     >
       {backdrop ? (
@@ -40,14 +40,14 @@ export function FeaturedHero({ items, mediaType }: FeaturedHeroProps) {
       ) : (
         <div className="absolute inset-0 -z-20 bg-muted" />
       )}
-      <div className="art-scrim absolute inset-0 -z-10" aria-hidden="true" />
+      
 
       <div className="site-container flex min-h-[24rem] items-end pb-10 pt-20 md:min-h-[30rem] md:pb-14">
         <div className="max-w-2xl">
           <p className="mb-3 text-sm text-white/75">
             {mediaType === "movie" ? "In theaters" : "New episodes this week"}
           </p>
-          <h1 id="featured-title" className="display-title text-shadow max-w-[16ch] text-white">
+          <h1 id="featured-title" className="hero-title max-w-[16ch] text-white">
             {title}
           </h1>
 
@@ -63,7 +63,7 @@ export function FeaturedHero({ items, mediaType }: FeaturedHeroProps) {
           </p>
 
           {item.overview && (
-            <p className="text-shadow mt-3 line-clamp-2 max-w-xl font-serif text-lg leading-relaxed text-white/90">
+            <p className="mt-3 line-clamp-2 max-w-xl font-serif text-lg leading-relaxed text-white/90">
               {item.overview}
             </p>
           )}

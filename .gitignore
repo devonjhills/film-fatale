@@ -44,3 +44,6 @@ auth.db
 *.tsbuildinfo
 next-env.d.ts
 cloudflare-env.d.ts
+
+# Brainstorm mockups and plan workspaces
+.superpowers/

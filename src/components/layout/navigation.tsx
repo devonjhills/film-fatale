@@ -137,7 +137,7 @@ export function Navigation() {
                   </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="surface-float w-64 p-2">
+              <DropdownMenuContent align="end" className="w-64 p-2">
                 <DropdownMenuLabel className="px-2 py-3">
                   <span className="block text-sm font-medium">
                     {user.name || "Film Fatale"}
