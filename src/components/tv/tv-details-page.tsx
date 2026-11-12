@@ -2,7 +2,21 @@
 
 import { notFound } from "next/navigation";
 import { useTVDetails, useTVWatchProviders } from "@/lib/hooks/api-hooks";
-import { DetailsHero, DetailsPageSkeleton } from "@/components/ui/details-hero";
+import {
+  DetailHeader,
+  DetailsPageSkeleton,
+  PeopleLinks,
+  RatingValue,
+} from "@/components/ui/detail-header";
+import { StreamingOn } from "@/components/shared/watch-providers";
+import { TrailerModal } from "@/components/ui/trailer-modal";
+import { LibraryButton } from "@/components/library/library-panel";
+import { ShareButton } from "@/components/ui/share-button";
+import { Chip } from "@/components/ui/chip";
+import { Panel, PanelNote } from "@/components/ui/panel";
+import { FactGrid } from "@/components/ui/fact-card";
+import { getImageUrl } from "@/lib/api";
+import { streamingServices } from "@/lib/watch-providers";
 import { CastGrid, CrewList } from "@/components/person/cast-grid";
 import { MediaSection } from "@/components/shared/media-section";
 import { SeriesStrip } from "@/components/shared/series-strip";
@@ -10,7 +24,6 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { useWatchedTitles } from "@/lib/hooks/use-library";
 import { similarListLink } from "@/lib/browse-link";
 import type { RelatedShelf } from "@/lib/related";
-import { Section, FactList } from "@/components/shared/section";
 import { ExternalLinks } from "@/components/ui/external-links";
 import { formatDate, formatYear } from "@/lib/utils";
 import type { TVShowDetails } from "@/lib/types";
@@ -97,19 +110,94 @@ export function TVDetailsPage({
     />
   ));
 
+  const providers = watchProviders?.results?.US;
+  const numbered = seasons.filter((season) => season.season_number > 0).length;
+  const hasSpecials = seasons.some((season) => season.season_number === 0);
+  const firstYear = formatYear(tvShow.first_air_date);
+  const lastYear = tvShow.in_production ? "present" : formatYear(tvShow.last_air_date);
+  const aired = firstYear && (lastYear && lastYear !== firstYear ? `${firstYear} – ${lastYear}` : firstYear);
+  const status = STATUS_LABELS[tvShow.status] ?? tvShow.status;
+  const plural = (count: number, noun: string) => `${count} ${noun}${count === 1 ? "" : "s"}`;
+
   return (
-    <div className="detail-page">
-      <DetailsHero
-        item={tvShow}
-        mediaType="tv"
-        trailer={trailer}
-        watchProviders={watchProviders?.results?.US}
-        credit={{ label: "Created by", people: creators.slice(0, 3) }}
+    <div>
+      <DetailHeader
+        backdrop={tvShow.backdrop_path ? getImageUrl(tvShow.backdrop_path, "backdrop", "w1280") : null}
+        poster={{
+          src: tvShow.poster_path ? getImageUrl(tvShow.poster_path, "poster", "w500") : null,
+          alt: `${tvShow.name} poster`,
+          fallback: "tv",
+        }}
+        title={tvShow.name}
+        tagline={tvShow.tagline}
+        overview={tvShow.overview && <p>{tvShow.overview}</p>}
+        actions={
+          <>
+            {trailer && <TrailerModal trailer={trailer} title={tvShow.name} />}
+            <LibraryButton
+              meta={{
+                tmdb_id: tvShow.id,
+                media_type: "tv",
+                title: tvShow.name,
+                poster_path: tvShow.poster_path,
+                overview: tvShow.overview,
+                release_date: tvShow.first_air_date,
+                vote_average: tvShow.vote_average,
+              }}
+              size="lg"
+            />
+            <ShareButton title={tvShow.name} />
+          </>
+        }
+        facts={[
+          { label: "Rating", value: tvShow.vote_average > 0 && <RatingValue value={tvShow.vote_average} /> },
+          {
+            label: "Aired",
+            value: (aired || status) && (
+              <span className="flex flex-wrap items-center gap-2">
+                {aired && <span className="tabular-nums">{aired}</span>}
+                {status && <Chip tone="mint">{status}</Chip>}
+              </span>
+            ),
+          },
+          {
+            label: "Seasons",
+            value:
+              tvShow.number_of_seasons > 0 &&
+              [
+                plural(tvShow.number_of_seasons, "season"),
+                tvShow.number_of_episodes > 0 && plural(tvShow.number_of_episodes, "episode"),
+              ]
+                .filter(Boolean)
+                .join(", "),
+          },
+          { label: "Genres", value: tvShow.genres.map((genre) => genre.name).join(", ") },
+          {
+            label: "Created by",
+            value: creators.length > 0 && <PeopleLinks people={creators.slice(0, 3)} />,
+          },
+          {
+            label: "Network",
+            value: tvShow.networks?.slice(0, 2).map((network) => network.name).join(", "),
+          },
+          {
+            label: "Stream on",
+            value: streamingServices(providers?.flatrate).length > 0 && <StreamingOn providers={providers} />,
+          },
+        ]}
       />
 
-      <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
+      <div className="site-container space-y-5 py-6 md:space-y-6 md:py-8">
         {seasons.length > 0 && (
-          <Section title="Seasons">
+          <Panel
+            title="Seasons"
+            aside={
+              <PanelNote>
+                {plural(numbered, "season")}
+                {hasSpecials && " + specials"}
+              </PanelNote>
+            }
+          >
             <SeriesStrip
               label="Seasons"
               items={seasons.map((season) => ({
@@ -125,7 +213,7 @@ export function TVDetailsPage({
                 posterPath: season.poster_path,
               }))}
             />
-          </Section>
+          </Panel>
         )}
 
         <MediaSection
@@ -141,27 +229,22 @@ export function TVDetailsPage({
         {relatedSections}
 
         {mainCast.length > 0 && (
-          <Section title="Cast">
+          <Panel title="Cast">
             <CastGrid cast={mainCast} mediaType="tv" />
-          </Section>
+          </Panel>
         )}
 
-        <Section title="Details">
-          <FactList
+        <Panel title="Details">
+          <FactGrid
             facts={[
+              {
+                label: "Original title",
+                value: tvShow.original_name !== tvShow.name ? tvShow.original_name : null,
+              },
               { label: "First aired", value: tvShow.first_air_date ? firstAirDate : null },
               {
                 label: tvShow.in_production ? "Latest episode" : "Last aired",
                 value: tvShow.last_air_date ? lastAirDate : null,
-              },
-              { label: "Status", value: tvShow.status || null },
-              { label: "Seasons", value: tvShow.number_of_seasons || null },
-              { label: "Episodes", value: tvShow.number_of_episodes || null },
-              {
-                label: "Network",
-                value: tvShow.networks?.length
-                  ? tvShow.networks.slice(0, 2).map((network) => network.name).join(", ")
-                  : null,
               },
               {
                 label: "Language",
@@ -171,20 +254,27 @@ export function TVDetailsPage({
           />
 
           <ExternalLinks
-            className="mt-8"
+            className="mt-5 first:mt-0"
             externalIds={tvShow.external_ids}
             homepage={tvShow.homepage}
             title={tvShow.name}
             releaseDate={tvShow.first_air_date}
           />
-        </Section>
+        </Panel>
 
         {tvShow.credits?.crew?.length ? (
-          <Section title="Crew">
+          <Panel title="Crew">
             <CrewList crew={tvShow.credits.crew} />
-          </Section>
+          </Panel>
         ) : null}
       </div>
     </div>
   );
 }
+
+/** TMDB show statuses in the site's words. */
+const STATUS_LABELS: Record<string, string> = {
+  "Returning Series": "Returning",
+  "In Production": "In production",
+  Canceled: "Cancelled",
+};

@@ -48,24 +48,24 @@ export function CastGrid({ cast, mediaType = "movie" }: CastGridProps) {
             <li key={person.id} className="min-w-0">
               <Link
                 href={`/person/${person.id}`}
-                className="group -mx-2 flex items-center gap-3 rounded-sm px-2 py-2 transition-colors hover:bg-accent/60"
+                className="group -mx-2 flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-surface-2"
               >
-                <span className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted outline outline-1 -outline-offset-1 outline-foreground/10">
+                <span className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-line bg-surface-2">
                   {profileUrl ? (
                     <Image src={profileUrl} alt="" fill sizes="56px" className="object-cover" />
                   ) : (
-                    <User className="size-5 text-muted-foreground/50" aria-hidden="true" />
+                    <User className="size-5 text-ink-muted/50" aria-hidden="true" />
                   )}
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-[0.9375rem] font-medium">{person.name}</span>
+                  <span className="block truncate text-md font-medium">{person.name}</span>
                   {person.character && (
-                    <span className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                    <span className="line-clamp-2 text-sm leading-snug text-ink-muted">
                       {person.character}
                     </span>
                   )}
                   {episodes && (
-                    <span className="block text-xs tabular-nums text-muted-foreground">{episodes}</span>
+                    <span className="block text-xs tabular-nums text-ink-muted">{episodes}</span>
                   )}
                 </span>
               </Link>
@@ -77,7 +77,8 @@ export function CastGrid({ cast, mediaType = "movie" }: CastGridProps) {
       {cast.length > 4 && (
         <Button
           variant="outline"
-          className={cn("mt-4", cast.length <= COLLAPSED_COUNT && !expanded && "min-[480px]:hidden")}
+          size="sm"
+          className={cn("mt-3", cast.length <= COLLAPSED_COUNT && !expanded && "min-[480px]:hidden")}
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
         >
@@ -138,11 +139,11 @@ export function CrewList({ crew, limit = 12 }: { crew: CrewMember[]; limit?: num
         <li key={person.id} className="min-w-0">
           <Link
             href={`/person/${person.id}`}
-            className="text-[0.9375rem] font-medium hover:underline"
+            className="text-md font-medium hover:underline"
           >
             {person.name}
           </Link>
-          <p className="mt-0.5 text-sm text-muted-foreground">
+          <p className="mt-0.5 text-sm text-ink-muted">
             {person.jobs
               .sort((a, b) => JOB_ORDER.indexOf(a) - JOB_ORDER.indexOf(b))
               .join(", ")}

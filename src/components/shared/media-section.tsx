@@ -1,6 +1,6 @@
 import Link from "@/components/ui/app-link";
 import { MediaGrid } from "./media-grid";
-import { Section } from "./section";
+import { Panel, panelLinkClass } from "@/components/ui/panel";
 import type { MediaItem } from "./media-card";
 
 interface MediaSectionProps {
@@ -30,14 +30,11 @@ export function MediaSection({
   const twoRows = tall && items.length >= 16;
 
   return (
-    <Section
+    <Panel
       title={title}
-      action={
+      aside={
         href && (
-          <Link
-            href={href}
-            className="-my-3 flex min-h-11 shrink-0 items-center text-sm text-muted-foreground transition-colors duration-150 hover:text-foreground"
-          >
+          <Link href={href} className={panelLinkClass}>
             {hrefLabel}
             {hrefLabel === "See all" && <span className="sr-only"> {title.toLowerCase()}</span>}
           </Link>
@@ -50,6 +47,6 @@ export function MediaSection({
         className={twoRows ? "poster-grid-two-rows" : "poster-grid-shelf"}
         watched={watched}
       />
-    </Section>
+    </Panel>
   );
 }

@@ -3,7 +3,21 @@
 import { notFound } from "next/navigation";
 
 import { useMovieDetails, useMovieWatchProviders } from "@/lib/hooks/api-hooks";
-import { DetailsHero, DetailsPageSkeleton } from "@/components/ui/details-hero";
+import {
+  DetailHeader,
+  DetailsPageSkeleton,
+  PeopleLinks,
+  RatingValue,
+} from "@/components/ui/detail-header";
+import { StreamingOn } from "@/components/shared/watch-providers";
+import { TrailerModal } from "@/components/ui/trailer-modal";
+import { LibraryButton } from "@/components/library/library-panel";
+import { ShareButton } from "@/components/ui/share-button";
+import { Chip } from "@/components/ui/chip";
+import { Panel, PanelNote } from "@/components/ui/panel";
+import { FactGrid } from "@/components/ui/fact-card";
+import { getImageUrl } from "@/lib/api";
+import { streamingServices } from "@/lib/watch-providers";
 import { CastGrid, CrewList } from "@/components/person/cast-grid";
 import { MediaSection } from "@/components/shared/media-section";
 import { SeriesStrip } from "@/components/shared/series-strip";
@@ -11,9 +25,14 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { useWatchedTitles } from "@/lib/hooks/use-library";
 import { similarListLink } from "@/lib/browse-link";
 import type { RelatedShelf } from "@/lib/related";
-import { Section, FactList } from "@/components/shared/section";
 import { ExternalLinks } from "@/components/ui/external-links";
-import { formatDate, formatRuntime, formatCurrency, formatYear } from "@/lib/utils";
+import {
+  formatCurrency,
+  formatDate,
+  formatRuntime,
+  formatYear,
+  getUSCertification,
+} from "@/lib/utils";
 import type { MovieDetails } from "@/lib/types";
 
 interface MovieDetailsPageProps {
@@ -70,19 +89,64 @@ export function MovieDetailsPage({
       />
     );
 
+  const providers = watchProviders?.results?.US;
+  const certification = getUSCertification(movie.release_dates);
+
   return (
-    <div className="detail-page">
-      <DetailsHero
-        item={movie}
-        mediaType="movie"
-        trailer={trailer}
-        watchProviders={watchProviders?.results?.US}
-        credit={{ label: "Directed by", people: directors }}
+    <div>
+      <DetailHeader
+        backdrop={movie.backdrop_path ? getImageUrl(movie.backdrop_path, "backdrop", "w1280") : null}
+        poster={{
+          src: movie.poster_path ? getImageUrl(movie.poster_path, "poster", "w500") : null,
+          alt: `${movie.title} poster`,
+          fallback: "movie",
+        }}
+        title={movie.title}
+        tagline={movie.tagline}
+        overview={movie.overview && <p>{movie.overview}</p>}
+        actions={
+          <>
+            {trailer && <TrailerModal trailer={trailer} title={movie.title} />}
+            <LibraryButton
+              meta={{
+                tmdb_id: movie.id,
+                media_type: "movie",
+                title: movie.title,
+                poster_path: movie.poster_path,
+                overview: movie.overview,
+                release_date: movie.release_date,
+                vote_average: movie.vote_average,
+              }}
+              size="lg"
+            />
+            <ShareButton title={movie.title} />
+          </>
+        }
+        facts={[
+          { label: "Rating", value: movie.vote_average > 0 && <RatingValue value={movie.vote_average} /> },
+          {
+            label: "Released",
+            value: (movie.release_date || movie.status !== "Released") && (
+              <span className="flex flex-wrap items-center gap-2">
+                {movie.release_date ? formatDate(movie.release_date) : "TBA"}
+                {movie.status && movie.status !== "Released" && <Chip>{movie.status}</Chip>}
+              </span>
+            ),
+          },
+          { label: "Runtime", value: formatRuntime(movie.runtime) || null },
+          { label: "Rated", value: certification },
+          { label: "Genres", value: movie.genres.map((genre) => genre.name).join(", ") },
+          { label: "Directed by", value: directors.length > 0 && <PeopleLinks people={directors} /> },
+          {
+            label: "Stream on",
+            value: streamingServices(providers?.flatrate).length > 0 && <StreamingOn providers={providers} />,
+          },
+        ]}
       />
 
-      <div className="site-container space-y-12 py-10 md:space-y-14 md:py-14">
+      <div className="site-container space-y-5 py-6 md:space-y-6 md:py-8">
         {collection && (
-          <Section title={collection.title}>
+          <Panel title={collection.title} aside={<PanelNote>{collection.items.length} films</PanelNote>}>
             <SeriesStrip
               label={collection.title}
               items={collection.items.map((item) => ({
@@ -95,7 +159,7 @@ export function MovieDetailsPage({
                 watched: watched.has(`movie-${item.id}`),
               }))}
             />
-          </Section>
+          </Panel>
         )}
 
         <MediaSection
@@ -112,17 +176,18 @@ export function MovieDetailsPage({
         {relatedSection(shelf("star"))}
 
         {cast.length > 0 && (
-          <Section title="Cast">
+          <Panel title="Cast">
             <CastGrid cast={cast} mediaType="movie" />
-          </Section>
+          </Panel>
         )}
 
-        <Section title="Details">
-          <FactList
+        <Panel title="Details">
+          <FactGrid
             facts={[
-              { label: "Released", value: movie.release_date ? formatDate(movie.release_date) : null },
-              { label: "Runtime", value: formatRuntime(movie.runtime) || null },
-              { label: "Status", value: movie.status !== "Released" ? movie.status : null },
+              {
+                label: "Original title",
+                value: movie.original_title !== movie.title ? movie.original_title : null,
+              },
               { label: "Budget", value: movie.budget > 0 ? formatCurrency(movie.budget) : null },
               { label: "Box office", value: movie.revenue > 0 ? formatCurrency(movie.revenue) : null },
               {
@@ -139,18 +204,18 @@ export function MovieDetailsPage({
           />
 
           <ExternalLinks
-            className="mt-8"
+            className="mt-5 first:mt-0"
             externalIds={movie.external_ids}
             homepage={movie.homepage}
             title={movie.title}
             releaseDate={movie.release_date}
           />
-        </Section>
+        </Panel>
 
         {crew.length > 0 && (
-          <Section title="Crew">
+          <Panel title="Crew">
             <CrewList crew={crew} />
-          </Section>
+          </Panel>
         )}
       </div>
     </div>
