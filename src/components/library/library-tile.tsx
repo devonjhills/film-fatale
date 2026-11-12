@@ -32,13 +32,13 @@ export function LibraryTile({ item, onOpen }: LibraryTileProps) {
             </div>
           )}
           {badge && (
-            <span className="absolute bottom-2 left-2 rounded-sm bg-mint px-1.5 py-0.5 text-xs font-semibold tabular-nums text-background">
+            <span className="absolute bottom-2 left-2 rounded-full bg-mint px-2 py-0.5 text-xs font-semibold tabular-nums text-page">
               {badge}
             </span>
           )}
         </div>
         <div className="tile-body">
-          <h3 className="line-clamp-2 min-h-[2.75em] pr-1 text-[0.8125rem] font-medium leading-snug text-foreground group-hover:underline group-hover:underline-offset-4">
+          <h3 className="line-clamp-2 min-h-[2.75em] pr-1 text-ui font-medium leading-snug text-foreground group-hover:underline group-hover:underline-offset-4">
             {item.title}
           </h3>
           <p className="mt-auto flex items-center justify-between gap-2 text-xs tabular-nums text-muted-foreground">

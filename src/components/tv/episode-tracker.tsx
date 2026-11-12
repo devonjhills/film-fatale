@@ -13,6 +13,7 @@ import {
 } from "@/lib/hooks/use-library";
 import { formatDate, cn } from "@/lib/utils";
 import { ProgressBar, progressSummary } from "@/components/library/progress";
+import { segmentVariants } from "@/components/ui/segmented-control";
 
 // Long-running shows pick their season from a menu instead of a wall of buttons.
 const SEASON_BUTTON_LIMIT = 12;
@@ -55,10 +56,10 @@ export function EpisodeTracker({ show, onChange }: EpisodeTrackerProps) {
   if (isLoading || !progress) {
     return (
       <div className="animate-pulse space-y-4" aria-busy="true">
-        <div className="h-4 w-1/2 rounded-sm bg-muted" />
-        <div className="h-1 rounded-full bg-muted" />
-        <div className="h-10 w-2/3 rounded-sm bg-muted" />
-        <div className="h-24 rounded-sm bg-muted" />
+        <div className="h-4 w-1/2 rounded-sm bg-surface-2" />
+        <div className="h-1 rounded-full bg-surface-2" />
+        <div className="h-10 w-2/3 rounded-md bg-surface-2" />
+        <div className="h-24 rounded-md bg-surface-2" />
       </div>
     );
   }
@@ -106,11 +107,9 @@ export function EpisodeTracker({ show, onChange }: EpisodeTrackerProps) {
                 aria-pressed={isSelected}
                 onClick={() => setSelected(s.season_number)}
                 className={cn(
-                  "flex h-10 items-center justify-center gap-1 rounded-sm border px-1 text-sm font-medium tabular-nums transition-colors",
-                  isSelected
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-input text-foreground hover:border-foreground/60",
-                  !isSelected && s.aired === 0 && "text-muted-foreground",
+                  segmentVariants({ selected: isSelected }),
+                  "h-10 gap-1 px-1 tabular-nums",
+                  !isSelected && s.aired > 0 && "text-ink",
                 )}
               >
                 S{s.season_number}
@@ -207,11 +206,11 @@ export function EpisodeTracker({ show, onChange }: EpisodeTrackerProps) {
                   )
                 }
                 className={cn(
-                  "flex h-10 w-full items-center justify-center rounded-sm border text-sm font-medium tabular-nums transition-colors",
+                  "flex h-10 w-full items-center justify-center rounded-md border text-sm font-medium tabular-nums transition-colors",
                   isWatched
-                    ? "border-mint bg-mint text-background"
-                    : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",
-                  !hasAired && "border-dashed border-border text-muted-foreground/50 hover:border-border hover:text-muted-foreground/50",
+                    ? "border-mint bg-mint text-page"
+                    : "border-line bg-surface-2 text-ink-muted hover:border-line-strong hover:text-ink",
+                  !hasAired && "border-dashed bg-transparent text-ink-muted/50 hover:border-line hover:text-ink-muted/50",
                 )}
               >
                 {episode}

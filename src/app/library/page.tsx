@@ -14,7 +14,8 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+import { Panel } from "@/components/ui/panel";
+import { SegmentCount, SegmentedControl, segmentVariants } from "@/components/ui/segmented-control";
 
 type Tab = "watching" | "plan_to_watch" | "completed";
 type MediaFilter = "all" | "movie" | "tv";
@@ -121,8 +122,8 @@ export default function LibraryPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="page-header">
-        <div className="site-container py-10 md:py-14">
+      <header>
+        <div className="site-container pt-8 md:pt-12">
           <h1 className="page-title">Library</h1>
           {newCount > 0 && (
             <p className="page-lede mt-4">
@@ -134,7 +135,7 @@ export default function LibraryPage() {
           {/* One row on phones too; it scrolls sideways rather than wrapping. */}
           <nav
             aria-label="Library lists"
-            className="-mx-4 mt-8 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:px-0"
+            className="-mx-4 mt-6 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:px-0"
           >
             <ul className="flex w-max gap-1.5 sm:gap-2">
               {TABS.map(({ value, label }) => {
@@ -145,19 +146,10 @@ export default function LibraryPage() {
                       type="button"
                       onClick={() => selectTab(value)}
                       aria-current={current ? "page" : undefined}
-                      className={cn(
-                        "flex min-h-10 items-center gap-1.5 whitespace-nowrap rounded-sm border px-3 text-[0.8125rem] font-medium transition-colors sm:gap-2 sm:px-4 sm:text-sm",
-                        current
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",
-                      )}
+                      className={segmentVariants({ selected: current })}
                     >
                       {label}
-                      {items && (
-                        <span className={cn("tabular-nums", current ? "text-background/60" : "text-muted-foreground/70")}>
-                          {counts[value]}
-                        </span>
-                      )}
+                      {items && <SegmentCount>{counts[value]}</SegmentCount>}
                     </button>
                   </li>
                 );
@@ -167,40 +159,7 @@ export default function LibraryPage() {
         </div>
       </header>
 
-      <div className="site-container py-10 md:py-14">
-        {inTab.length > 0 && (
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex gap-1" role="group" aria-label="Type">
-              {MEDIA_FILTERS.map(({ value, label }) => (
-                <button
-                  key={value}
-                  type="button"
-                  aria-pressed={media === value}
-                  onClick={() => setMedia(value)}
-                  className={cn(
-                    "min-h-9 rounded-sm px-3 text-sm font-medium transition-colors",
-                    media === value
-                      ? "bg-accent text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-            {inTab.length >= SEARCH_THRESHOLD && (
-              <Input
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Filter by title"
-                aria-label="Filter by title"
-                className="h-9 w-full sm:w-64"
-              />
-            )}
-          </div>
-        )}
-
+      <div className="site-container py-6 md:py-8">
         {error && !items ? (
           <EmptyState title="Library didn't load" description="Check your connection, then try again.">
             <Button variant="outline" onClick={refresh}>
@@ -215,16 +174,42 @@ export default function LibraryPage() {
               <Link href="/">Go to Discover</Link>
             </Button>
           </EmptyState>
-        ) : shown.length === 0 ? (
-          <p className="py-16 text-center text-muted-foreground">Nothing matches these filters.</p>
-        ) : tab === "watching" ? (
-          <UpNextList items={shown} onChange={refresh} onOpen={openPanel} />
         ) : (
-          <div className="poster-grid">
-            {shown.map((item) => (
-              <LibraryTile key={item.id} item={item} onOpen={openPanel} />
-            ))}
-          </div>
+          <Panel
+            title={TABS.find((entry) => entry.value === tab)?.label ?? "Library"}
+            aside={
+              <SegmentedControl
+                label="Type"
+                size="sm"
+                options={MEDIA_FILTERS}
+                value={media}
+                onChange={setMedia}
+                className="flex-nowrap"
+              />
+            }
+          >
+            {inTab.length >= SEARCH_THRESHOLD && (
+              <Input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Filter by title"
+                aria-label="Filter by title"
+                className="mb-4 h-9 sm:w-64"
+              />
+            )}
+            {shown.length === 0 ? (
+              <p className="py-12 text-center text-ink-muted">Nothing matches these filters.</p>
+            ) : tab === "watching" ? (
+              <UpNextList items={shown} onChange={refresh} onOpen={openPanel} />
+            ) : (
+              <div className="poster-grid">
+                {shown.map((item) => (
+                  <LibraryTile key={item.id} item={item} onOpen={openPanel} />
+                ))}
+              </div>
+            )}
+          </Panel>
         )}
       </div>
 
@@ -268,7 +253,7 @@ function SignIn({ error }: { error: string | null }) {
 function LibrarySkeleton({ tab }: { tab: Tab }) {
   if (tab === "watching") {
     return (
-      <div className="divide-y divide-border border-y border-border" aria-busy="true">
+      <div className="divide-y divide-line rounded-lg border border-line bg-surface-1 px-4" aria-busy="true">
         {Array.from({ length: 4 }, (_, i) => (
           <div key={i} className="flex gap-4 py-4">
             <Skeleton className="aspect-[2/3] w-16 sm:w-[4.5rem]" />

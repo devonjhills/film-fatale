@@ -22,7 +22,7 @@ function visiblePages(current: number, total: number): (number | "gap")[] {
 }
 
 const itemClass =
-  "flex min-h-10 min-w-10 items-center justify-center gap-1 rounded-sm px-3 text-sm font-medium transition-colors";
+  "flex min-h-10 min-w-10 items-center justify-center gap-1 rounded-md border px-3 text-sm font-medium transition-colors";
 
 /** Pagination as plain links, so every page has its own URL. */
 export function PageLinks({ currentPage, totalPages, hrefFor }: PageLinksProps) {
@@ -32,11 +32,11 @@ export function PageLinks({ currentPage, totalPages, hrefFor }: PageLinksProps) 
   const next = currentPage < totalPages ? currentPage + 1 : null;
 
   return (
-    <nav aria-label="Pages" className="flex justify-center pt-4">
+    <nav aria-label="Pages" className="flex justify-center">
       <ul className="flex flex-wrap items-center justify-center gap-1">
         <li>
           {previous ? (
-            <Link href={hrefFor(previous)} className={cn(itemClass, "text-muted-foreground hover:bg-accent hover:text-foreground")}>
+            <Link href={hrefFor(previous)} className={cn(itemClass, "border-transparent text-ink-muted hover:bg-surface-2 hover:text-ink")}>
               <ChevronLeft className="size-4" aria-hidden="true" />
               Previous
             </Link>
@@ -58,7 +58,7 @@ export function PageLinks({ currentPage, totalPages, hrefFor }: PageLinksProps) 
                   "tabular-nums",
                   page === currentPage
                     ? "border border-input text-foreground"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                    : "border-transparent text-ink-muted hover:bg-surface-2 hover:text-ink",
                 )}
               >
                 {page}
@@ -71,7 +71,7 @@ export function PageLinks({ currentPage, totalPages, hrefFor }: PageLinksProps) 
         </li>
         <li>
           {next ? (
-            <Link href={hrefFor(next)} className={cn(itemClass, "text-muted-foreground hover:bg-accent hover:text-foreground")}>
+            <Link href={hrefFor(next)} className={cn(itemClass, "border-transparent text-ink-muted hover:bg-surface-2 hover:text-ink")}>
               Next
               <ChevronRight className="size-4" aria-hidden="true" />
             </Link>

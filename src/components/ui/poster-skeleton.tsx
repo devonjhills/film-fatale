@@ -17,17 +17,18 @@ function MediaCardSkeleton() {
 function PosterPageSkeleton() {
   return (
     <div className="min-h-screen" aria-busy="true">
-      <div className="page-header">
-        <div className="site-container space-y-3 py-8 md:py-10">
-          <Skeleton className="h-9 w-56 rounded-sm md:h-11" />
-          <Skeleton className="h-4 w-72 max-w-full rounded-sm" />
-        </div>
+      <div className="site-container space-y-3 pt-8 md:pt-12">
+        <Skeleton className="h-9 w-56 rounded-sm md:h-11" />
+        <Skeleton className="h-4 w-72 max-w-full rounded-sm" />
       </div>
-      <div className="site-container py-8 md:py-10">
-        <div className="poster-grid">
-          {Array.from({ length: 16 }).map((_, i) => (
-            <MediaCardSkeleton key={i} />
-          ))}
+      <div className="site-container py-6 md:py-8">
+        <div className="rounded-lg border border-line bg-surface-1">
+          <div className="h-11 border-b border-line bg-surface-2" />
+          <div className="poster-grid p-3 sm:p-4">
+            {Array.from({ length: 16 }).map((_, i) => (
+              <MediaCardSkeleton key={i} />
+            ))}
+          </div>
         </div>
       </div>
     </div>

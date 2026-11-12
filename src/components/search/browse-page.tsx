@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Search, X } from "@/components/ui/icons";
 import { useMultiSearch } from "@/lib/hooks/api-hooks";
 import { SearchResults } from "./search-results";
-import { Button } from "@/components/ui/button";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { fieldClass } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { MediaCardSkeleton } from "@/components/ui/poster-skeleton";
 
 interface BrowsePageProps {
@@ -71,8 +73,8 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
 
   return (
     <div className="min-h-screen">
-      <header className="page-header">
-        <div className="site-container py-8 md:py-10">
+      <header>
+        <div className="site-container pt-8 md:pt-12">
           <h1 className="page-title">Search</h1>
 
           <div className="relative mt-5 max-w-3xl">
@@ -87,13 +89,13 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Movies, shows and people"
               aria-label="Search movies, TV shows and people"
-              className="custom-search-clear min-h-14 w-full rounded-sm border border-input bg-card py-3 pl-12 pr-14 text-lg text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
+              className={cn(fieldClass, "custom-search-clear min-h-14 py-3 pl-12 pr-14 text-lg")}
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="absolute right-2 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                className="absolute right-2 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-md text-ink-muted hover:bg-surface-2 hover:text-ink"
                 aria-label="Clear search"
               >
                 <X aria-hidden="true" />
@@ -103,10 +105,10 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
         </div>
       </header>
 
-      <div className="site-container py-8 md:py-10">
+      <div className="site-container py-6 md:py-8">
         {debouncedQuery ? (
           <>
-            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-sm text-muted-foreground">
                   Results for <span className="font-medium text-foreground">“{debouncedQuery}”</span>
@@ -117,19 +119,13 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
                     : `${resultCount} result${resultCount === 1 ? "" : "s"} found`}
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2" aria-label="Filter search results">
-                {mediaTypeOptions.map((option) => (
-                  <Button
-                    key={option.value}
-                    variant={mediaTypeFilter === option.value ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setMediaTypeFilter(option.value)}
-                    aria-pressed={mediaTypeFilter === option.value}
-                  >
-                    {option.label}
-                  </Button>
-                ))}
-              </div>
+              <SegmentedControl
+                label="Filter search results"
+                size="sm"
+                options={mediaTypeOptions}
+                value={mediaTypeFilter}
+                onChange={setMediaTypeFilter}
+              />
             </div>
 
             {isLoading ? (
@@ -157,5 +153,7 @@ export function BrowsePage({ initialQuery = "" }: BrowsePageProps) {
 }
 
 function SearchMessage({ children }: { children: React.ReactNode }) {
-  return <p className="py-12 text-center text-muted-foreground">{children}</p>;
+  return (
+    <p className="rounded-lg border border-line bg-surface-1 px-6 py-14 text-center text-ink-muted">{children}</p>
+  );
 }

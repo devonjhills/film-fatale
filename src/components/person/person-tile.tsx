@@ -37,7 +37,7 @@ export function PersonTile({ person, subtitle, detail, className }: PersonTilePr
         </div>
 
         <div className="tile-body">
-          <h3 className="line-clamp-2 text-[0.8125rem] font-medium leading-snug text-foreground">
+          <h3 className="line-clamp-2 text-ui font-medium leading-snug text-foreground">
             {person.name}
           </h3>
           {subtitle && (

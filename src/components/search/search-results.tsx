@@ -1,5 +1,5 @@
 import { MediaGrid } from "@/components/shared/media-grid";
-import { Section } from "@/components/shared/section";
+import { Panel, PanelNote } from "@/components/ui/panel";
 import { PersonGrid } from "./person-grid";
 import type { MultiSearchResult } from "@/lib/types";
 
@@ -7,23 +7,23 @@ export function SearchResults({ results }: { results: MultiSearchResult }) {
   const { movieResults, tvResults, peopleResults } = results;
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-5 md:space-y-6">
       {movieResults.length > 0 && (
-        <Section title={`Movies (${movieResults.length})`}>
+        <Panel title="Movies" aside={<PanelNote>{movieResults.length}</PanelNote>}>
           <MediaGrid items={movieResults} mediaType="movie" />
-        </Section>
+        </Panel>
       )}
 
       {tvResults.length > 0 && (
-        <Section title={`TV shows (${tvResults.length})`}>
+        <Panel title="TV shows" aside={<PanelNote>{tvResults.length}</PanelNote>}>
           <MediaGrid items={tvResults} mediaType="tv" />
-        </Section>
+        </Panel>
       )}
 
       {peopleResults.length > 0 && (
-        <Section title={`People (${peopleResults.length})`}>
+        <Panel title="People" aside={<PanelNote>{peopleResults.length}</PanelNote>}>
           <PersonGrid people={peopleResults} />
-        </Section>
+        </Panel>
       )}
     </div>
   );

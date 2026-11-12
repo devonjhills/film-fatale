@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
 import Link from "@/components/ui/app-link";
 import { mutate as revalidate } from "swr";
 import type { ViewingHistoryItem, WatchStatus } from "@/lib/types";
@@ -9,7 +8,7 @@ import { getImageUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, Check, ChevronDown, Clock, Film, Play, Star } from "@/components/ui/icons";
+import { ArrowRight, Check, ChevronDown, Clock, Play, Star } from "@/components/ui/icons";
 import { EpisodeTracker } from "@/components/tv/episode-tracker";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
@@ -19,6 +18,8 @@ import {
   type LibraryMeta,
 } from "@/lib/hooks/use-library";
 import { cn } from "@/lib/utils";
+import { MountedPoster } from "@/components/ui/mounted-poster";
+import { segmentVariants } from "@/components/ui/segmented-control";
 
 export const STATUS_LABELS: Record<WatchStatus, string> = {
   plan_to_watch: "Want to watch",
@@ -64,16 +65,14 @@ export function LibraryPanel({ meta, open, onOpenChange, initial, pageLink }: Li
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent>
-        <header className="flex shrink-0 gap-4 border-b border-border p-5 pr-14">
-          <div className="poster-frame relative aspect-[2/3] w-14 shrink-0 overflow-hidden">
-            {poster ? (
-              <Image src={poster} alt="" fill sizes="56px" className="object-cover" />
-            ) : (
-              <span className="flex size-full items-center justify-center bg-muted">
-                <Film className="size-5 text-muted-foreground/50" aria-hidden="true" />
-              </span>
-            )}
-          </div>
+        <header className="flex shrink-0 gap-4 border-b border-line bg-surface-2 p-5 pr-14">
+          <MountedPoster
+            src={poster}
+            alt=""
+            sizes="56px"
+            fallback={meta.media_type === "tv" ? "tv" : "movie"}
+            className="w-16 shrink-0 p-1"
+          />
           <div className="min-w-0 self-center">
             <SheetTitle className="line-clamp-2 font-serif text-2xl font-medium leading-tight">
               {meta.title}
@@ -164,10 +163,9 @@ function PanelBody({
                 disabled={saving || item === undefined}
                 onClick={() => !current && save({ status })}
                 className={cn(
-                  "flex min-h-11 items-center justify-center whitespace-nowrap rounded-sm border px-1.5 text-[0.8125rem] font-medium transition-colors disabled:opacity-60 sm:text-sm",
-                  current
-                    ? "border-primary bg-primary text-primary-foreground disabled:opacity-100"
-                    : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",
+                  segmentVariants({ selected: current }),
+                  "min-h-11 px-1.5 text-ui sm:text-sm",
+                  current && "disabled:opacity-100",
                 )}
               >
                 {STATUS_LABELS[status]}
@@ -199,7 +197,7 @@ function PanelBody({
             onSave={(notes) => save({ status: item.status, notes: notes || null })}
           />
 
-          <div className="border-t border-border pt-5">
+          <div className="border-t border-line pt-5">
             <Button
               variant="ghost"
               size="sm"

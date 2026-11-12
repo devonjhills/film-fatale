@@ -19,7 +19,7 @@ interface UpNextListProps {
 /** In-progress shows and films, each with its next step one tap away. */
 export function UpNextList({ items, onChange, onOpen }: UpNextListProps) {
   return (
-    <ol className="divide-y divide-border border-y border-border">
+    <ol className="-my-3 divide-y divide-line sm:-my-4">
       {items.map((item) => (
         <UpNextRow key={item.id} item={item} onChange={onChange} onOpen={onOpen} />
       ))}
@@ -68,12 +68,12 @@ function UpNextRow({ item, onChange, onOpen }: { item: ViewingHistoryItem } & Om
 
   return (
     <li className="grid grid-cols-[4rem_minmax(0,1fr)] gap-x-4 gap-y-3 py-4 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-center sm:gap-x-6">
-      <button type="button" onClick={open} className="poster-frame relative row-span-2 aspect-[2/3] overflow-hidden sm:row-span-1" tabIndex={-1} aria-hidden="true">
+      <button type="button" onClick={open} className="relative row-span-2 aspect-[2/3] overflow-hidden rounded-sm border border-line bg-surface-2 sm:row-span-1" tabIndex={-1} aria-hidden="true">
         {poster ? (
           <Image src={poster} alt="" fill sizes="72px" className="object-cover" />
         ) : (
           <span className="flex size-full items-center justify-center">
-            <Film className="size-5 text-muted-foreground/50" aria-hidden="true" />
+            <Film className="size-5 text-ink-muted/50" aria-hidden="true" />
           </span>
         )}
       </button>
@@ -89,12 +89,12 @@ function UpNextRow({ item, onChange, onOpen }: { item: ViewingHistoryItem } & Om
             {item.title}
           </button>
           {badge && (
-            <span className="rounded-sm bg-mint px-1.5 py-0.5 text-xs font-semibold tabular-nums text-background">
+            <span className="rounded-full bg-mint px-2 py-0.5 text-xs font-semibold tabular-nums text-page">
               {badge}
             </span>
           )}
         </div>
-        <p className="mt-1 text-sm tabular-nums text-muted-foreground">{detail}</p>
+        <p className="mt-1 text-sm tabular-nums text-ink-muted">{detail}</p>
         {progress && progress.aired_episodes > 0 && (
           <ProgressBar value={percent} className="mt-3 max-w-sm" />
         )}

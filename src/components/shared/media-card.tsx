@@ -66,7 +66,7 @@ export function MediaCard({
             </div>
           )}
           {watched && (
-            <span className="absolute left-1.5 top-1.5 inline-flex items-center gap-1 rounded-sm bg-background/85 px-1.5 py-0.5 text-[0.6875rem] font-medium text-mint">
+            <span className="absolute left-1.5 top-1.5 inline-flex items-center gap-1 rounded-full bg-page/85 px-2 py-0.5 text-2xs font-medium text-mint">
               <Check className="size-3" weight="bold" aria-hidden="true" />
               Watched
             </span>
@@ -74,7 +74,7 @@ export function MediaCard({
         </div>
 
         <div className="tile-body">
-          <h3 className="line-clamp-2 min-h-[2.75em] text-[0.8125rem] font-medium leading-snug text-foreground">
+          <h3 className="line-clamp-2 min-h-[2.75em] text-ui font-medium leading-snug text-foreground">
             {title}
           </h3>
           {(note || year || rating) && (

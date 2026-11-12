@@ -16,7 +16,10 @@ import {
   type MediaType,
 } from "@/lib/browse";
 import { GENRE_NAMES } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { Panel, PanelNote } from "@/components/ui/panel";
+import { segmentVariants } from "@/components/ui/segmented-control";
+import { EmptyState } from "@/components/shared/empty-state";
+import { Button } from "@/components/ui/button";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -53,8 +56,8 @@ export async function CategoryPage({ media, slug, searchParams }: CategoryPagePr
 
   return (
     <div className="min-h-screen">
-      <header className="page-header">
-        <div className="site-container py-8 md:py-10">
+      <header>
+        <div className="site-container pt-8 md:pt-12">
           <h1 className="page-title">{list.title}</h1>
           <p className="page-lede mt-2">{list.description}</p>
 
@@ -71,12 +74,7 @@ export async function CategoryPage({ media, slug, searchParams }: CategoryPagePr
                           decade: entry.current ? undefined : filters.decade,
                         })}
                         aria-current={current ? "page" : undefined}
-                        className={cn(
-                          "flex min-h-10 items-center rounded-sm border px-4 text-sm font-medium transition-colors",
-                          current
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-input text-muted-foreground hover:border-foreground/60 hover:text-foreground",
-                        )}
+                        className={segmentVariants({ selected: current })}
                       >
                         {entry.label}
                       </Link>
@@ -97,28 +95,34 @@ export async function CategoryPage({ media, slug, searchParams }: CategoryPagePr
         </div>
       </header>
 
-      <div className="site-container space-y-10 py-8 md:py-10">
+      <div className="site-container space-y-5 py-6 md:space-y-6 md:py-8">
         {result === null ? (
-          <p className="py-16 text-center text-muted-foreground">
-            This list didn&apos;t load. Refresh the page to try again.
-          </p>
+          <EmptyState title="This list didn't load" description="Refresh the page to try again." />
         ) : result.items.length === 0 ? (
-          <div className="py-16 text-center">
-            <p className="text-muted-foreground">
-              No {genreName ? `${genreName.toLowerCase()} ` : ""}
-              {noun}
-              {filters.decade ? ` from the ${filters.decade}s` : ""} in this list.
-            </p>
-            <Link
-              href={listHref(media, slug)}
-              className="mt-3 inline-flex min-h-11 items-center text-sm font-medium text-primary hover:underline"
-            >
-              Clear filters
-            </Link>
-          </div>
+          <EmptyState
+            title="Nothing here"
+            description={`No ${genreName ? `${genreName.toLowerCase()} ` : ""}${noun}${
+              filters.decade ? ` from the ${filters.decade}s` : ""
+            } in this list.`}
+          >
+            <Button variant="outline" asChild>
+              <Link href={listHref(media, slug)}>Clear filters</Link>
+            </Button>
+          </EmptyState>
         ) : (
           <>
-            <MediaGrid items={result.items} mediaType={media} priorityCount={6} />
+            <Panel
+              title={[list.title, genreName, filters.decade && `${filters.decade}s`].filter(Boolean).join(" · ")}
+              aside={
+                result.totalPages > 1 && (
+                  <PanelNote>
+                    Page {filters.page} of {result.totalPages}
+                  </PanelNote>
+                )
+              }
+            >
+              <MediaGrid items={result.items} mediaType={media} priorityCount={6} />
+            </Panel>
             <PageLinks
               currentPage={filters.page}
               totalPages={result.totalPages}

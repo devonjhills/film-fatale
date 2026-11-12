@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
+import { fieldClass } from "@/components/ui/input";
 
 interface BrowseFilterControlsProps {
   media: "movie" | "tv";
@@ -73,7 +74,7 @@ export function BrowseFilterControls({
         <button
           type="button"
           onClick={() => startTransition(() => router.push(pathname))}
-          className="min-h-10 px-2 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          className="min-h-10 px-2 text-sm text-ink-muted underline-offset-4 hover:text-ink hover:underline"
         >
           Clear
           <span className="sr-only"> {media === "movie" ? "movie" : "show"} filters</span>
@@ -101,8 +102,9 @@ function FilterSelect({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         className={cn(
-          "min-h-10 appearance-none rounded-sm border bg-card py-2 pl-3.5 pr-9 text-sm transition-colors focus:border-ring",
-          value ? "border-primary text-foreground" : "border-input text-muted-foreground hover:text-foreground",
+          fieldClass,
+          "min-h-10 w-auto appearance-none py-2 pr-9",
+          value ? "border-violet" : "text-ink-muted hover:text-ink",
         )}
       >
         {children}
