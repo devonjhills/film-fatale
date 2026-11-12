@@ -48,7 +48,7 @@ export function DetailHeader({
       <div
         className={cn(
           "grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-4 gap-y-5 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-x-7",
-          "lg:grid-cols-[13rem_minmax(0,1fr)_20rem] lg:gap-x-9",
+          "lg:grid-cols-[13rem_minmax(0,1fr)_20rem] lg:grid-rows-[auto_1fr] lg:gap-x-9",
           hasStrip && "sm:px-4 lg:px-5",
         )}
       >
@@ -67,7 +67,7 @@ export function DetailHeader({
         <div
           className={cn(
             "col-start-2 row-start-1 min-w-0 self-end pt-4 lg:self-start lg:pt-7",
-            !hasStrip && "self-center lg:pt-2",
+            !hasStrip && "self-center lg:self-start lg:pt-2",
           )}
         >
           {eyebrow && <div className="mb-2 text-sm text-ink-muted">{eyebrow}</div>}
