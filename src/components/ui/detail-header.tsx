@@ -46,8 +46,8 @@ interface DetailHeaderProps {
   /** The audience score shown at the top of the scorecard. */
   score?: Score | null;
   facts: Fact[];
-  /** A full-width bar along the bottom of the card, e.g. where to watch. */
-  footer?: ReactNode;
+  /** Under the score, read at a glance with it: where to watch. */
+  watch?: ReactNode;
 }
 
 /**
@@ -57,11 +57,11 @@ interface DetailHeaderProps {
  *
  *   wide:   stage
  *           [poster + action drawer] | meta, title, tagline   | score
- *                                    | genres, story
+ *                                    | genres, story          | where to watch
  *                                    | facts
  *           credits
- *           where to watch
- *   phones: stage, poster | title, then score, story, actions, facts, credits
+ *   phones: stage, poster | title, then score and where to watch, story,
+ *           actions, facts, credits
  */
 export function DetailHeader({
   backdrop,
@@ -77,10 +77,11 @@ export function DetailHeader({
   credits = [],
   score,
   facts,
-  footer,
+  watch,
 }: DetailHeaderProps) {
   const hasBody = Boolean(overview || afterOverview || genres.length);
   const hasScore = Boolean(score && score.value > 0);
+  const hasCard = hasScore || Boolean(watch);
   const stage = Boolean(backdrop);
 
   return (
@@ -114,10 +115,10 @@ export function DetailHeader({
           <div
             className={cn(
               "grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-4 gap-y-5 p-4 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-x-6 sm:gap-y-6 sm:p-6",
-              "[grid-template-areas:'poster_head'_'score_score'_'body_body'_'actions_actions'_'facts_facts'_'credits_credits']",
+              "[grid-template-areas:'poster_head'_'card_card'_'body_body'_'actions_actions'_'facts_facts'_'credits_credits']",
               "lg:grid-rows-[auto_1fr_auto_auto] lg:gap-x-9 lg:gap-y-6 lg:p-8 xl:gap-x-10",
-              hasScore
-                ? "lg:grid-cols-[13rem_minmax(0,1fr)_auto] xl:grid-cols-[14rem_minmax(0,1fr)_auto] lg:[grid-template-areas:'side_head_score'_'side_body_body'_'side_facts_facts'_'credits_credits_credits']"
+              hasCard
+                ? "lg:grid-cols-[13rem_minmax(0,1fr)_16rem] xl:grid-cols-[14rem_minmax(0,1fr)_17rem] lg:[grid-template-areas:'side_head_card'_'side_body_card'_'side_facts_facts'_'credits_credits_credits']"
                 : "lg:grid-cols-[13rem_minmax(0,1fr)] xl:grid-cols-[14rem_minmax(0,1fr)] lg:[grid-template-areas:'side_head'_'side_body'_'side_facts'_'credits_credits']",
             )}
           >
@@ -152,7 +153,12 @@ export function DetailHeader({
               )}
             </div>
 
-            {hasScore && <ScoreBadge score={score} className="justify-self-start [grid-area:score] lg:self-start" />}
+            {hasCard && (
+              <div className="flex min-w-0 flex-col gap-3 [grid-area:card] sm:flex-row sm:items-start lg:flex-col lg:items-stretch lg:self-start">
+                <ScoreBadge score={score} className="shrink-0" />
+                {watch && <div className="min-w-0 flex-1 lg:flex-none">{watch}</div>}
+              </div>
+            )}
 
             {hasBody && (
               <div className="min-w-0 [grid-area:body]">
@@ -174,8 +180,6 @@ export function DetailHeader({
 
             {credits.length > 0 && <CreditsRow credits={credits} />}
           </div>
-
-          {footer && <div className="border-t border-line">{footer}</div>}
         </div>
       </div>
     </header>

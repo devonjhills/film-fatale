@@ -202,7 +202,7 @@ export function TVDetailsPage({
             detail: tvShow.networks?.[1]?.name,
           },
         ]}
-        footer={<WhereToWatch providers={providers} loading={providersLoading} />}
+        watch={<WhereToWatch providers={providers} loading={providersLoading} />}
       />
 
       <div className="site-container space-y-5 py-6 md:space-y-6 md:py-8">
