@@ -61,7 +61,7 @@ const Link = forwardRef<HTMLAnchorElement, LinkProps>(
           variant === "nav",
 
         // Button-like link
-        "inline-flex items-center justify-center rounded-sm border border-primary bg-primary font-semibold text-primary-foreground hover:bg-primary/85":
+        "inline-flex items-center justify-center rounded-sm border font-semibold border-violet/45 bg-violet/15 text-violet-soft hover:border-violet/70 hover:bg-violet/25":
           variant === "button",
 
         // Ghost button link

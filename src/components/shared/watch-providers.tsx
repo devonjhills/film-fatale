@@ -12,24 +12,19 @@ interface WhereToWatchProps {
   className?: string;
 }
 
-const MAX_STREAM = 5;
-const MAX_RENT = 3;
+const MAX_SERVICES = 6;
 
 /**
- * Where a title can be watched in the US, as one bar along the bottom of the
- * detail header: subscription services, then rent or buy, each as a logo
- * and name, with a link to every option at the end.
+ * Where a title can be streamed in the US, as one bar along the bottom of the
+ * detail header: each subscription service as a logo and name, with a link
+ * to every option at the end. Rent and buy are left out; nearly every film
+ * can be rented or bought, so listing them says nothing.
  */
 export function WhereToWatch({ providers, loading = false, className }: WhereToWatchProps) {
-  const stream = streamingServices([...(providers?.flatrate ?? []), ...(providers?.ads ?? [])]).slice(
+  const services = streamingServices([...(providers?.flatrate ?? []), ...(providers?.ads ?? [])]).slice(
     0,
-    MAX_STREAM,
+    MAX_SERVICES,
   );
-  const streamNames = new Set(stream.map((service) => service.name));
-  const rentOrBuy = streamingServices([...(providers?.rent ?? []), ...(providers?.buy ?? [])])
-    .filter((service) => !streamNames.has(service.name))
-    .slice(0, MAX_RENT);
-  const empty = stream.length === 0 && rentOrBuy.length === 0;
 
   return (
     <section
@@ -48,13 +43,10 @@ export function WhereToWatch({ providers, loading = false, className }: WhereToW
           <div className="h-9 w-28 animate-pulse rounded-md bg-surface-2" />
           <div className="h-9 w-24 animate-pulse rounded-md bg-surface-2" />
         </div>
-      ) : empty ? (
+      ) : services.length === 0 ? (
         <p className="text-sm text-ink-muted">Not streaming in the US right now.</p>
       ) : (
-        <>
-          <ServiceGroup label="Stream" services={stream} />
-          <ServiceGroup label="Rent or buy" services={rentOrBuy} />
-        </>
+        <ServiceList services={services} />
       )}
 
       {!loading && providers?.link && (
@@ -72,29 +64,24 @@ export function WhereToWatch({ providers, loading = false, className }: WhereToW
   );
 }
 
-function ServiceGroup({ label, services }: { label: string; services: StreamingService[] }) {
-  if (!services.length) return null;
-
+function ServiceList({ services }: { services: StreamingService[] }) {
   return (
-    <div className="flex min-w-0 flex-wrap items-center gap-2">
-      <span className="text-2xs font-medium text-ink-muted">{label}</span>
-      <ul className="flex flex-wrap gap-1.5">
-        {services.map((service) => (
-          <li
-            key={service.name}
-            className="flex h-9 items-center gap-2 rounded-md border border-line bg-surface-2 pl-1 pr-3 text-ui font-medium text-ink"
-          >
-            <Image
-              src={getImageUrl(service.logo_path, "logo", "w92")}
-              alt=""
-              width={28}
-              height={28}
-              className="size-7 shrink-0 rounded-[5px]"
-            />
-            {service.name}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul className="flex min-w-0 flex-wrap gap-1.5">
+      {services.map((service) => (
+        <li
+          key={service.name}
+          className="flex h-9 items-center gap-2 rounded-md border border-line bg-surface-2 pl-1 pr-3 text-ui font-medium text-ink"
+        >
+          <Image
+            src={getImageUrl(service.logo_path, "logo", "w92")}
+            alt=""
+            width={28}
+            height={28}
+            className="size-7 shrink-0 rounded-[5px]"
+          />
+          {service.name}
+        </li>
+      ))}
+    </ul>
   );
 }

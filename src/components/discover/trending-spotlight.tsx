@@ -7,7 +7,7 @@ import { Panel, PanelNote } from "@/components/ui/panel";
 import { getImageUrl } from "@/lib/api";
 import { GENRE_NAMES } from "@/lib/constants";
 import type { TrendingItem } from "@/lib/data-fetching";
-import { formatVoteAverage } from "@/lib/utils";
+import { cn, formatVoteAverage } from "@/lib/utils";
 
 const titleOf = (item: TrendingItem) => (item.media_type === "movie" ? item.title : item.name);
 const dateOf = (item: TrendingItem) =>
@@ -51,13 +51,15 @@ export function TrendingSpotlight({ items }: { items: TrendingItem[] }) {
       aside={<PanelNote>Films and series</PanelNote>}
       bodyClassName="grid gap-6 p-4 sm:p-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] lg:gap-8"
     >
-      <article className="min-w-0">
+      {/* The lead bleeds to the panel's edges: its backdrop has no frame and
+          eases into the panel colour, and the text rises into the faded part. */}
+      <article className="-mx-4 -mt-4 min-w-0 sm:-mx-5 sm:-mt-5 lg:-mb-5 lg:mr-0">
         {backdrop && (
           <Link
             href={hrefOf(lead)}
             tabIndex={-1}
             aria-hidden="true"
-            className="relative block aspect-video overflow-hidden rounded-md border border-line bg-surface-2"
+            className="relative block aspect-video overflow-hidden bg-surface-2"
           >
             <Image
               src={backdrop}
@@ -65,42 +67,50 @@ export function TrendingSpotlight({ items }: { items: TrendingItem[] }) {
               fill
               priority
               fetchPriority="high"
-              sizes="(max-width: 1024px) 100vw, 820px"
-              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 860px"
+              className="object-cover object-[center_25%]"
             />
-            <span className="absolute left-3 top-3 inline-flex h-7 items-center rounded-full bg-violet px-2.5 text-xs font-semibold text-page">
+            <span className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-b from-transparent via-surface-1/85 to-surface-1" />
+            <span className="absolute inset-y-0 right-0 hidden w-1/5 bg-linear-to-r from-transparent to-surface-1 lg:block" />
+            <span className="absolute left-4 top-4 inline-flex h-7 items-center rounded-full border border-violet/45 bg-page/85 px-2.5 text-xs font-semibold text-violet-soft sm:left-5 sm:top-5">
               No. 1 today
             </span>
           </Link>
         )}
 
-        <MetaLine
-          className="mt-5"
-          items={[
-            lead.vote_average > 0 && (
-              <span className="inline-flex items-center gap-1.5 font-medium text-ink">
-                <Star className="size-3.5 text-violet" weight="fill" aria-hidden="true" />
-                <span className="sr-only">Rated </span>
-                {formatVoteAverage(lead.vote_average)}
-              </span>
-            ),
-            kindOf(lead),
-            year,
-            genreNames(lead, 2).join(", "),
-          ]}
-        />
-        <h2 className="hero-title mt-2">
-          <Link href={hrefOf(lead)} className="hover:underline hover:decoration-line-strong hover:underline-offset-8">
-            {titleOf(lead)}
-          </Link>
-        </h2>
-        {lead.overview && <p className="reading-text mt-3 line-clamp-3 max-w-[62ch]">{lead.overview}</p>}
-        <Button asChild size="lg" className="mt-5">
-          <Link href={hrefOf(lead)}>
-            View {lead.media_type === "movie" ? "film" : "series"}
-            <span className="sr-only">: {titleOf(lead)}</span>
-          </Link>
-        </Button>
+        <div
+          className={cn("relative px-4 pb-4 sm:px-5 sm:pb-5", backdrop ? "-mt-16 sm:-mt-24" : "pt-4 sm:pt-5")}
+        >
+          <MetaLine
+            items={[
+              lead.vote_average > 0 && (
+                <span className="inline-flex items-center gap-1.5 font-medium text-ink">
+                  <Star className="size-3.5 text-violet" weight="fill" aria-hidden="true" />
+                  <span className="sr-only">Rated </span>
+                  {formatVoteAverage(lead.vote_average)}
+                </span>
+              ),
+              kindOf(lead),
+              year,
+              genreNames(lead, 2).join(", "),
+            ]}
+          />
+          <h2 className="hero-title mt-2">
+            <Link
+              href={hrefOf(lead)}
+              className="hover:underline hover:decoration-line-strong hover:underline-offset-8"
+            >
+              {titleOf(lead)}
+            </Link>
+          </h2>
+          {lead.overview && <p className="reading-text mt-3 line-clamp-3 max-w-[62ch]">{lead.overview}</p>}
+          <Button asChild size="lg" className="mt-5">
+            <Link href={hrefOf(lead)}>
+              View {lead.media_type === "movie" ? "film" : "series"}
+              <span className="sr-only">: {titleOf(lead)}</span>
+            </Link>
+          </Button>
+        </div>
       </article>
 
       {rest.length > 0 && (

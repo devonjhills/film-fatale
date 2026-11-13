@@ -21,6 +21,8 @@
   --ink: #e6e4f0;
   --ink-muted: #9a97b0;
   --violet: #a277ff;
+  /* Violet text on a violet tint: the label colour of primary actions. */
+  --violet-soft: #cdb8ff;
   --mint: #61ffca;
   --blue: #7aa2f7;
   --red: #f7768e;
@@ -59,6 +61,7 @@
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
   --color-violet: var(--violet);
+  --color-violet-soft: var(--violet-soft);
   --color-mint: var(--mint);
   --color-blue: var(--blue);
   --color-red: var(--red);

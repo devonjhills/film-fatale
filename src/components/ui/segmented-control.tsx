@@ -11,7 +11,7 @@ export const segmentVariants = cva(
   {
     variants: {
       selected: {
-        true: "border-violet bg-violet text-page",
+        true: "border-violet/45 bg-violet/15 text-violet-soft",
         false: "border-line bg-surface-2 text-ink-muted hover:border-line-strong hover:text-ink",
       },
       size: {

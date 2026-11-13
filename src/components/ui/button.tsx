@@ -9,8 +9,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        // A violet tint with a fine violet edge: plainly the main action
+        // without a solid block of colour.
         default:
-          "border-primary bg-primary text-primary-foreground hover:bg-primary/85",
+          "border-violet/45 bg-violet/15 text-violet-soft hover:border-violet/70 hover:bg-violet/25",
         destructive:
           "border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/85",
         outline:
