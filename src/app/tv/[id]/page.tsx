@@ -20,6 +20,14 @@ interface TVPageProps {
   }>;
 }
 
+// Rendered on first visit, then served from the cache for a day (see
+// open-next.config.ts): the Workers Free plan's CPU limit is too tight to
+// render these on every request.
+export const revalidate = 86400;
+export async function generateStaticParams() {
+  return [];
+}
+
 const getTVDetails = cache(async (tvId: number) => {
   try {
     return await fetchTMDBServer<TVShowDetails>(`/tv/${tvId}`, {

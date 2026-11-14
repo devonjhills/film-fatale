@@ -20,6 +20,14 @@ interface MoviePageProps {
   }>;
 }
 
+// Rendered on first visit, then served from the cache for a day (see
+// open-next.config.ts): the Workers Free plan's CPU limit is too tight to
+// render these on every request.
+export const revalidate = 86400;
+export async function generateStaticParams() {
+  return [];
+}
+
 const getMovieDetails = cache(async (movieId: number) => {
   try {
     return await fetchTMDBServer<MovieDetails>(`/movie/${movieId}`, {
