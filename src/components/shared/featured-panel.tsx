@@ -18,9 +18,9 @@ const COPY = {
 };
 
 /**
- * The landing pages' lead: one current title. Its backdrop fills the card;
- * the story sits on a heavier flat panel that the image runs under, beside
- * the picture on wide screens and below it on phones.
+ * The landing pages' lead: one current title. Its backdrop has no frame and
+ * eases into the card colour, so the story sits beside the picture on wide
+ * screens and rises into its faded lower edge on phones.
  */
 export function FeaturedPanel({ items, mediaType }: FeaturedPanelProps) {
   const item = items.find((candidate) => candidate.backdrop_path) ?? items[0];
@@ -53,13 +53,18 @@ export function FeaturedPanel({ items, mediaType }: FeaturedPanelProps) {
             sizes="(max-width: 1024px) 100vw, 1000px"
             className="object-cover object-[center_30%]"
           />
+          {/* The picture eases into the card colour where the text meets it:
+              along the bottom on phones, from the left on wide screens. The
+              fades run a pixel past the picture so its edge can't show. */}
+          <span className="absolute inset-x-0 -bottom-px h-3/4 bg-linear-to-b from-transparent via-surface-1/80 via-55% to-surface-1 to-90% lg:hidden" />
+          <span className="absolute inset-y-0 -left-px hidden w-1/2 bg-linear-to-r from-surface-1 via-surface-1/80 to-transparent lg:block" />
         </Link>
       )}
 
       <div
         className={cn(
-          "flex min-w-0 flex-col justify-center p-5 sm:p-6",
-          backdrop && "border-t border-line lg:w-[44%] lg:border-r lg:border-t-0 lg:bg-page/90 lg:p-10",
+          "relative flex min-w-0 flex-col justify-center p-5 sm:p-6",
+          backdrop && "-mt-16 pt-0 sm:-mt-24 sm:pt-0 lg:mt-0 lg:w-[44%] lg:p-10",
         )}
       >
         <p className="text-ui font-semibold text-violet">{kicker}</p>

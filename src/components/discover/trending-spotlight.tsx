@@ -59,7 +59,7 @@ export function TrendingSpotlight({ items }: { items: TrendingItem[] }) {
             href={hrefOf(lead)}
             tabIndex={-1}
             aria-hidden="true"
-            className="relative block aspect-video overflow-hidden bg-surface-2"
+            className="relative block aspect-video bg-surface-2"
           >
             <Image
               src={backdrop}
@@ -70,8 +70,9 @@ export function TrendingSpotlight({ items }: { items: TrendingItem[] }) {
               sizes="(max-width: 1024px) 100vw, 860px"
               className="object-cover object-[center_25%]"
             />
-            <span className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-b from-transparent via-surface-1/85 to-surface-1" />
-            <span className="absolute inset-y-0 right-0 hidden w-1/5 bg-linear-to-r from-transparent to-surface-1 lg:block" />
+            {/* The fades run a pixel past the picture so its edge can't show. */}
+            <span className="absolute inset-x-0 -bottom-px h-3/4 bg-linear-to-b from-transparent via-surface-1/80 via-55% to-surface-1 to-90%" />
+            <span className="absolute inset-y-0 -right-px hidden w-1/5 bg-linear-to-r from-transparent to-surface-1 lg:block" />
             <span className="absolute left-4 top-4 inline-flex h-7 items-center rounded-full border border-violet/45 bg-page/85 px-2.5 text-xs font-semibold text-violet-soft sm:left-5 sm:top-5">
               No. 1 today
             </span>
