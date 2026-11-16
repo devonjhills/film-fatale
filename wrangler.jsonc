@@ -32,13 +32,6 @@
 			"migrations_dir": "migrations"
 		}
 	],
-	// OpenNext's page and fetch cache (see open-next.config.ts).
-	"kv_namespaces": [
-		{
-			"binding": "NEXT_INC_CACHE_KV",
-			"id": "da38b40fff48434bb7d025b13f91900a"
-		}
-	],
 	// Lets the Worker call itself to refresh stale cached pages.
 	"services": [
 		{
